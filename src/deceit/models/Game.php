@@ -84,4 +84,11 @@ class Game
     public function getGameId(): GameId {
         return $this->gameId;
     }
+
+    /**
+     * @return string
+     */
+    public function getGameOwnerName(): string {
+        return $this->gameOwnerName;
+    }
 }
