@@ -12,7 +12,7 @@ class Game
     private int $wolfsCount;
 
     private array $playersName;
-    private array $wolfsName;
+    private array $wolfNameList;
 
     private array $fuelTanks;
 
@@ -27,7 +27,7 @@ class Game
         $this->maxPlayers = $maxPlayers;
         $this->wolfsCount = $wolfsCount;
         $this->playersName = $playersName;
-        $this->wolfsName = $wolfsName;
+        $this->wolfNameList = $wolfsName;
         $this->fuelTanks = $fuelTanks;
         $this->map = $map;
         $this->timer = $timer;
@@ -53,6 +53,11 @@ class Game
             $timer,
             false
         );
+    }
+
+    public function start(): void {
+        $this->isStarted = true;
+        $this->timer->start();
     }
 
     public function canJoin(string $playerName): bool {
@@ -126,5 +131,24 @@ class Game
      */
     public function getPlayersName(): array {
         return $this->playersName;
+    }
+
+    /**
+     * @param array $wolfNameList
+     * @return bool
+     */
+    public function setWolfNameList(array $wolfNameList): bool {
+        if ($this->isStarted) return false;
+        if (count($this->wolfNameList) >= $this->wolfsCount) return false;
+
+        $this->wolfNameList = $wolfNameList;
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getWolfNameList(): array {
+        return $this->wolfNameList;
     }
 }
