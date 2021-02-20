@@ -9,7 +9,7 @@ use deceit\models\Timer;
 use deceit\storages\GameStorage;
 use pocketmine\scheduler\TaskScheduler;
 
-class SetUpGameService
+class CreateGameService
 {
     static function execute(string $gameOwnerName, string $mapName, int $maxPlayers, int $wolfsCount, TaskScheduler $scheduler): bool {
         $game = Game::asNew($gameOwnerName, MapDAO::findByName($mapName), Timer::asNew(600, $scheduler), $maxPlayers, $wolfsCount);

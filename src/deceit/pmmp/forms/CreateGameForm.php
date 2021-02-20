@@ -5,7 +5,7 @@ namespace deceit\pmmp\forms;
 
 
 use deceit\dao\MapDAO;
-use deceit\services\SetUpGameService;
+use deceit\services\CreateGameService;
 use form_builder\models\custom_form_elements\Dropdown;
 use form_builder\models\custom_form_elements\Input;
 use form_builder\models\custom_form_elements\Slider;
@@ -48,7 +48,7 @@ class CreateGameForm extends CustomForm
         $maxPlayers = intval($this->maxPlayersElement->getResult());
         $wolfCount = intval($this->wolfsCountElement->getResult());
 
-        $result = SetUpGameService::execute($player->getName(), $mapName, $maxPlayers, $wolfCount, $this->scheduler);
+        $result = CreateGameService::execute($player->getName(), $mapName, $maxPlayers, $wolfCount, $this->scheduler);
         if ($result) {
             $player->sendMessage("ゲームを作成しました");
         } else {
