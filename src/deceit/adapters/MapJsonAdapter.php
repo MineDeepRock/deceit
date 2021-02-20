@@ -30,7 +30,7 @@ class MapJsonAdapter
             $json["start_vector"]["z"],
         );
 
-        return new Map($json["name"], $startVector, $fuelTankVectors, $fuelSpawnVectors);
+        return new Map($json["level_name"], $json["name"], $startVector, $fuelTankVectors, $fuelSpawnVectors);
     }
 
     static function encode(Map $map): array {
@@ -55,6 +55,7 @@ class MapJsonAdapter
 
 
         return [
+            "level_name" => $map->getLevelName(),
             "name" => $map->getName(),
             "start_vector" => $map->getStartVector(),
             "fuel_tank_vectors" => $fuelTankVectors,
