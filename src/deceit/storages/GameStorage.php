@@ -10,8 +10,11 @@ class GameStorage
 {
     static array $games = [];
 
-    static function add(Game $game): void {
-        if (self::findById($game->getGameId()) === null) self::$games[] = $game;
+    static function add(Game $game): bool {
+        if (self::findById($game->getGameId()) !== null) return false;
+
+        self::$games[] = $game;
+        return true;
     }
 
     static function delete(GameId $gameId): void {
@@ -23,7 +26,7 @@ class GameStorage
         self::$games = array_values(self::$games);
     }
 
-    static function deleteAll():void {
+    static function deleteAll(): void {
         self::$games = [];
     }
 
