@@ -11,7 +11,7 @@ class GameStorage
     static array $games = [];
 
     static function add(Game $game): void {
-        self::$games[] = $game;
+        if (self::findById($game->getGameId()) === null) self::$games[] = $game;
     }
 
     static function delete(GameId $gameId): void {
