@@ -17,12 +17,14 @@ class FuelTank
         $this->storageAmount = $storageAmount;
     }
 
-    static function asNew(int $capacity): FuelTank {
-        return new FuelTank(FuelTankId::asNew(), $capacity, 0);
+    static function asNew(): FuelTank {
+        return new FuelTank(FuelTankId::asNew(), 500, 0);
     }
 
-    public function addFuel(int $value): void {
-        $this->storageAmount += $value;
+    public function addFuel(int $fuelCount): void {
+        $fuelAmount = 10 * $fuelCount;
+
+        $this->storageAmount += $fuelAmount;
 
         if ($this->storageAmount >= $this->capacity) {
             //TODO: event
