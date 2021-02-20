@@ -11,11 +11,15 @@ use pocketmine\scheduler\TaskScheduler;
 
 class SetUpGameService
 {
-    static function execute(string $gameOwnerName, string $mapName, $maxTime, int $maxPlayers, int $wolfsCount, TaskScheduler $scheduler): void {
-        $game = Game::asNew($gameOwnerName, MapDAO::findByName($mapName), Timer::asNew($maxTime, $scheduler), $maxPlayers, $wolfsCount);
+    static function execute(string $gameOwnerName, string $mapName, int $maxPlayers, int $wolfsCount, TaskScheduler $scheduler): bool {
+        $game = Game::asNew($gameOwnerName, MapDAO::findByName($mapName), Timer::asNew(600, $scheduler), $maxPlayers, $wolfsCount);
         $result = GameStorage::add($game);
 
+        if (!$result) return false;
+
+
         //オーナーも参加させる
-        if ($result) JoinGameService::execute($game->getGameId(), $game->getGameOwnerName());
+        JoinGameService::execute($game->getGameId(), $game->getGameOwnerName());
+        return true;
     }
 }
