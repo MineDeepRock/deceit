@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "716e3e9fef6a775521c268a9f12ee8cd",
+    "content-hash": "d2abbc3b28ee892cd93f5726f19ca91e",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -49,6 +49,32 @@
                 "strip-comment"
             ],
             "time": "2020-01-03T13:51:23+00:00"
+        },
+        {
+            "name": "mine_deep_rock/form_builder",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MineDeepRock/form_builder",
+                "reference": "3c5822f9ac3810924f0b8868209042dab827551b"
+            },
+            "require": {
+                "pocketmine/pocketmine-mp": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": [
+                        "src/"
+                    ]
+                }
+            },
+            "authors": [
+                {
+                    "name": "suinua"
+                }
+            ],
+            "time": "2020-09-16T13:56:43+00:00"
         },
         {
             "name": "ocramius/package-versions",
@@ -564,7 +590,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "mine_deep_rock/form_builder": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
