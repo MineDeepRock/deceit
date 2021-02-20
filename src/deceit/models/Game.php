@@ -127,7 +127,7 @@ class Game
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getPlayersName(): array {
         return $this->playersName;
