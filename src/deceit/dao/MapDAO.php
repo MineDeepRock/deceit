@@ -16,6 +16,9 @@ class MapDAO
         return MapJsonAdapter::decode($mapsData);
     }
 
+    /**
+     * @return Map[]
+     */
     static function all(): array {
         $maps = [];
         $dh = opendir(DataFolderPath::$map);
