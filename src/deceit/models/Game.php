@@ -55,13 +55,21 @@ class Game
         );
     }
 
-    public function addPlayer(string $playerName): bool {
+    public function canJoin(string $playerName): bool {
         if (in_array($playerName, $this->playersName)) return false;
         if (count($this->playersName) === $this->maxPlayers) return false;
         if ($this->isStarted) return false;
 
-        $this->playersName[] = $playerName;
         return true;
+    }
+
+    public function addPlayer(string $playerName): bool {
+        if ($this->canJoin($playerName)) {
+            $this->playersName[] = $playerName;
+            return true;
+        }
+
+        return false;
     }
 
     public function removePlayer(string $playerName): bool {
@@ -90,5 +98,33 @@ class Game
      */
     public function getGameOwnerName(): string {
         return $this->gameOwnerName;
+    }
+
+    /**
+     * @return Map
+     */
+    public function getMap(): Map {
+        return $this->map;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxPlayers(): int {
+        return $this->maxPlayers;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWolfsCount(): int {
+        return $this->wolfsCount;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPlayersName(): array {
+        return $this->playersName;
     }
 }
