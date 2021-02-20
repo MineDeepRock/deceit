@@ -8,7 +8,7 @@ use deceit\models\GameId;
 
 class GameStorage
 {
-    static array $games;
+    static array $games = [];
 
     static function add(Game $game): void {
         self::$games[] = $game;
