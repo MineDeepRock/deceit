@@ -4,8 +4,10 @@ namespace deceit;
 
 use deceit\dao\PlayerStatusDAO;
 use deceit\models\PlayerStatus;
+use deceit\services\QuitGameService;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\plugin\PluginBase;
 
 class Main extends PluginBase implements Listener
@@ -21,5 +23,11 @@ class Main extends PluginBase implements Listener
             $status = new PlayerStatus($playerName);
             PlayerStatusDAO::save($status);
         }
+    }
+
+    public function onQuit(PlayerQuitEvent $event) {
+        $playerName = $event->getPlayer()->getName();
+        
+        QuitGameService::execute($playerName);
     }
 }
