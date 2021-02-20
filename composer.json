@@ -1,0 +1,19 @@
+{
+    "name": "mine_deep_rock/deceit",
+    "authors": [
+        {
+            "name": "suinua"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "": [
+                "src/"
+            ]
+        }
+    },
+    "require": {
+        "pocketmine/pocketmine-mp": "*",
+        "ext-json": "*"
+    }
+}
