@@ -14,6 +14,8 @@ class SetUpGameService
     static function execute(string $gameOwnerName, string $mapName, $maxTime, int $maxPlayers, int $wolfsCount, TaskScheduler $scheduler): void {
         $game = Game::asNew($gameOwnerName, MapDAO::findByName($mapName), Timer::asNew($maxTime, $scheduler), $maxPlayers, $wolfsCount);
         $result = GameStorage::add($game);
+
+        //オーナーも参加させる
         if ($result) JoinGameService::execute($game->getGameId(), $game->getGameOwnerName());
     }
 }
