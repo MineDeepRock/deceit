@@ -9,14 +9,15 @@ use deceit\storages\GameStorage;
 
 class QuitGameService
 {
-    static function execute(string $playerName): void {
+    static function execute(string $playerName): bool {
         $status = PlayerStatusDAO::findByName($playerName);
         $belongGameId = $status->getBelongGameId();
-        if ($belongGameId === null) return;
+        if ($belongGameId === null) return false;
 
         $game = GameStorage::findById($belongGameId);
-        if ($game === null) return;
+        if ($game === null) return false;
 
         $game->removePlayer($playerName);
+        return true;
     }
 }
