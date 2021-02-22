@@ -14,6 +14,9 @@ class Game
     private array $playersName;
     private array $wolfNameList;
 
+    /**
+     * @var FuelTank[]
+     */
     private array $fuelTanks;
 
     private Map $map;
@@ -150,5 +153,20 @@ class Game
      */
     public function getWolfNameList(): array {
         return $this->wolfNameList;
+    }
+
+    /**
+     * @return FuelTank[]
+     */
+    public function getFuelTanks(): array {
+        return $this->fuelTanks;
+    }
+
+    public function getFuelTankById(FuelTankId $id): ?FuelTank {
+        foreach ($this->fuelTanks as $fuelTank) {
+            if ($fuelTank->getTankId()->equals($id)) return $fuelTank;
+        }
+
+        return null;
     }
 }
