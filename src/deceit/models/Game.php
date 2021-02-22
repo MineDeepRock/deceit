@@ -23,8 +23,9 @@ class Game
     private Timer $timer;
 
     private bool $isStarted;
+    private bool $isFinished;
 
-    private function __construct(GameId $gameId, string $gameOwnerName, int $maxPlayers, int $wolfsCount, array $playersName, array $wolfsName, array $fuelTanks, Map $map, Timer $timer, bool $isStarted) {
+    private function __construct(GameId $gameId, string $gameOwnerName, int $maxPlayers, int $wolfsCount, array $playersName, array $wolfsName, array $fuelTanks, Map $map, Timer $timer, bool $isStarted, bool $isFinished) {
         $this->gameId = $gameId;
         $this->gameOwnerName = $gameOwnerName;
         $this->maxPlayers = $maxPlayers;
@@ -35,6 +36,7 @@ class Game
         $this->map = $map;
         $this->timer = $timer;
         $this->isStarted = $isStarted;
+        $this->isFinished = $isFinished;
     }
 
     static function asNew(string $gameOwnerName, Map $map, Timer $timer, int $maxPlayers, int $wolfsCount): self {
@@ -55,6 +57,7 @@ class Game
             $fuelTanks,
             $map,
             $timer,
+            false,
             false
         );
     }
@@ -63,6 +66,12 @@ class Game
         $this->isStarted = true;
         $this->timer->start();
     }
+
+    public function finish(): void {
+        $this->isFinished = true;
+        $this->timer->stop();
+    }
+
 
     public function canJoin(string $playerName): bool {
         if (in_array($playerName, $this->playersName)) return false;
@@ -169,5 +178,19 @@ class Game
         }
 
         return null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFinished(): bool {
+        return $this->isFinished;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStarted(): bool {
+        return $this->isStarted;
     }
 }
