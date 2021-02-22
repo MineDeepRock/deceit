@@ -37,4 +37,11 @@ class FuelTank
 
         if ($this->storageAmount < 0) $this->storageAmount = 0;
     }
+
+    /**
+     * @return FuelTankId
+     */
+    public function getTankId(): FuelTankId {
+        return $this->tankId;
+    }
 }
