@@ -22,10 +22,13 @@ class CadaverEntity extends EntityBase
     protected string $geometryId = "geometry." . self::NAME;
     protected string $geometryName = self::NAME . ".geo.json";
 
-    private $owner;
+    private Player $owner;
+
+    private array $votedPlayerNameList;
 
     public function __construct(Level $level, Player $owner) {
         $this->owner = $owner;
+        $this->votedPlayerNameList = [];
         $nbt = new CompoundTag('', [
             'Pos' => new ListTag('Pos', [
                 new DoubleTag('', $owner->getX()),
@@ -66,5 +69,18 @@ class CadaverEntity extends EntityBase
      */
     public function getOwner(): Player {
         return $this->owner;
+    }
+
+    /**
+     * @return array
+     */
+    public function getVotedPlayerNameList(): array {
+        return $this->votedPlayerNameList;
+    }
+
+    public function vote(string $playerName): bool {
+        if (in_array($playerName, $this->votedPlayerNameList)) return false;
+        $this->votedPlayerNameList[] = $playerName;
+        return true;
     }
 }
