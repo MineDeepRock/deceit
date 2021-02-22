@@ -5,6 +5,7 @@ namespace deceit\pmmp\listeners;
 
 use deceit\dao\PlayerStatusDAO;
 use deceit\pmmp\entities\FuelTankEntity;
+use deceit\pmmp\events\FuelTankBecameFullEvent;
 use deceit\pmmp\items\FuelItem;
 use deceit\storages\GameStorage;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -58,6 +59,23 @@ class GameListeners implements Listener
                 }
             }
 
+        }
+    }
+
+    public function onFuelTankBecameFull(FuelTankBecameFullEvent $event): void {
+        $fulledTankId = $event->getTankId();
+        $gameId = $event->getBelongGameId();
+
+        $game = GameStorage::findById($gameId);
+        if ($game === null) return;
+
+        $isAllTankFull = true;
+        foreach ($game->getFuelTanks() as $fuelTank) {
+            if (!$fuelTank->isFull()) $isAllTankFull = false;
+        }
+
+        if ($isAllTankFull) {
+            //TODO:脱出の出口を開く
         }
     }
 }
