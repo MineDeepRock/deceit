@@ -4,6 +4,7 @@ namespace deceit\pmmp\listeners;
 
 
 use deceit\dao\PlayerStatusDAO;
+use deceit\pmmp\entities\CadaverEntity;
 use deceit\pmmp\entities\FuelTankEntity;
 use deceit\pmmp\events\FuelTankBecameFullEvent;
 use deceit\pmmp\items\FuelItem;
@@ -11,6 +12,8 @@ use deceit\storages\GameStorage;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -77,5 +80,34 @@ class GameListeners implements Listener
         if ($isAllTankFull) {
             //TODO:脱出の出口を開く
         }
+    }
+
+    public function onGamePlayerDeath(PlayerDeathEvent $event) :void {
+        $player = $event->getPlayer();
+        $playerStatus = PlayerStatusDAO::findByName($player->getName());
+        $gameId = $playerStatus->getBelongGameId();
+        if ($gameId === null) return;
+
+        $game = GameStorage::findById($gameId);
+        if (!$game->isStarted()) return;
+        if ($game->isFinished()) return;
+
+        $player->setSpawn($player->getPosition());
+        $cadaver = new CadaverEntity($player->getLevel(), $player);
+        $cadaver->spawnToAll();
+    }
+
+    public function onGamePlayerRespawn(PlayerRespawnEvent $event): void {
+        $player = $event->getPlayer();
+        $playerStatus = PlayerStatusDAO::findByName($player->getName());
+        $gameId = $playerStatus->getBelongGameId();
+        if ($gameId === null) return;
+
+        $game = GameStorage::findById($gameId);
+        if (!$game->isStarted()) return;
+        if ($game->isFinished()) return;
+
+        $player->setGamemode(Player::SPECTATOR);
+        $player->setImmobile(true);
     }
 }
