@@ -12,6 +12,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\ListTag;
+use pocketmine\utils\TextFormat;
 
 class FuelTankEntity extends EntityBase
 {
@@ -23,7 +24,7 @@ class FuelTankEntity extends EntityBase
     public string $geometryId = "geometry." . self::NAME;
     public string $geometryName = self::NAME . ".geo.json";
 
-    public function __construct(Level $level, Position $position,GameId $belongGameId, FuelTankId $fuelTankId) {
+    public function __construct(Level $level, Position $position, GameId $belongGameId, FuelTankId $fuelTankId) {
         $this->belongGameId = $belongGameId;
         $this->fuelTankId = $fuelTankId;
 
@@ -43,6 +44,9 @@ class FuelTankEntity extends EntityBase
                 new FloatTag("", 0)
             ]),
         ]));
+
+        $this->setNameTagAlwaysVisible();
+        $this->updateTankGauge(0.0);
     }
 
     /**
@@ -59,4 +63,14 @@ class FuelTankEntity extends EntityBase
         return $this->belongGameId;
     }
 
+    public function updateTankGauge(float $percentage): void {
+        if ($percentage >= 1) {
+            $this->setNameTag(str_repeat(TextFormat::GREEN . ".", 100));
+        } else {
+            $fuelGauge = str_repeat(TextFormat::GREEN . ".", intval($percentage * 10));
+            $blankGauge = str_repeat(TextFormat::WHITE . ".", 100 - intval($percentage * 10));
+
+            $this->setNameTag($fuelGauge . $blankGauge);
+        }
+    }
 }
