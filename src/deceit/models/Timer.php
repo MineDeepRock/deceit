@@ -5,6 +5,7 @@ namespace deceit\models;
 
 
 use pocketmine\scheduler\ClosureTask;
+use pocketmine\scheduler\TaskHandler;
 use pocketmine\scheduler\TaskScheduler;
 
 class Timer
@@ -13,6 +14,7 @@ class Timer
     private int $timeLeft;
 
     private TaskScheduler $scheduler;
+    private TaskHandler $handler;
 
     public function __construct(int $initialTime, int $timeLeft, TaskScheduler $scheduler) {
         $this->timeLeft = $timeLeft;
@@ -25,11 +27,17 @@ class Timer
     }
 
     public function start(): void {
-        $this->scheduler->scheduleDelayedRepeatingTask(new ClosureTask(
+        $this->handler = $this->scheduler->scheduleDelayedRepeatingTask(new ClosureTask(
             function (int $currentTick): void {
                 $this->timeLeft -= 1;
                 //TODO:event
             }
         ), 20, 20);
+    }
+
+    public function stop(): void {
+        if ($this->handler !== null) {
+            $this->handler->cancel();
+        }
     }
 }
