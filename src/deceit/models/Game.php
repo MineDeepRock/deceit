@@ -39,13 +39,14 @@ class Game
 
     static function asNew(string $gameOwnerName, Map $map, Timer $timer, int $maxPlayers, int $wolfsCount): self {
 
+        $gameId = GameId::asNew();
         $fuelTanks = [];
         foreach ($map->getFuelSpawnVectors() as $fuelSpawnVector) {
-            $fuelTanks[] = FuelTank::asNew();
+            $fuelTanks[] = FuelTank::asNew($gameId);
         }
 
         return new Game(
-            GameId::asNew(),
+            $gameId,
             $gameOwnerName,
             $maxPlayers,
             $wolfsCount,
