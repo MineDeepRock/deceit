@@ -11,8 +11,11 @@ class Game
     private int $maxPlayers;
     private int $wolfsCount;
 
-    private array $playersName;
+    private array $playersName;//TODO:rename
     private array $wolfNameList;
+
+    private array $alivePlayerNameList;
+    private array $deadPlayerNameList;
 
     /**
      * @var FuelTank[]
@@ -25,7 +28,7 @@ class Game
     private bool $isStarted;
     private bool $isFinished;
 
-    private function __construct(GameId $gameId, string $gameOwnerName, int $maxPlayers, int $wolfsCount, array $playersName, array $wolfsName, array $fuelTanks, Map $map, Timer $timer, bool $isStarted, bool $isFinished) {
+    private function __construct(GameId $gameId, string $gameOwnerName, int $maxPlayers, int $wolfsCount, array $playersName, array $wolfsName, array $fuelTanks, Map $map, Timer $timer, bool $isStarted, bool $isFinished, array $alivePlayerNameList, array $deadPlayerNameList) {
         $this->gameId = $gameId;
         $this->gameOwnerName = $gameOwnerName;
         $this->maxPlayers = $maxPlayers;
@@ -37,6 +40,8 @@ class Game
         $this->timer = $timer;
         $this->isStarted = $isStarted;
         $this->isFinished = $isFinished;
+        $this->alivePlayerNameList = $alivePlayerNameList;
+        $this->deadPlayerNameList = $deadPlayerNameList;
     }
 
     static function asNew(string $gameOwnerName, Map $map, Timer $timer, int $maxPlayers, int $wolfsCount): self {
@@ -58,7 +63,9 @@ class Game
             $map,
             $timer,
             false,
-            false
+            false,
+            [],
+            []
         );
     }
 
@@ -84,6 +91,7 @@ class Game
     public function addPlayer(string $playerName): bool {
         if ($this->canJoin($playerName)) {
             $this->playersName[] = $playerName;
+            $this->alivePlayerNameList[] = $playerName;
             return true;
         }
 
@@ -97,11 +105,39 @@ class Game
         unset($this->playersName[$index]);
         $this->playersName = array_values($this->playersName);
 
+        //オーナーを受け渡す
         if ($playerName === $this->gameOwnerName) {
             $this->gameOwnerName = $this->playersName[0];
         }
 
+        //AlivePlayerNameListからも削除
+        if (!in_array($playerName, $this->alivePlayerNameList)) return false;
+
+        $alivePlayerIndex = array_search($playerName, $this->alivePlayerNameList);
+        unset($this->alivePlayerNameList[$alivePlayerIndex]);
+        $this->alivePlayerNameList = array_values($this->alivePlayerNameList);
+
         return true;
+    }
+
+    public function addDeadPlayerName(string $name): void {
+        //参加していない
+        if (!in_array($name, $this->playersName)) return;
+        //追加済み
+        if (in_array($name, $this->alivePlayerNameList)) return;
+
+        $this->alivePlayerNameList[] = $name;
+    }
+
+    public function removeDeadPlayerName(string $name): void {
+        //参加していない
+        if (!in_array($name, $this->playersName)) return;
+        //いない
+        if (!in_array($name, $this->alivePlayerNameList)) return;
+
+        $index = array_search($name, $this->alivePlayerNameList);
+        unset($this->alivePlayerNameList[$index]);
+        $this->alivePlayerNameList = array_values($this->alivePlayerNameList[$index]);
     }
 
     /**
@@ -192,5 +228,19 @@ class Game
      */
     public function isStarted(): bool {
         return $this->isStarted;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAlivePlayerNameList(): array {
+        return $this->alivePlayerNameList;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getDeadPlayerNameList(): array {
+        return $this->deadPlayerNameList;
     }
 }
