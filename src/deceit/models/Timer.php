@@ -8,7 +8,7 @@ use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\TaskHandler;
 use pocketmine\scheduler\TaskScheduler;
 
-class Timer
+abstract class Timer
 {
     private int $initialTime;
     private int $timeLeft;
@@ -37,5 +37,19 @@ class Timer
         if ($this->handler !== null) {
             $this->handler->cancel();
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function getInitialTime(): int {
+        return $this->initialTime;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeLeft(): int {
+        return $this->timeLeft;
     }
 }
