@@ -14,6 +14,9 @@ class SelectWolfPlayersService
         if ($game === null) return false;
         if ($game->getGameOwnerName() !== $ownerName) return false;
 
+        if (count($game->getPlayersName()) <= 3) return false;
+        if (count($game->getPlayersName()) - $game->getWolfsCount() * 2 <= 0) return false;
+
         $wolfPlayersName = [];
         $wolfPlayersNameIndexList = array_rand($game->getPlayersName(), $game->getWolfsCount());
         foreach ($wolfPlayersNameIndexList as $wolfPlayerNameIndex) {

@@ -18,15 +18,15 @@ use pocketmine\utils\TextFormat;
 
 class StartGamePMMPService
 {
-    static function execute(Player $owner): void {
+    static function execute(Player $owner): bool {
         $gameId = PlayerStatusDAO::findByName($owner->getName())->getBelongGameId();
-        if ($gameId === null) return;
+        if ($gameId === null) return false;
 
         $selectWolfResult = SelectWolfPlayersService::execute($owner->getName(), $gameId);
-        if (!$selectWolfResult) return;
+        if (!$selectWolfResult) return false;
 
         $startResult = StartGameService::execute($owner->getName(), $gameId);
-        if (!$startResult) return;
+        if (!$startResult) return false;
 
 
         $game = GameStorage::findById($gameId);
@@ -61,5 +61,7 @@ class StartGamePMMPService
                 $player->sendTitle(TextFormat::GREEN . "あなたは人間です", "燃料を燃料タンクに集めましょう");
             }
         }
+
+        return true;
     }
 }

@@ -15,7 +15,10 @@ class SettingGameForm extends SimpleForm
     public function __construct() {
         parent::__construct("試合の設定", "", [
             new SimpleFormButton("開始", null, function (Player $player) {
-                StartGamePMMPService::execute($player);
+                $result = StartGamePMMPService::execute($player);
+                if (!$result) {
+                    $player->sendMessage("試合を開始できませんでした");
+                }
             })
         ]);
     }
