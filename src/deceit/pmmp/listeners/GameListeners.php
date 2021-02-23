@@ -6,22 +6,31 @@ namespace deceit\pmmp\listeners;
 use bossbar_system\BossBar;
 use deceit\dao\PlayerStatusDAO;
 use deceit\models\PlayerStatus;
+use deceit\pmmp\blocks\ExitBlock;
 use deceit\pmmp\BossBarTypeList;
 use deceit\pmmp\entities\CadaverEntity;
 use deceit\pmmp\entities\FuelTankEntity;
+use deceit\pmmp\events\FinishedExitTimerEvent;
+use deceit\pmmp\events\FinishedGameTimerEvent;
 use deceit\pmmp\events\FuelTankBecameFullEvent;
+use deceit\pmmp\events\StoppedExitTimerEvent;
+use deceit\pmmp\events\StoppedGameTimerEvent;
 use deceit\pmmp\events\UpdatedExitTimerEvent;
 use deceit\pmmp\events\UpdatedGameTimerEvent;
 use deceit\pmmp\events\VotedPlayerEvent;
 use deceit\pmmp\forms\ConfirmVoteForm;
 use deceit\pmmp\items\FuelItem;
+use deceit\pmmp\services\FinishGamePMMPService;
+use deceit\services\FinishGameService;
 use deceit\storages\GameStorage;
+use pocketmine\block\Block;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
+use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
@@ -87,9 +96,13 @@ class GameListeners implements Listener
             if (!$fuelTank->isFull()) $isAllTankFull = false;
         }
 
+        //すべてのタンクが満タンになったら、脱出の出口を開く
         if ($isAllTankFull) {
-            //TODO:脱出の出口を開く
             $exitVector = $game->getMap()->getExitVector();
+            $levelName = $game->getMap()->getLevelName();
+            $level = Server::getInstance()->getLevelByName($levelName);
+
+            $level->setBlock($exitVector, Block::get(ExitBlock::ID));
         }
     }
 
@@ -175,6 +188,8 @@ class GameListeners implements Listener
         $owner->setImmobile(false);
 
         $game = GameStorage::findById($belongGameId);
+        $game->addDeadPlayerName($owner->getName());
+
         foreach ($game->getPlayersName() as $name) {
             $player = Server::getInstance()->getPlayer($name);
             if ($player === null) return;
@@ -212,6 +227,61 @@ class GameListeners implements Listener
             $bossBar = BossBar::findByType($player, BossBarTypeList::ExitTimer());
             if ($bossBar === null) return;//TODO:error
             $bossBar->updatePercentage($game->getExitTimerPercentage());
+        }
+    }
+
+    public function onStoppedGameTimer(StoppedGameTimerEvent $event) {
+        $gameId = $event->getGameId();
+        $game = GameStorage::findById($gameId);
+        if ($game === null) return;
+
+        foreach ($game->getPlayersName() as $playerName) {
+            $player = Server::getInstance()->getPlayer($playerName);
+            if ($player === null) return;
+            $bossBar = BossBar::findByType($player, BossBarTypeList::GameTimer());
+            $bossBar->remove();
+        }
+    }
+
+    public function onFinishedGameTimer(FinishedGameTimerEvent $event) {
+        $gameId = $event->getGameId();
+
+        FinishGamePMMPService::execute($gameId);
+        FinishGameService::execute($gameId);
+    }
+
+    public function onFinishedExitTimer(FinishedExitTimerEvent $event) {
+        $gameId = $event->getGameId();
+
+        FinishGamePMMPService::execute($gameId);
+        FinishGameService::execute($gameId);
+    }
+
+    public function onToggleSneak(PlayerToggleSneakEvent $event) {
+        $player = $event->getPlayer();
+        if (!$player->isSneaking()) return;
+
+        $playerStatus = PlayerStatusDAO::findByName($player->getName());
+        if (!$this->belongGameIsInProgress($playerStatus)) return;
+
+        $game = GameStorage::findById($playerStatus->getBelongGameId());
+        $levelName = $game->getMap()->getLevelName();
+        $level = Server::getInstance()->getLevelByName($levelName);
+
+        $blockUnderPlayer = $level->getBlock($player);
+
+        //脱出
+        //TODO:時間がかかるようにする
+        if ($blockUnderPlayer->getId() === ExitBlock::ID) {
+            $game->addEscapedPlayerName($player->getName());
+            $player->setGamemode(Player::SPECTATOR);
+
+            $player->sendMessage("脱出成功！！");
+
+            foreach ($game->getPlayersName() as $participantName) {
+                $participant = Server::getInstance()->getPlayer($participantName);
+                $participant->sendMessage($player->getName() . "が脱出しました");
+            }
         }
     }
 
