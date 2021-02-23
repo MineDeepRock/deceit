@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d33adca625e4b1dd3291e60d13cbc6d9",
+    "content-hash": "6444e3bf6ba3e5a0037ed0c2ead945aa",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -104,6 +104,32 @@
                 }
             ],
             "time": "2020-09-16T13:56:43+00:00"
+        },
+        {
+            "name": "mine_deep_rock/scoreboard_builder",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MineDeepRock/scoreboard_builder",
+                "reference": "7b31322887305893565f621b618a47d8b2f3bb7b"
+            },
+            "require": {
+                "pocketmine/pocketmine-mp": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": [
+                        "src/"
+                    ]
+                }
+            },
+            "authors": [
+                {
+                    "name": "suinua"
+                }
+            ],
+            "time": "2020-09-16T15:31:55+00:00"
         },
         {
             "name": "ocramius/package-versions",
@@ -621,7 +647,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "mine_deep_rock/form_builder": 20,
-        "mine_deep_rock/bossbar_system": 20
+        "mine_deep_rock/bossbar_system": 20,
+        "mine_deep_rock/scoreboard_builder": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
