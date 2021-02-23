@@ -3,6 +3,8 @@
 namespace deceit\models;
 
 
+use pocketmine\scheduler\TaskScheduler;
+
 class Game
 {
     private GameId $gameId;
@@ -24,11 +26,12 @@ class Game
 
     private Map $map;
     private Timer $timer;
+    private Timer $exitTimer;
 
     private bool $isStarted;
     private bool $isFinished;
 
-    private function __construct(GameId $gameId, string $gameOwnerName, int $maxPlayers, int $wolfsCount, array $playersName, array $wolfsName, array $fuelTanks, Map $map, Timer $timer, bool $isStarted, bool $isFinished, array $alivePlayerNameList, array $deadPlayerNameList) {
+    private function __construct(GameId $gameId, string $gameOwnerName, int $maxPlayers, int $wolfsCount, array $playersName, array $wolfsName, array $fuelTanks, Map $map, Timer $timer, Timer $exitTimer, bool $isStarted, bool $isFinished, array $alivePlayerNameList, array $deadPlayerNameList) {
         $this->gameId = $gameId;
         $this->gameOwnerName = $gameOwnerName;
         $this->maxPlayers = $maxPlayers;
@@ -38,19 +41,23 @@ class Game
         $this->fuelTanks = $fuelTanks;
         $this->map = $map;
         $this->timer = $timer;
+        $this->exitTimer = $exitTimer;
         $this->isStarted = $isStarted;
         $this->isFinished = $isFinished;
         $this->alivePlayerNameList = $alivePlayerNameList;
         $this->deadPlayerNameList = $deadPlayerNameList;
     }
 
-    static function asNew(string $gameOwnerName, Map $map, Timer $timer, int $maxPlayers, int $wolfsCount): self {
+    static function asNew(string $gameOwnerName, Map $map, int $maxPlayers, int $wolfsCount, TaskScheduler $scheduler): self {
 
         $gameId = GameId::asNew();
         $fuelTanks = [];
         foreach ($map->getFuelSpawnVectors() as $fuelSpawnVector) {
             $fuelTanks[] = FuelTank::asNew($gameId);
         }
+
+        $timer = new GameTimer($gameId, $scheduler);
+        $exitTimer = new ExitTimer($gameId, $scheduler);
 
         return new Game(
             $gameId,
@@ -62,6 +69,7 @@ class Game
             $fuelTanks,
             $map,
             $timer,
+            $exitTimer,
             false,
             false,
             [],
@@ -76,9 +84,14 @@ class Game
 
     public function finish(): void {
         $this->isFinished = true;
-        $this->timer->stop();
+        $this->exitTimer->stop();
+
     }
 
+    public function startExitTimer(): void {
+        $this->timer->stop();
+        $this->exitTimer->start();
+    }
 
     public function canJoin(string $playerName): bool {
         if (in_array($playerName, $this->playersName)) return false;
