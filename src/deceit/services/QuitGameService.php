@@ -12,8 +12,6 @@ class QuitGameService
     static function execute(string $playerName): bool {
         $status = PlayerStatusDAO::findByName($playerName);
         $belongGameId = $status->getBelongGameId();
-        if ($belongGameId === null) return false;
-
         $game = GameStorage::findById($belongGameId);
         if ($game === null) return false;
 

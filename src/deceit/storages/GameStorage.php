@@ -30,7 +30,8 @@ class GameStorage
         self::$games = [];
     }
 
-    static function findById(GameId $gameId): ?Game {
+    static function findById(?GameId $gameId): ?Game {
+        if ($gameId === null) return null;;
 
         foreach (self::$games as $game) {
             if ($game->getId()->equals($gameId)) {

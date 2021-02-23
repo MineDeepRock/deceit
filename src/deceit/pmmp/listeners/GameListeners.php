@@ -46,8 +46,8 @@ class GameListeners implements Listener
             $fuelTankBelongGameId = $fuelTankEntity->getBelongGameId();
 
             //試合に参加していない or 別の試合 ならキャンセル
-            if ($belongGameId === null or !($belongGameId->equals($fuelTankBelongGameId))) return;
-
+            if ($belongGameId === null) return;
+            if (!($belongGameId->equals($fuelTankBelongGameId))) return;
             $game = GameStorage::findById($belongGameId);
 
             //TODO :メタで人狼を特定されないように、燃料と同じテクスチャアイテムを持ってタップしたときに～～の処理をかく
@@ -217,9 +217,9 @@ class GameListeners implements Listener
 
     private function belongGameIsInProgress(PlayerStatus $playerStatus): bool {
         $gameId = $playerStatus->getBelongGameId();
-        if ($gameId === null) return false;
 
         $game = GameStorage::findById($gameId);
+        if ($game === null) return false;
         if (!$game->isStarted()) return false;
         if ($game->isFinished()) return false;
 
