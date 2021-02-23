@@ -66,12 +66,8 @@ class GameListener implements Listener
             if (!($belongGameId->equals($fuelTankBelongGameId))) return;
             $game = GameStorage::findById($belongGameId);
 
-            //TODO :メタで人狼を特定されないように、燃料と同じテクスチャアイテムを持ってタップしたときに～～の処理をかく
-            if (in_array($attacker->getName(), $game->getWolfNameList())) {
-                return;
-            }
-
             //燃料を持ってタップしたら、手に持っている分だけタンクに追加
+            //人狼の場合はニセの燃料を追加
             $itemInHand = $attacker->getInventory()->getItemInHand();
             if ($itemInHand->getId() === FuelItem::ITEM_ID) {
                 $fuelTank = $game->getFuelTankById($fuelTankEntity->getTankId());
