@@ -20,7 +20,7 @@ class FuelTank
     public function __construct(GameId $gameId) {
         $this->belongGameId = $gameId;
         $this->tankId = FuelTankId::asNew();
-        $this->capacity = 500;
+        $this->capacity = 200;
         $this->storageAmount = 0;
         $this->fakeStorageAmount = 0;
         $this->isOnceFulled = false;
