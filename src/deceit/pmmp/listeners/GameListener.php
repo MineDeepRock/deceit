@@ -38,7 +38,7 @@ use pocketmine\utils\TextFormat;
 
 
 //TODO:蘇生機能
-class GameListeners implements Listener
+class GameListener implements Listener
 {
     private TaskScheduler $scheduler;
 
