@@ -25,13 +25,13 @@ class Game
     private array $fuelTanks;
 
     private Map $map;
-    private Timer $timer;
-    private Timer $exitTimer;
+    private GameTimer $timer;
+    private ExitTimer $exitTimer;
 
     private bool $isStarted;
     private bool $isFinished;
 
-    private function __construct(GameId $gameId, string $gameOwnerName, int $maxPlayers, int $wolfsCount, array $playersName, array $wolfsName, array $fuelTanks, Map $map, Timer $timer, Timer $exitTimer, bool $isStarted, bool $isFinished, array $alivePlayerNameList, array $deadPlayerNameList) {
+    private function __construct(GameId $gameId, string $gameOwnerName, int $maxPlayers, int $wolfsCount, array $playersName, array $wolfsName, array $fuelTanks, Map $map, GameTimer $timer, ExitTimer $exitTimer, bool $isStarted, bool $isFinished, array $alivePlayerNameList, array $deadPlayerNameList) {
         $this->gameId = $gameId;
         $this->gameOwnerName = $gameOwnerName;
         $this->maxPlayers = $maxPlayers;
@@ -255,5 +255,15 @@ class Game
      */
     public function getDeadPlayerNameList(): array {
         return $this->deadPlayerNameList;
+    }
+
+    public function getGameTimerPercentage(): float {
+        if ($this->timer->getTimeLeft() === 0) return 0;
+        return $this->timer->getTimeLeft() / $this->timer->getInitialTime();
+    }
+
+    public function getExitTimerPercentage(): float {
+        if ($this->exitTimer->getTimeLeft() === 0) return 0;
+        return $this->exitTimer->getTimeLeft() / $this->exitTimer->getInitialTime();
     }
 }
