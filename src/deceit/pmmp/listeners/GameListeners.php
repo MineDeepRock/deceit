@@ -3,8 +3,10 @@
 namespace deceit\pmmp\listeners;
 
 
+use bossbar_system\BossBar;
 use deceit\dao\PlayerStatusDAO;
 use deceit\models\PlayerStatus;
+use deceit\pmmp\BossBarTypeList;
 use deceit\pmmp\entities\CadaverEntity;
 use deceit\pmmp\entities\FuelTankEntity;
 use deceit\pmmp\events\FuelTankBecameFullEvent;
@@ -182,7 +184,7 @@ class GameListeners implements Listener
         }
     }
 
-    public function onUpdatedGameTimer (UpdatedGameTimerEvent $event) {
+    public function onUpdatedGameTimer(UpdatedGameTimerEvent $event) {
         $gameId = $event->getGameId();
         $game = GameStorage::findById($gameId);
         if ($game === null) return;
@@ -190,11 +192,14 @@ class GameListeners implements Listener
             $player = Server::getInstance()->getPlayer($playerName);
             if ($player === null) return;
 
-            //TODO:ボスバーの更新
+            //BossBarnの更新
+            $bossBar = BossBar::findByType($player, BossBarTypeList::GameTimer());
+            if ($bossBar === null) return;//TODO:error
+            $bossBar->updatePercentage($game->getGameTimerPercentage());
         }
     }
 
-    public function onUpdatedExitTimer (UpdatedExitTimerEvent $event) {
+    public function onUpdatedExitTimer(UpdatedExitTimerEvent $event) {
         $gameId = $event->getGameId();
         $game = GameStorage::findById($gameId);
         if ($game === null) return;
@@ -202,7 +207,10 @@ class GameListeners implements Listener
             $player = Server::getInstance()->getPlayer($playerName);
             if ($player === null) return;
 
-            //TODO:ボスバーの更新
+            //BossBarnの更新
+            $bossBar = BossBar::findByType($player, BossBarTypeList::ExitTimer());
+            if ($bossBar === null) return;//TODO:error
+            $bossBar->updatePercentage($game->getExitTimerPercentage());
         }
     }
 
