@@ -172,6 +172,7 @@ class GameListeners implements Listener
         $belongGameId = $ownerStatus->getBelongGameId();
         if ($belongGameId === null) return;
         $owner->setGamemode(Player::SPECTATOR);
+        $owner->setImmobile(false);
 
         $game = GameStorage::findById($belongGameId);
         foreach ($game->getPlayersName() as $name) {
