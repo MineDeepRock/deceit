@@ -5,7 +5,7 @@ namespace deceit;
 use deceit\dao\PlayerStatusDAO;
 use deceit\models\PlayerStatus;
 use deceit\pmmp\forms\CreateGameForm;
-use deceit\pmmp\forms\SettingGameForm;
+use deceit\pmmp\forms\GameSettingForm;
 use deceit\pmmp\listeners\GameListener;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\services\QuitGameService;
@@ -49,7 +49,7 @@ class Main extends PluginBase implements Listener
                 return true;
             }
             if ($label === "setting") {
-                $sender->sendForm(new SettingGameForm());
+                $sender->sendForm(new GameSettingForm());
                 return true;
             }
         }

@@ -9,7 +9,7 @@ use form_builder\models\simple_form_elements\SimpleFormButton;
 use form_builder\models\SimpleForm;
 use pocketmine\Player;
 
-class SettingGameForm extends SimpleForm
+class GameSettingForm extends SimpleForm
 {
 
     public function __construct() {
