@@ -18,11 +18,17 @@
             "type": "git",
             "name": "mine_deep_rock/form_builder",
             "url": "https://github.com/MineDeepRock/form_builder"
+        },
+        {
+            "type": "git",
+            "name": "mine_deep_rock/bossbar_system",
+            "url": "https://github.com/MineDeepRock/bossbar_system"
         }
     ],
     "require": {
         "pocketmine/pocketmine-mp": "*",
         "ext-json": "*",
-        "mine_deep_rock/form_builder": "dev-master"
+        "mine_deep_rock/form_builder": "dev-master",
+        "mine_deep_rock/bossbar_system": "dev-master"
     }
 }
