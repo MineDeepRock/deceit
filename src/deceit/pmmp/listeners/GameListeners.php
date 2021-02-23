@@ -13,7 +13,6 @@ use deceit\pmmp\entities\FuelTankEntity;
 use deceit\pmmp\events\FinishedExitTimerEvent;
 use deceit\pmmp\events\FinishedGameTimerEvent;
 use deceit\pmmp\events\FuelTankBecameFullEvent;
-use deceit\pmmp\events\StoppedExitTimerEvent;
 use deceit\pmmp\events\StoppedGameTimerEvent;
 use deceit\pmmp\events\UpdatedExitTimerEvent;
 use deceit\pmmp\events\UpdatedGameTimerEvent;
@@ -32,6 +31,8 @@ use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\Player;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\scheduler\TaskScheduler;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
@@ -39,6 +40,12 @@ use pocketmine\utils\TextFormat;
 //TODO:蘇生機能
 class GameListeners implements Listener
 {
+    private TaskScheduler $scheduler;
+
+    public function __construct(TaskScheduler $scheduler) {
+        $this->scheduler = $scheduler;
+    }
+
     public function onDamagedFuelTankEntity(EntityDamageEvent $event) {
         $fuelTankEntity = $event->getEntity();
         if (!($fuelTankEntity instanceof FuelTankEntity)) return;
@@ -114,6 +121,22 @@ class GameListeners implements Listener
         $player->setSpawn($player->getPosition());
         $cadaver = new CadaverEntity($player->getLevel(), $player);
         $cadaver->spawnToAll();
+
+        //15秒間放置されると死亡する
+        $playerName = $player->getName();
+        $level = $player->getLevel();
+        $this->scheduler->scheduleDelayedTask(new ClosureTask(
+            function (int $currentTick) use ($playerName, $level): void {
+                foreach ($level->getEntities() as $entity) {
+                    if (!($entity instanceof CadaverEntity)) continue;
+                    $owner = $entity->getOwner();
+                    if ($owner === null) continue;
+                    if ($owner->getName() === $playerName) {
+                        $entity->kill();
+                    }
+                }
+            }
+        ), 20 * 15);
     }
 
     public function onGamePlayerRespawn(PlayerRespawnEvent $event): void {
@@ -195,8 +218,8 @@ class GameListeners implements Listener
             if ($player === null) return;
             if (!$player->isOnline()) return;
 
-            $player->sendMessage(TextFormat::RED . $owner->getName() . "が処刑されました");
-            $player->sendTitle(TextFormat::RED . $owner->getName() . "が処刑されました");
+            //$player->sendMessage(TextFormat::RED . $owner->getName() . "が処刑されました");
+            //$player->sendTitle(TextFormat::RED . $owner->getName() . "が処刑されました");
         }
     }
 
