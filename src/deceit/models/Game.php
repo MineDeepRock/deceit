@@ -296,4 +296,11 @@ class Game
         if ($this->exitTimer->getTimeLeft() === 0) return 0;
         return $this->exitTimer->getTimeLeft() / $this->exitTimer->getInitialTime();
     }
+
+    /**
+     * @return array
+     */
+    public function getEscapedPlayerNameList(): array {
+        return $this->escapedPlayerNameList;
+    }
 }
