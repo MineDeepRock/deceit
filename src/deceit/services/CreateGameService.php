@@ -4,6 +4,7 @@ namespace deceit\services;
 
 
 use deceit\dao\MapDAO;
+use deceit\dao\PlayerStatusDAO;
 use deceit\models\Game;
 use deceit\storages\GameStorage;
 use pocketmine\scheduler\TaskScheduler;
@@ -11,6 +12,9 @@ use pocketmine\scheduler\TaskScheduler;
 class CreateGameService
 {
     static function execute(string $gameOwnerName, string $mapName, int $maxPlayers, int $wolfsCount, TaskScheduler $scheduler): bool {
+        $ownerStatus = PlayerStatusDAO::findByName($gameOwnerName);
+        if ($ownerStatus->getBelongGameId() !== null) return false;
+
         $game = new Game($gameOwnerName, MapDAO::findByName($mapName), $maxPlayers, $wolfsCount, $scheduler);
         $result = GameStorage::add($game);
 
