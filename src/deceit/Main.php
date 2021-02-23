@@ -4,6 +4,7 @@ namespace deceit;
 
 use deceit\dao\PlayerStatusDAO;
 use deceit\models\PlayerStatus;
+use deceit\pmmp\listeners\GameListener;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\services\QuitGameService;
 use pocketmine\event\Listener;
@@ -15,6 +16,7 @@ class Main extends PluginBase implements Listener
 {
     public function onLoad() {
         DataFolderPath::init($this->getDataFolder());
+        $this->getServer()->getPluginManager()->registerEvents(new GameListener($this->getScheduler()), $this);
     }
 
     public function onJoin(PlayerJoinEvent $event) {
@@ -31,7 +33,7 @@ class Main extends PluginBase implements Listener
 
     public function onQuit(PlayerQuitEvent $event) {
         $playerName = $event->getPlayer()->getName();
-        
+
         QuitGameService::execute($playerName);
     }
 }
