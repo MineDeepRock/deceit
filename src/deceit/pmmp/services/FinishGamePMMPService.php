@@ -56,6 +56,7 @@ class FinishGamePMMPService
             if ($player === null) return;
 
             $player->teleport($level->getSpawnLocation());
+            $player->getInventory()->setContents([]);
             $bossBars = BossBar::getBelongings($player);
             foreach ($bossBars as $bossBar) $bossBar->remove();
             LobbyScoreboard::send($player);

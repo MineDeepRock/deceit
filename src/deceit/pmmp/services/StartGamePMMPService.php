@@ -37,6 +37,7 @@ class StartGamePMMPService
             //初期位置にテレポート //TODO:ランダムな場所にテレポートするように
             $player = Server::getInstance()->getPlayer($playerName);
             $player->teleport(new Position($map->getStartVector(), $level));
+            $player->getInventory()->setContents([]);
 
             //スコアボード
             GameSettingsScoreboard::delete($player);
