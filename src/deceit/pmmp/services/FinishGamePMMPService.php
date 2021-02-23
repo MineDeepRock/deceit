@@ -8,6 +8,7 @@ use bossbar_system\BossBar;
 use deceit\models\GameId;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\storages\GameStorage;
+use pocketmine\block\Block;
 use pocketmine\Server;
 
 class FinishGamePMMPService
@@ -17,6 +18,9 @@ class FinishGamePMMPService
         $game = GameStorage::findById($gameId);
         if ($game === null) return;
 
+        $map = $game->getMap();
+        $mapLevel = Server::getInstance()->getLevelByName($map->getLevelName());
+        $mapLevel->setBlock($map->getExitVector(), Block::get($map->getOriginalExitBlockId()));
 
         if (count($game->getEscapedPlayerNameList()) === 0) {
 
