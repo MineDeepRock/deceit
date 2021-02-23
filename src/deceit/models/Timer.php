@@ -25,16 +25,23 @@ abstract class Timer
     public function start(): void {
         $this->handler = $this->scheduler->scheduleDelayedRepeatingTask(new ClosureTask(
             function (int $currentTick): void {
-                $this->timeLeft -= 1;
+                $this->timeLeft += 1;
                 $this->onUpdatedTimer();
+                if ($this->timeLeft === $this->initialTime) {
+                    $this->onFinishedTimer();
+                    $this->handler->cancel();
+                }
             }
         ), 20, 20);
     }
 
     abstract public function onUpdatedTimer(): void;
+    abstract public function onStoppedTimer(): void;
+    abstract public function onFinishedTimer(): void;
 
     public function stop(): void {
         if ($this->handler !== null) {
+            $this->onStoppedTimer();
             $this->handler->cancel();
         }
     }
