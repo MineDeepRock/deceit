@@ -1,5 +1,13 @@
 name: Deceit
-main: deceit\main
+main: deceit\Main
 version: "1.0"
 api: [3.0.0, 4.0.0]
 author: "suinua"
+
+commands:
+  spawnnpc:
+    usage: "/create"
+    description: "create game"
+  setting:
+    usage: "/setting"
+    description: "change game setting"
