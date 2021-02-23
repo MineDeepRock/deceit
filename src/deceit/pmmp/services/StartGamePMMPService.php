@@ -8,6 +8,7 @@ use bossbar_system\BossBar;
 use bossbar_system\model\BossBarType;
 use deceit\dao\PlayerStatusDAO;
 use deceit\pmmp\BossBarTypeList;
+use deceit\pmmp\scoreboards\GameSettingsScoreboard;
 use deceit\services\SelectWolfPlayersService;
 use deceit\services\StartGameService;
 use deceit\storages\GameStorage;
@@ -37,6 +38,8 @@ class StartGamePMMPService
             $player = Server::getInstance()->getPlayer($playerName);
             $player->teleport(new Position($map->getStartVector(), $level));
 
+            //スコアボード
+            GameSettingsScoreboard::delete($player);
 
             //TODO:ボスバーのメッセージ
             //役職のメッセージ

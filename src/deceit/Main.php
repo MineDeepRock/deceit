@@ -4,6 +4,7 @@ namespace deceit;
 
 use deceit\dao\PlayerStatusDAO;
 use deceit\models\PlayerStatus;
+use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\services\QuitGameService;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
@@ -17,12 +18,15 @@ class Main extends PluginBase implements Listener
     }
 
     public function onJoin(PlayerJoinEvent $event) {
-        $playerName = $event->getPlayer()->getName();
+        $player = $event->getPlayer();
+        $playerName = $player->getName();
 
         if (PlayerStatusDAO::findByName($playerName) === null) {
             $status = new PlayerStatus($playerName);
             PlayerStatusDAO::save($status);
         }
+
+        LobbyScoreboard::send($player);
     }
 
     public function onQuit(PlayerQuitEvent $event) {
