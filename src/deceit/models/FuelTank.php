@@ -14,27 +14,34 @@ class FuelTank
     private int $capacity;
     private int $storageAmount;
 
-    private function __construct(GameId $gameId, FuelTankId $tankId, int $capacity, int $storageAmount) {
+    private int $fakeStorageAmount;
+    private int $isOnceFulled;
+
+    public function __construct(GameId $gameId) {
         $this->belongGameId = $gameId;
-        $this->tankId = $tankId;
-        $this->capacity = $capacity;
-        $this->storageAmount = $storageAmount;
+        $this->tankId = FuelTankId::asNew();
+        $this->capacity = 500;
+        $this->storageAmount = 0;
+        $this->fakeStorageAmount = 0;
+        $this->isOnceFulled = false;
     }
 
-    static function asNew(GameId $gameId): FuelTank {
-        return new FuelTank($gameId, FuelTankId::asNew(), 500, 0);
-    }
-
-    public function addFuel(int $fuelCount): bool {
+    public function addFuel(int $fuelCount, bool $isFake = false): bool {
         if ($this->capacity >= $this->storageAmount) return false;
 
         $fuelAmount = 10 * $fuelCount;
         $this->storageAmount += $fuelAmount;
+        if ($isFake) $this->fakeStorageAmount += $fuelAmount;
 
         if ($this->storageAmount >= $this->capacity) {
             $this->storageAmount = $this->capacity;
-            $event = new FuelTankBecameFullEvent($this->belongGameId, $this->tankId);
-            $event->call();
+
+            if ($this->isOnceFulled) {
+                $this->storageAmount -= $this->fakeStorageAmount;
+            } else {
+                $event = new FuelTankBecameFullEvent($this->belongGameId, $this->tankId);
+                $event->call();
+            }
         }
 
         return true;
