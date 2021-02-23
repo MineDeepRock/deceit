@@ -19,6 +19,8 @@ class Game
     private array $alivePlayerNameList;
     private array $deadPlayerNameList;
 
+    private array $escapedPlayerNameList;
+
     /**
      * @var FuelTank[]
      */
@@ -31,25 +33,7 @@ class Game
     private bool $isStarted;
     private bool $isFinished;
 
-    private function __construct(GameId $gameId, string $gameOwnerName, int $maxPlayers, int $wolfsCount, array $playersName, array $wolfsName, array $fuelTanks, Map $map, GameTimer $timer, ExitTimer $exitTimer, bool $isStarted, bool $isFinished, array $alivePlayerNameList, array $deadPlayerNameList) {
-        $this->gameId = $gameId;
-        $this->gameOwnerName = $gameOwnerName;
-        $this->maxPlayers = $maxPlayers;
-        $this->wolfsCount = $wolfsCount;
-        $this->playersName = $playersName;
-        $this->wolfNameList = $wolfsName;
-        $this->fuelTanks = $fuelTanks;
-        $this->map = $map;
-        $this->timer = $timer;
-        $this->exitTimer = $exitTimer;
-        $this->isStarted = $isStarted;
-        $this->isFinished = $isFinished;
-        $this->alivePlayerNameList = $alivePlayerNameList;
-        $this->deadPlayerNameList = $deadPlayerNameList;
-    }
-
-    static function asNew(string $gameOwnerName, Map $map, int $maxPlayers, int $wolfsCount, TaskScheduler $scheduler): self {
-
+    public function __construct(string $gameOwnerName, Map $map, int $maxPlayers, int $wolfsCount, TaskScheduler $scheduler) {
         $gameId = GameId::asNew();
         $fuelTanks = [];
         foreach ($map->getFuelSpawnVectors() as $fuelSpawnVector) {
@@ -59,22 +43,21 @@ class Game
         $timer = new GameTimer($gameId, $scheduler);
         $exitTimer = new ExitTimer($gameId, $scheduler);
 
-        return new Game(
-            $gameId,
-            $gameOwnerName,
-            $maxPlayers,
-            $wolfsCount,
-            [],
-            [],
-            $fuelTanks,
-            $map,
-            $timer,
-            $exitTimer,
-            false,
-            false,
-            [],
-            []
-        );
+        $this->gameId = $gameId;
+        $this->gameOwnerName = $gameOwnerName;
+        $this->maxPlayers = $maxPlayers;
+        $this->wolfsCount = $wolfsCount;
+        $this->playersName = [];
+        $this->wolfNameList = [];
+        $this->fuelTanks = $fuelTanks;
+        $this->map = $map;
+        $this->timer = $timer;
+        $this->exitTimer = $exitTimer;
+        $this->isStarted = false;
+        $this->isFinished = false;
+        $this->alivePlayerNameList = [];
+        $this->deadPlayerNameList = [];
+        $this->escapedPlayerNameList = [];
     }
 
     public function start(): void {
@@ -123,26 +106,27 @@ class Game
             $this->gameOwnerName = $this->playersName[0];
         }
 
-        //AlivePlayerNameListからも削除
-        if (!in_array($playerName, $this->alivePlayerNameList)) return false;
-
-        $alivePlayerIndex = array_search($playerName, $this->alivePlayerNameList);
-        unset($this->alivePlayerNameList[$alivePlayerIndex]);
-        $this->alivePlayerNameList = array_values($this->alivePlayerNameList);
+        //他のListからも削除
+        $this->removeAlivePlayerName($playerName);
+        $this->removeDeadPlayerName($playerName);
+        $this->removeEscapedPlayerName($playerName);
 
         return true;
     }
 
-    public function addDeadPlayerName(string $name): void {
+    public function addAlivePlayerName(string $name): void {
         //参加していない
         if (!in_array($name, $this->playersName)) return;
         //追加済み
         if (in_array($name, $this->alivePlayerNameList)) return;
 
+        //DeadPlayerから削除
+        $this->removeDeadPlayerName($name);
+
         $this->alivePlayerNameList[] = $name;
     }
 
-    public function removeDeadPlayerName(string $name): void {
+    private function removeAlivePlayerName(string $name): void {
         //参加していない
         if (!in_array($name, $this->playersName)) return;
         //いない
@@ -150,7 +134,53 @@ class Game
 
         $index = array_search($name, $this->alivePlayerNameList);
         unset($this->alivePlayerNameList[$index]);
-        $this->alivePlayerNameList = array_values($this->alivePlayerNameList[$index]);
+        $this->alivePlayerNameList = array_values($this->alivePlayerNameList);
+    }
+
+    public function addDeadPlayerName(string $name): void {
+        //参加していない
+        if (!in_array($name, $this->playersName)) return;
+        //追加済み
+        if (in_array($name, $this->deadPlayerNameList)) return;
+        //AlivePlayerから削除
+        $this->removeAlivePlayerName($name);
+
+        $this->deadPlayerNameList[] = $name;
+    }
+
+    public function removeDeadPlayerName(string $name): void {
+        //参加していない
+        if (!in_array($name, $this->playersName)) return;
+        //いない
+        if (!in_array($name, $this->deadPlayerNameList)) return;
+
+        $index = array_search($name, $this->deadPlayerNameList);
+        unset($this->deadPlayerNameList[$index]);
+        $this->deadPlayerNameList = array_values($this->deadPlayerNameList);
+    }
+
+    public function addEscapedPlayerName(string $name): void {
+        //参加していない
+        if (!in_array($name, $this->playersName)) return;
+        //追加済み
+        if (in_array($name, $this->escapedPlayerNameList)) return;
+
+        //AliveとDeadから削除
+        $this->removeAlivePlayerName($name);
+        $this->removeDeadPlayerName($name);
+
+        $this->escapedPlayerNameList[] = $name;
+    }
+
+    public function removeEscapedPlayerName(string $name): void {
+        //参加していない
+        if (!in_array($name, $this->playersName)) return;
+        //いない
+        if (!in_array($name, $this->escapedPlayerNameList)) return;
+
+        $index = array_search($name, $this->escapedPlayerNameList);
+        unset($this->escapedPlayerNameList[$index]);
+        $this->escapedPlayerNameList = array_values($this->escapedPlayerNameList);
     }
 
     /**
