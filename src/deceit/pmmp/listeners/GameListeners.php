@@ -8,6 +8,8 @@ use deceit\models\PlayerStatus;
 use deceit\pmmp\entities\CadaverEntity;
 use deceit\pmmp\entities\FuelTankEntity;
 use deceit\pmmp\events\FuelTankBecameFullEvent;
+use deceit\pmmp\events\UpdatedExitTimerEvent;
+use deceit\pmmp\events\UpdatedGameTimerEvent;
 use deceit\pmmp\events\VotedPlayerEvent;
 use deceit\pmmp\forms\ConfirmVoteForm;
 use deceit\pmmp\items\FuelItem;
@@ -85,6 +87,7 @@ class GameListeners implements Listener
 
         if ($isAllTankFull) {
             //TODO:脱出の出口を開く
+            $exitVector = $game->getMap()->getExitVector();
         }
     }
 
@@ -179,6 +182,29 @@ class GameListeners implements Listener
         }
     }
 
+    public function onUpdatedGameTimer (UpdatedGameTimerEvent $event) {
+        $gameId = $event->getGameId();
+        $game = GameStorage::findById($gameId);
+        if ($game === null) return;
+        foreach ($game->getPlayersName() as $playerName) {
+            $player = Server::getInstance()->getPlayer($playerName);
+            if ($player === null) return;
+
+            //TODO:ボスバーの更新
+        }
+    }
+
+    public function onUpdatedExitTimer (UpdatedExitTimerEvent $event) {
+        $gameId = $event->getGameId();
+        $game = GameStorage::findById($gameId);
+        if ($game === null) return;
+        foreach ($game->getPlayersName() as $playerName) {
+            $player = Server::getInstance()->getPlayer($playerName);
+            if ($player === null) return;
+
+            //TODO:ボスバーの更新
+        }
+    }
 
     private function belongGameIsInProgress(PlayerStatus $playerStatus): bool {
         $gameId = $playerStatus->getBelongGameId();
