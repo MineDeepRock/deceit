@@ -37,7 +37,7 @@ class Game
         $gameId = GameId::asNew();
         $fuelTanks = [];
         foreach ($map->getFuelSpawnVectors() as $fuelSpawnVector) {
-            $fuelTanks[] = FuelTank::asNew($gameId);
+            $fuelTanks[] = new FuelTank($gameId);
         }
 
         $timer = new GameTimer($gameId, $scheduler);
