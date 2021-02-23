@@ -30,7 +30,13 @@ class MapJsonAdapter
             $json["start_vector"]["z"],
         );
 
-        return new Map($json["level_name"], $json["name"], $startVector, $fuelTankVectors, $fuelSpawnVectors);
+        $exitVector = new Vector3(
+            $json["exit_vector"]["y"],
+            $json["exit_vector"]["x"],
+            $json["exit_vector"]["z"],
+        );
+
+        return new Map($json["level_name"], $json["name"], $startVector, $exitVector, $fuelTankVectors, $fuelSpawnVectors);
     }
 
     static function encode(Map $map): array {
@@ -53,11 +59,22 @@ class MapJsonAdapter
             ];
         }
 
+        $startVector = [
+            "x" => $map->getStartVector()->getX(),
+            "y" => $map->getStartVector()->getY(),
+            "z" => $map->getStartVector()->getZ(),
+        ];
+        $exitVector = [
+            "x" => $map->getExitVector()->getX(),
+            "y" => $map->getExitVector()->getY(),
+            "z" => $map->getExitVector()->getZ(),
+        ];
 
         return [
             "level_name" => $map->getLevelName(),
             "name" => $map->getName(),
-            "start_vector" => $map->getStartVector(),
+            "start_vector" => $startVector,
+            "exit_vector" => $exitVector,
             "fuel_tank_vectors" => $fuelTankVectors,
             "fuel_spawn_vectors" => $fuelSpawnVectors,
         ];
