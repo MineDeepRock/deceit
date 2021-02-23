@@ -3,8 +3,15 @@
 namespace deceit\models;
 
 
+use deceit\pmmp\entities\FuelEntity;
+use deceit\pmmp\entities\FuelTankEntity;
+use pocketmine\level\Position;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\scheduler\TaskHandler;
 use pocketmine\scheduler\TaskScheduler;
+use pocketmine\Server;
 
+//TODO:ユーザーがTankのキャパ設定をできるように
 class Game
 {
     private GameId $gameId;
@@ -30,16 +37,20 @@ class Game
     private GameTimer $timer;
     private ExitTimer $exitTimer;
 
+    private TaskScheduler $scheduler;
+    private TaskHandler $fuelSpawnHandler;
+
     private bool $isStarted;
     private bool $isFinished;
 
     public function __construct(string $gameOwnerName, Map $map, int $maxPlayers, int $wolfsCount, TaskScheduler $scheduler) {
         $gameId = GameId::asNew();
         $fuelTanks = [];
-        foreach ($map->getFuelSpawnVectors() as $fuelSpawnVector) {
+        foreach ($map->getFuelSpawnVectors() as $_) {
             $fuelTanks[] = new FuelTank($gameId);
         }
 
+        $this->scheduler = $scheduler;
         $timer = new GameTimer($gameId, $scheduler);
         $exitTimer = new ExitTimer($gameId, $scheduler);
 
@@ -61,6 +72,28 @@ class Game
     }
 
     public function start(): void {
+
+        //TODO:ここにあるのは微妙
+        $level = Server::getInstance()->getLevelByName($this->map->getLevelName());
+        $this->fuelSpawnHandler = $this->scheduler->scheduleDelayedRepeatingTask(new ClosureTask(
+            function (int $currentTick) use ($level): void {
+                //TODO:難易度調整
+                $spawnCount = intval(count($this->map->getFuelSpawnVectors()) / 2);
+                $vectors = array_rand($this->map->getFuelSpawnVectors(), $spawnCount);
+                foreach ($vectors as $vector) {
+                    $fuelEntity = new FuelEntity($level, Position::fromObject($vector, $level));
+                    $fuelEntity->spawnToAll();
+                }
+            }
+        ), 20 * 3, 20 * 30);
+
+        $index = 0;
+        foreach ($this->map->getFuelTankVectors() as $tankVector) {
+            $fuelEntity = new FuelTankEntity($level, Position::fromObject($tankVector, $level), $this->gameId, $this->getFuelTanks()[$index]->getTankId());
+            $fuelEntity->spawnToAll();
+            $index++;
+        }
+
         $this->isStarted = true;
         $this->timer->start();
     }
@@ -68,12 +101,13 @@ class Game
     public function finish(): void {
         $this->isFinished = true;
         $this->exitTimer->stop();
-
+        $this->fuelSpawnHandler->cancel();
     }
 
     public function startExitTimer(): void {
         $this->timer->stop();
         $this->exitTimer->start();
+        $this->fuelSpawnHandler->cancel();
     }
 
     public function canJoin(string $playerName): bool {
