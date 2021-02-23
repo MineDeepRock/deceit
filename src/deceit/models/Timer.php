@@ -22,18 +22,16 @@ class Timer
         $this->scheduler = $scheduler;
     }
 
-    static function asNew(int $initialTime, TaskScheduler $scheduler): self {
-        return new Timer($initialTime, 0, $scheduler);
-    }
-
     public function start(): void {
         $this->handler = $this->scheduler->scheduleDelayedRepeatingTask(new ClosureTask(
             function (int $currentTick): void {
                 $this->timeLeft -= 1;
-                //TODO:event
+                $this->onUpdatedTimer();
             }
         ), 20, 20);
     }
+
+    abstract public function onUpdatedTimer(): void;
 
     public function stop(): void {
         if ($this->handler !== null) {
