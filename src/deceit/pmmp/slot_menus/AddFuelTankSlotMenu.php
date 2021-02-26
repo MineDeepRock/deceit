@@ -59,7 +59,7 @@ class AddFuelTankSlotMenu extends SlotMenu
             $newFuelTankVectors,
             $this->map->getFuelSpawnVectors(),
         );
-        MapDAO::update($newMap);
+        MapDAO::update($this->map->getName(), $newMap);
 
         return MapDao::findByName($this->map->getName());
     }

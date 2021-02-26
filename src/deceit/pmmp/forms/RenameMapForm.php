@@ -34,7 +34,7 @@ class RenameMapForm extends CustomForm
             $this->map->getFuelSpawnVectors(),
         );
 
-        MapDAO::update($newMap);
+        MapDAO::update($this->map->getName(), $newMap);
 
         $updatedMap = MapDAO::findByName($newMap->getName());
         $player->sendForm(new MapSettingForm($updatedMap));
