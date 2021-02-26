@@ -45,4 +45,8 @@ class MapDAO
 
         file_put_contents(DataFolderPath::$map . $map->getName() . ".json", json_encode(MapJsonAdapter::encode($map)));
     }
+
+    static function delete(string $mapName): void {
+        unlink(DataFolderPath::$map . $mapName . ".json");
+    }
 }
