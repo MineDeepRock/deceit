@@ -10,6 +10,7 @@ use deceit\pmmp\slot_menus\InitialSpawnVectorSettingSlotMenu;
 use form_builder\models\simple_form_elements\SimpleFormButton;
 use form_builder\models\SimpleForm;
 use pocketmine\Player;
+use pocketmine\utils\TextFormat;
 use slot_menu_system\SlotMenuSystem;
 
 class MapSettingForm extends SimpleForm
@@ -50,6 +51,13 @@ class MapSettingForm extends SimpleForm
                 null,
                 function (Player $player) use ($map) {
                     $player->sendForm(new FuelSpawnVectorSettingForm($map));
+                }
+            ),
+            new SimpleFormButton(
+                TextFormat::RED . "マップの削除",
+                null,
+                function (Player $player) use ($map) {
+                    $player->sendForm(new ConfirmDeletingMapForm($map));
                 }
             ),
         ];
