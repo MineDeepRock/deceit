@@ -49,7 +49,7 @@ class MapSettingForm extends SimpleForm
                 "燃料のスポーン位置の変更",
                 null,
                 function (Player $player) use ($map) {
-                    //TODO:実装
+                    $player->sendForm(new FuelSpawnVectorSettingForm($map));
                 }
             ),
         ];
