@@ -17,7 +17,7 @@ class MainMapForm extends SimpleForm
             "マップを追加",
             null,
             function (Player $player) {
-                $player->sendForm(new SelectMapWorldForm());
+                $player->sendForm(new CreateNewMapForm());
             }
         )];
 
