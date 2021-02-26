@@ -5,6 +5,7 @@ namespace deceit\pmmp\forms;
 
 
 use deceit\models\Map;
+use deceit\pmmp\slot_menus\ExitVectorSettingSlotMenu;
 use deceit\pmmp\slot_menus\InitialSpawnVectorSettingSlotMenu;
 use form_builder\models\simple_form_elements\SimpleFormButton;
 use form_builder\models\SimpleForm;
@@ -34,7 +35,7 @@ class MapSettingForm extends SimpleForm
                 "出口の変更",
                 null,
                 function (Player $player) use ($map) {
-                    //TODO:実装
+                    SlotMenuSystem::send($player, new ExitVectorSettingSlotMenu($map));
                 }
             ),
             new SimpleFormButton(
