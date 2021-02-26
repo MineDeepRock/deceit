@@ -28,6 +28,11 @@
             "type": "git",
             "name": "mine_deep_rock/scoreboard_builder",
             "url": "https://github.com/MineDeepRock/scoreboard_builder"
+        },
+        {
+            "type": "git",
+            "name": "mine_deep_rock/slot_menu_system",
+            "url": "https://github.com/MineDeepRock/slot_menu_system"
         }
     ],
     "require": {
@@ -35,6 +40,7 @@
         "ext-json": "*",
         "mine_deep_rock/form_builder": "dev-master",
         "mine_deep_rock/bossbar_system": "dev-master",
-        "mine_deep_rock/scoreboard_builder": "dev-master"
+        "mine_deep_rock/scoreboard_builder": "dev-master",
+        "mine_deep_rock/slot_menu_system": "dev-master"
     }
 }

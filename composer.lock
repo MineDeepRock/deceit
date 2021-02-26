@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6444e3bf6ba3e5a0037ed0c2ead945aa",
+    "content-hash": "8254aa734f16c025e65dadbc0b38add0",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -130,6 +130,32 @@
                 }
             ],
             "time": "2020-09-16T15:31:55+00:00"
+        },
+        {
+            "name": "mine_deep_rock/slot_menu_system",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MineDeepRock/slot_menu_system",
+                "reference": "865c425a05ff8782f61c8ea9551916d3c5332201"
+            },
+            "require": {
+                "pocketmine/pocketmine-mp": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": [
+                        "src/"
+                    ]
+                }
+            },
+            "authors": [
+                {
+                    "name": "suinua"
+                }
+            ],
+            "time": "2020-09-20T02:35:27+00:00"
         },
         {
             "name": "ocramius/package-versions",
@@ -648,7 +674,8 @@
     "stability-flags": {
         "mine_deep_rock/form_builder": 20,
         "mine_deep_rock/bossbar_system": 20,
-        "mine_deep_rock/scoreboard_builder": 20
+        "mine_deep_rock/scoreboard_builder": 20,
+        "mine_deep_rock/slot_menu_system": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
