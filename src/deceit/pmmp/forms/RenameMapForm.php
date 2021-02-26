@@ -35,8 +35,12 @@ class RenameMapForm extends CustomForm
         );
 
         MapDAO::update($newMap);
+
+        $updatedMap = MapDAO::findByName($newMap->getName());
+        $player->sendForm(new MapSettingForm($updatedMap));
     }
 
     function onClickCloseButton(Player $player): void {
+        $player->sendForm(new MapSettingForm($this->map));
     }
 }

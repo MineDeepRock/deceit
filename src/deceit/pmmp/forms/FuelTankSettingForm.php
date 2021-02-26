@@ -14,8 +14,10 @@ use slot_menu_system\SlotMenuSystem;
 
 class FuelTankSettingForm extends SimpleForm
 {
+    private Map $map;
 
     public function __construct(Map $map) {
+        $this->map = $map;
         $buttons = [
             new SimpleFormButton(
                 "タンクを追加",
@@ -41,5 +43,6 @@ class FuelTankSettingForm extends SimpleForm
     }
 
     function onClickCloseButton(Player $player): void {
+        $player->sendForm(new MapSettingForm($this->map));
     }
 }
