@@ -42,7 +42,7 @@ class MapSettingForm extends SimpleForm
                 "燃料タンクの変更",
                 null,
                 function (Player $player) use ($map) {
-                    //TODO:実装
+                    $player->sendForm(new FuelTankSettingForm($map));
                 }
             ),
             new SimpleFormButton(
