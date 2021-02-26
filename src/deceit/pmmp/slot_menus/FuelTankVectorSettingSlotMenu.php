@@ -7,8 +7,6 @@ namespace deceit\pmmp\slot_menus;
 use deceit\dao\MapDAO;
 use deceit\models\Map;
 use deceit\pmmp\forms\FuelTankSettingForm;
-use deceit\pmmp\forms\MapSettingForm;
-use pocketmine\block\Block;
 use pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
