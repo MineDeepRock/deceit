@@ -14,7 +14,7 @@ use pocketmine\Player;
 use slot_menu_system\SlotMenu;
 use slot_menu_system\SlotMenuElement;
 
-class InitialSpawnPointSettingSlotMenu extends SlotMenu
+class InitialSpawnVectorSettingSlotMenu extends SlotMenu
 {
 
     private Map $map;
