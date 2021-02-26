@@ -5,9 +5,11 @@ namespace deceit\pmmp\forms;
 
 
 use deceit\models\Map;
+use deceit\pmmp\slot_menus\InitialSpawnPointSettingSlotMenu;
 use form_builder\models\simple_form_elements\SimpleFormButton;
 use form_builder\models\SimpleForm;
 use pocketmine\Player;
+use slot_menu_system\SlotMenuSystem;
 
 class MapSettingForm extends SimpleForm
 {
@@ -25,7 +27,7 @@ class MapSettingForm extends SimpleForm
                 "初期位置の変更",
                 null,
                 function (Player $player) use ($map) {
-                    //TODO:実装
+                    SlotMenuSystem::send($player, new InitialSpawnPointSettingSlotMenu($map));
                 }
             ),
             new SimpleFormButton(
