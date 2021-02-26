@@ -40,8 +40,9 @@ class MapDAO
         file_put_contents(DataFolderPath::$map . $map->getName() . ".json", json_encode(MapJsonAdapter::encode($map)));
     }
 
-    static function update(Map $map): void {
+    static function update(string $mapName, Map $map): void {
         if (self::findByName($map->getName()) === null) return;
+        if ($mapName !== $map->getName()) self::delete($mapName);
 
         file_put_contents(DataFolderPath::$map . $map->getName() . ".json", json_encode(MapJsonAdapter::encode($map)));
     }
