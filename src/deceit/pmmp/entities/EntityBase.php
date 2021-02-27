@@ -16,7 +16,7 @@ class EntityBase extends Human
     protected const NAME ="";
 
     protected $skinId = "Standard_CustomSlim";
-    protected $skinName = "";
+    public $skinName = self::NAME;
 
     protected $capeData = "";
 
