@@ -6,7 +6,7 @@ namespace deceit\models;
 
 use deceit\types\GameId;
 
-class PlayerStatusOnGame
+class PlayerDataOnGame
 {
     private string $name;
     private GameId $belongGameId;
