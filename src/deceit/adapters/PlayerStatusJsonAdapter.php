@@ -10,7 +10,7 @@ use deceit\models\PlayerStatus;
 class PlayerStatusJsonAdapter
 {
     static function decode(array $json): PlayerStatus {
-        $gameId = new GameId($json["belong_game_id"]);
+        $gameId = $json["belong_game_id"] === null ? null : new GameId($json["belong_game_id"]);
         return new PlayerStatus($json["name"], $gameId);
     }
 
