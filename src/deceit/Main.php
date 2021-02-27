@@ -6,9 +6,11 @@ use deceit\dao\PlayerStatusDAO;
 use deceit\models\PlayerStatus;
 use deceit\pmmp\forms\CreateGameForm;
 use deceit\pmmp\forms\GameSettingForm;
+use deceit\pmmp\forms\MainMapForm;
 use deceit\pmmp\listeners\GameListener;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\services\QuitGameService;
+use deceit\utilities\GetWorldNameList;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\event\Listener;
@@ -16,12 +18,18 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\Server;
 
 class Main extends PluginBase implements Listener
 {
-    public function onLoad() {
+    public function onEnable() {
         DataFolderPath::init($this->getDataFolder());
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getServer()->getPluginManager()->registerEvents(new GameListener($this->getScheduler()), $this);
+
+        foreach (GetWorldNameList::execute() as $worldName) {
+            Server::getInstance()->loadLevel($worldName);
+        }
     }
 
     public function onJoin(PlayerJoinEvent $event) {
@@ -50,6 +58,10 @@ class Main extends PluginBase implements Listener
             }
             if ($label === "setting") {
                 $sender->sendForm(new GameSettingForm());
+                return true;
+            }
+            if ($label === "map") {
+                $sender->sendForm(new MainMapForm());
                 return true;
             }
         }
