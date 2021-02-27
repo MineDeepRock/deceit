@@ -13,8 +13,8 @@ class PlayerStatusDAO
     static function findByName(string $name): ?PlayerStatus {
         if (!file_exists(DataFolderPath::$playerStatus . $name . ".json")) return null;
 
-        $mapsData = json_decode(file_get_contents(DataFolderPath::$playerStatus . $name . ".json"), true);
-        return PlayerStatusJsonAdapter::decode($mapsData);
+        $playerData = json_decode(file_get_contents(DataFolderPath::$playerStatus . $name . ".json"), true);
+        return PlayerStatusJsonAdapter::decode($playerData);
     }
 
     static function all(): array {
