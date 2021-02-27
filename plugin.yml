@@ -11,3 +11,6 @@ commands:
   setting:
     usage: "/setting"
     description: "change game setting"
+  map:
+    usage: "/map"
+    description: "map"
