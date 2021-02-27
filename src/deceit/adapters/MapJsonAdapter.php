@@ -11,17 +11,13 @@ class MapJsonAdapter
     static function decode(array $json): Map {
         $fuelTankVectors = [];
         foreach ($json["fuel_tank_vectors"] as $tankVector) {
-            $fuelTankVectors[] = [
-                new Vector3($tankVector["x"], $tankVector["y"], $tankVector["z"],)
-            ];
+            $fuelTankVectors[] = new Vector3($tankVector["x"], $tankVector["y"], $tankVector["z"]);
         }
 
 
         $fuelSpawnVectors = [];
         foreach ($json["fuel_spawn_vectors"] as $fuelSpawnVector) {
-            $fuelSpawnVectors[] = [
-                new Vector3($fuelSpawnVector["x"], $fuelSpawnVector["y"], $fuelSpawnVector["z"],)
-            ];
+            $fuelSpawnVectors[] = new Vector3($fuelSpawnVector["x"], $fuelSpawnVector["y"], $fuelSpawnVector["z"]);
         }
 
         $startVector = new Vector3(
@@ -52,7 +48,7 @@ class MapJsonAdapter
 
         $fuelSpawnVectors = [];
         foreach ($map->getFuelSpawnVectors() as $fuelSpawnVector) {
-            $fuelTankVectors[] = [
+            $fuelSpawnVectors[] = [
                 "x" => $fuelSpawnVector->getX(),
                 "y" => $fuelSpawnVector->getY(),
                 "z" => $fuelSpawnVector->getZ(),
