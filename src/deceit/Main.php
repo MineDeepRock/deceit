@@ -10,6 +10,7 @@ use deceit\pmmp\forms\MainMapForm;
 use deceit\pmmp\listeners\GameListener;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\services\QuitGameService;
+use deceit\storages\GameStorage;
 use deceit\utilities\GetWorldNameList;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -57,7 +58,15 @@ class Main extends PluginBase implements Listener
                 return true;
             }
             if ($label === "setting") {
-                $sender->sendForm(new GameSettingForm());
+                $playerStatus = PlayerStatusDAO::findByName($sender->getName());
+                $game = GameStorage::findById($playerStatus->getBelongGameId());
+
+                if ($game === null) {
+                    $sender->sendMessage("ゲームに参加していないか、ゲームのオーナではありません");
+                }  else {
+                    $sender->sendForm(new GameSettingForm());
+                }
+
                 return true;
             }
             if ($label === "map") {
