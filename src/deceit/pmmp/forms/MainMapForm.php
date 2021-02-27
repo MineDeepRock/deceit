@@ -25,7 +25,8 @@ class MainMapForm extends SimpleForm
             $buttons[] = new SimpleFormButton(
                 $map->getName(),
                 null,
-                function (Player $player) {
+                function (Player $player) use ($map) {
+                    $player->sendForm(new MapSettingForm($map));
                 }
             );
         }
