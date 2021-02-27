@@ -56,6 +56,7 @@ class Game
         $this->maxPlayers = $maxPlayers;
         $this->wolfsCount = $wolfsCount;
         $this->playerNameList = [];
+        $this->wolfNameList = [];
         $this->fuelTanks = $fuelTanks;
         $this->map = $map;
         $this->timer = $timer;
