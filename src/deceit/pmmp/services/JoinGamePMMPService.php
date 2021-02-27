@@ -27,7 +27,6 @@ class JoinGamePMMPService
                 if ($participant->getName() === $player->getName()) continue;
 
                 $participant->sendMessage($player->getName() . "がゲームに参加しました");
-                GameSettingsScoreboard::update($player);
             }
         } else {
             $player->sendMessage("ゲームに参加できませんでした");

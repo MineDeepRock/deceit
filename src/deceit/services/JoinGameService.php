@@ -6,6 +6,7 @@ namespace deceit\services;
 
 use deceit\dao\PlayerStatusDAO;
 use deceit\models\PlayerDataOnGame;
+use deceit\pmmp\events\UpdatedGameDataEvent;
 use deceit\storages\PlayerDataOnGameStorage;
 use deceit\types\GameId;
 use deceit\models\PlayerStatus;
@@ -25,6 +26,9 @@ class JoinGameService
         UpdatePlayerStateOnGameService::execute($playerName, PlayerStateOnGame::Alive());
 
         PlayerStatusDAO::update(new PlayerStatus($playerName, $gameId));
+
+        $event = new UpdatedGameDataEvent($gameId);
+        $event->call();
         return true;
     }
 }

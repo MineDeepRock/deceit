@@ -6,6 +6,7 @@ namespace deceit\services;
 
 use deceit\dao\PlayerStatusDAO;
 use deceit\models\PlayerStatus;
+use deceit\pmmp\events\UpdatedGameDataEvent;
 use deceit\storages\GameStorage;
 use deceit\storages\PlayerDataOnGameStorage;
 
@@ -21,6 +22,9 @@ class QuitGameService
         $game->removePlayer($playerName);
 
         PlayerDataOnGameStorage::delete($playerName);
+
+        $event = new UpdatedGameDataEvent($belongGameId);
+        $event->call();
         return true;
     }
 }
