@@ -4,7 +4,6 @@
 namespace deceit\services;
 
 
-use deceit\storages\PlayerDataOnGameStorage;
 use deceit\types\GameId;
 use deceit\storages\GameStorage;
 
@@ -14,7 +13,11 @@ class StartGameService
         $game = GameStorage::findById($gameId);
         if ($game === null) return false;
         if ($game->getGameOwnerName() !== $ownerName) return false;
-        if (count($game->getWolfNameList()) === 0) return false;
+
+        if (count($game->getPlayerNameList()) <= 3) return false;
+        if (count($game->getPlayerNameList()) - $game->getWolfsCount() * 2 <= 0) return false;
+
+        SelectWolfPlayersService::execute($gameId);
 
         $game->start();
         return true;
