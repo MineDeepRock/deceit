@@ -14,3 +14,6 @@ commands:
   map:
     usage: "/map"
     description: "map"
+  gamelist:
+    usage: "/gamelist"
+    description: "open game list"

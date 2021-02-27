@@ -5,6 +5,7 @@ namespace deceit;
 use deceit\dao\PlayerStatusDAO;
 use deceit\models\PlayerStatus;
 use deceit\pmmp\forms\CreateGameForm;
+use deceit\pmmp\forms\GameListForm;
 use deceit\pmmp\forms\GameSettingForm;
 use deceit\pmmp\forms\MainMapForm;
 use deceit\pmmp\listeners\GameListener;
@@ -71,6 +72,10 @@ class Main extends PluginBase implements Listener
             }
             if ($label === "map") {
                 $sender->sendForm(new MainMapForm());
+                return true;
+            }
+            if ($label = "gamelist") {
+                $sender->sendForm(new GameListForm($sender));
                 return true;
             }
         }
