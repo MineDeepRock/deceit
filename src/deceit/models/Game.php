@@ -5,6 +5,7 @@ namespace deceit\models;
 
 use deceit\pmmp\entities\FuelEntity;
 use deceit\pmmp\entities\FuelTankEntity;
+use deceit\storages\GameStorage;
 use pocketmine\level\Position;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\TaskHandler;
@@ -130,6 +131,15 @@ class Game
     public function removePlayer(string $playerName): bool {
         if (!in_array($playerName, $this->playersName)) return false;
 
+        //オーナー以外に参加者がいなかったら、試合を削除
+        if (count($this->playersName) === 1) {
+            GameStorage::delete($this->gameId);
+
+            return true;
+        }
+
+
+        //playersNameから削除
         $index = array_search($playerName, $this->playersName);
         unset($this->playersName[$index]);
         $this->playersName = array_values($this->playersName);
