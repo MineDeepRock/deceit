@@ -30,9 +30,7 @@ class MainMapForm extends SimpleForm
             );
         }
 
-        parent::__construct("", "", [
-
-        ]);
+        parent::__construct("", "", $buttons);
     }
 
     function onClickCloseButton(Player $player): void {
