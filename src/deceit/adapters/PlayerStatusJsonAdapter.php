@@ -15,9 +15,11 @@ class PlayerStatusJsonAdapter
     }
 
     static function encode(PlayerStatus $playerStatus): array {
+        $gameId = $playerStatus->getBelongGameId() === null ? null : strval($playerStatus->getBelongGameId());
+
         return [
             "name" => $playerStatus->getName(),
-            "belong_game_id" => $playerStatus->getBelongGameId(),
+            "belong_game_id" => $gameId,
         ];
     }
 }
