@@ -5,6 +5,7 @@ namespace deceit\pmmp\services;
 
 
 use bossbar_system\BossBar;
+use deceit\storages\PlayerDataOnGameStorage;
 use deceit\types\GameId;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\storages\GameStorage;
@@ -22,31 +23,23 @@ class FinishGamePMMPService
         $mapLevel = Server::getInstance()->getLevelByName($map->getLevelName());
         $mapLevel->setBlock($map->getExitVector(), Block::get($map->getOriginalExitBlockId()));
 
-        if (count($game->getEscapedPlayerNameList()) === 0) {
+        $escapedPlayerCount = PlayerDataOnGameStorage::getEscapedPlayers($gameId);
+        $winWolfs = $escapedPlayerCount === 0;
 
-            foreach ($game->getWolfNameList() as $escapedPlayerName) {
-                $player = Server::getInstance()->getPlayer($escapedPlayerName);
-                if ($player === null) return;
+        $messageToPlayers = $winWolfs ? "敗北" : "勝利!!";
+        $messageToWolfs = $winWolfs ? "勝利!!" : "敗北";
 
-                $player->sendMessage("勝利！！");
-                $player->sendTitle("勝利！！");
-            }
-        } else {
+        foreach ($game->getPlayersName() as $playerName) {
+            $player = Server::getInstance()->getPlayer($playerName);
+            if ($player === null) return;
 
-            foreach ($game->getEscapedPlayerNameList() as $escapedPlayerName) {
-                $escapedPlayer = Server::getInstance()->getPlayer($escapedPlayerName);
-                if ($escapedPlayer === null) return;
-
-                $escapedPlayer->sendMessage("勝利！！");
-                $escapedPlayer->sendTitle("勝利！！");
-            }
-
-            foreach ($game->getDeadPlayerNameList() as $deadPlayerName) {
-                $deadPlayer = Server::getInstance()->getPlayer($deadPlayerName);
-                if ($deadPlayer === null) return;
-
-                $deadPlayer->sendMessage("勝利！！");
-                $deadPlayer->sendTitle("勝利！！");
+            $playerDataOnGame = PlayerDataOnGameStorage::findByName($playerName);
+            if ($playerDataOnGame->isWolf()) {
+                $player->sendMessage($messageToWolfs);
+                $player->sendTitle($messageToWolfs);
+            } else {
+                $player->sendMessage($messageToPlayers);
+                $player->sendTitle($messageToPlayers);
             }
         }
 

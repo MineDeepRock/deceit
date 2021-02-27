@@ -5,9 +5,12 @@ namespace deceit\services;
 
 
 use deceit\dao\PlayerStatusDAO;
+use deceit\models\PlayerDataOnGame;
+use deceit\storages\PlayerDataOnGameStorage;
 use deceit\types\GameId;
 use deceit\models\PlayerStatus;
 use deceit\storages\GameStorage;
+use deceit\types\PlayerStateOnGame;
 
 class JoinGameService
 {
@@ -19,6 +22,7 @@ class JoinGameService
         $result = $game->addPlayer($playerName);
         if (!$result) return false;
 
+        UpdatePlayerStateOnGameService::execute($playerName, PlayerStateOnGame::Alive());
 
         PlayerStatusDAO::update(new PlayerStatus($playerName, $gameId));
         return true;

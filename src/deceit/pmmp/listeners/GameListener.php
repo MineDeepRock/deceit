@@ -5,6 +5,7 @@ namespace deceit\pmmp\listeners;
 
 use bossbar_system\BossBar;
 use deceit\dao\PlayerStatusDAO;
+use deceit\models\PlayerDataOnGame;
 use deceit\models\PlayerStatus;
 use deceit\pmmp\blocks\ExitBlock;
 use deceit\pmmp\BossBarTypeList;
@@ -21,7 +22,10 @@ use deceit\pmmp\forms\ConfirmVoteForm;
 use deceit\pmmp\items\FuelItem;
 use deceit\pmmp\services\FinishGamePMMPService;
 use deceit\services\FinishGameService;
+use deceit\services\UpdatePlayerStateOnGameService;
 use deceit\storages\GameStorage;
+use deceit\storages\PlayerDataOnGameStorage;
+use deceit\types\PlayerStateOnGame;
 use pocketmine\block\Block;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -74,8 +78,9 @@ class GameListener implements Listener
                 if ($fuelTank === null) return;
 
 
-                $isFakeFuel = in_array($attacker->getName(), $game->getWolfNameList());
-                $result = $fuelTank->addFuel($itemInHand->getCount(), $isFakeFuel);
+                $attackerGameData = PlayerDataOnGameStorage::findByName($attacker->getName());
+
+                $result = $fuelTank->addFuel($itemInHand->getCount(), $attackerGameData->isWolf());
                 if ($result) {
                     //TODO: マックスを超えた分は消費しないように
                     $attacker->getInventory()->clear($attacker->getInventory()->getHeldItemIndex());
@@ -184,7 +189,11 @@ class GameListener implements Listener
 
         $game = GameStorage::findById($playerStatus->getBelongGameId());
 
-        $isMajority = (count($game->getAlivePlayerNameList()) - count($votedPlayerNameList) * 2) <= 0;
+        $playersCanVoteCount =
+            count(PlayerDataOnGameStorage::getAlivePlayers($game->getGameId())) +
+            count(PlayerDataOnGameStorage::getCadaverPlayers($game->getGameId()));
+
+        $isMajority = $playersCanVoteCount - count($votedPlayerNameList) * 2 <= 0;
 
         if ($isMajority) {
             $cadaverEntity->kill();
@@ -209,7 +218,7 @@ class GameListener implements Listener
         $owner->setImmobile(false);
 
         $game = GameStorage::findById($belongGameId);
-        $game->addDeadPlayerName($owner->getName());
+        UpdatePlayerStateOnGameService::execute($owner->getName(), PlayerStateOnGame::Dead());
 
         foreach ($game->getPlayersName() as $name) {
             $player = Server::getInstance()->getPlayer($name);
@@ -294,7 +303,8 @@ class GameListener implements Listener
         //脱出
         //TODO:時間がかかるようにする
         if ($blockUnderPlayer->getId() === ExitBlock::ID) {
-            $game->addEscapedPlayerName($player->getName());
+            UpdatePlayerStateOnGameService::execute($player->getName(), PlayerStateOnGame::Escaped());
+
             $player->setGamemode(Player::SPECTATOR);
 
             $player->sendMessage("脱出成功！！");

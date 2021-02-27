@@ -4,8 +4,11 @@
 namespace deceit\services;
 
 
+use deceit\models\PlayerDataOnGame;
+use deceit\storages\PlayerDataOnGameStorage;
 use deceit\types\GameId;
 use deceit\storages\GameStorage;
+use deceit\types\PlayerStateOnGame;
 
 class SelectWolfPlayersService
 {
@@ -20,7 +23,10 @@ class SelectWolfPlayersService
         $wolfPlayersName = [];
         $wolfPlayersNameIndexList = array_rand($game->getPlayersName(), $game->getWolfsCount());
         foreach ($wolfPlayersNameIndexList as $wolfPlayerNameIndex) {
-            $wolfPlayersName[] = $game->getPlayersName()[$wolfPlayerNameIndex];
+            $wolfPlayerName = $game->getPlayersName()[$wolfPlayerNameIndex];
+            $wolfPlayersName[] = $wolfPlayerName;
+
+            PlayerDataOnGameStorage::update(new PlayerDataOnGame($wolfPlayerName, $gameId, PlayerStateOnGame::Alive(), true));
         }
         $game->setWolfNameList($wolfPlayersName);
 

@@ -61,16 +61,12 @@ class Game
         $this->maxPlayers = $maxPlayers;
         $this->wolfsCount = $wolfsCount;
         $this->playersName = [];
-        $this->wolfNameList = [];
         $this->fuelTanks = $fuelTanks;
         $this->map = $map;
         $this->timer = $timer;
         $this->exitTimer = $exitTimer;
         $this->isStarted = false;
         $this->isFinished = false;
-        $this->alivePlayerNameList = [];
-        $this->deadPlayerNameList = [];
-        $this->escapedPlayerNameList = [];
     }
 
     public function start(): void {
@@ -140,7 +136,6 @@ class Game
             return true;
         }
 
-
         //playersNameから削除
         $index = array_search($playerName, $this->playersName);
         unset($this->playersName[$index]);
@@ -151,81 +146,7 @@ class Game
             $this->gameOwnerName = $this->playersName[0];
         }
 
-        //他のListからも削除
-        $this->removeAlivePlayerName($playerName);
-        $this->removeDeadPlayerName($playerName);
-        $this->removeEscapedPlayerName($playerName);
-
         return true;
-    }
-
-    public function addAlivePlayerName(string $name): void {
-        //参加していない
-        if (!in_array($name, $this->playersName)) return;
-        //追加済み
-        if (in_array($name, $this->alivePlayerNameList)) return;
-
-        //DeadPlayerから削除
-        $this->removeDeadPlayerName($name);
-
-        $this->alivePlayerNameList[] = $name;
-    }
-
-    private function removeAlivePlayerName(string $name): void {
-        //参加していない
-        if (!in_array($name, $this->playersName)) return;
-        //いない
-        if (!in_array($name, $this->alivePlayerNameList)) return;
-
-        $index = array_search($name, $this->alivePlayerNameList);
-        unset($this->alivePlayerNameList[$index]);
-        $this->alivePlayerNameList = array_values($this->alivePlayerNameList);
-    }
-
-    public function addDeadPlayerName(string $name): void {
-        //参加していない
-        if (!in_array($name, $this->playersName)) return;
-        //追加済み
-        if (in_array($name, $this->deadPlayerNameList)) return;
-        //AlivePlayerから削除
-        $this->removeAlivePlayerName($name);
-
-        $this->deadPlayerNameList[] = $name;
-    }
-
-    public function removeDeadPlayerName(string $name): void {
-        //参加していない
-        if (!in_array($name, $this->playersName)) return;
-        //いない
-        if (!in_array($name, $this->deadPlayerNameList)) return;
-
-        $index = array_search($name, $this->deadPlayerNameList);
-        unset($this->deadPlayerNameList[$index]);
-        $this->deadPlayerNameList = array_values($this->deadPlayerNameList);
-    }
-
-    public function addEscapedPlayerName(string $name): void {
-        //参加していない
-        if (!in_array($name, $this->playersName)) return;
-        //追加済み
-        if (in_array($name, $this->escapedPlayerNameList)) return;
-
-        //AliveとDeadから削除
-        $this->removeAlivePlayerName($name);
-        $this->removeDeadPlayerName($name);
-
-        $this->escapedPlayerNameList[] = $name;
-    }
-
-    public function removeEscapedPlayerName(string $name): void {
-        //参加していない
-        if (!in_array($name, $this->playersName)) return;
-        //いない
-        if (!in_array($name, $this->escapedPlayerNameList)) return;
-
-        $index = array_search($name, $this->escapedPlayerNameList);
-        unset($this->escapedPlayerNameList[$index]);
-        $this->escapedPlayerNameList = array_values($this->escapedPlayerNameList);
     }
 
     /**
@@ -283,13 +204,6 @@ class Game
     }
 
     /**
-     * @return array
-     */
-    public function getWolfNameList(): array {
-        return $this->wolfNameList;
-    }
-
-    /**
      * @return FuelTank[]
      */
     public function getFuelTanks(): array {
@@ -318,20 +232,6 @@ class Game
         return $this->isStarted;
     }
 
-    /**
-     * @return string[]
-     */
-    public function getAlivePlayerNameList(): array {
-        return $this->alivePlayerNameList;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getDeadPlayerNameList(): array {
-        return $this->deadPlayerNameList;
-    }
-
     public function getGameTimerPercentage(): float {
         if ($this->timer->getTimeLeft() === 0) return 0;
         return $this->timer->getTimeLeft() / $this->timer->getInitialTime();
@@ -340,12 +240,5 @@ class Game
     public function getExitTimerPercentage(): float {
         if ($this->exitTimer->getTimeLeft() === 0) return 0;
         return $this->exitTimer->getTimeLeft() / $this->exitTimer->getInitialTime();
-    }
-
-    /**
-     * @return array
-     */
-    public function getEscapedPlayerNameList(): array {
-        return $this->escapedPlayerNameList;
     }
 }

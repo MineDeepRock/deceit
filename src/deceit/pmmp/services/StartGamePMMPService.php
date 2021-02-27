@@ -12,6 +12,7 @@ use deceit\pmmp\scoreboards\GameSettingsScoreboard;
 use deceit\services\SelectWolfPlayersService;
 use deceit\services\StartGameService;
 use deceit\storages\GameStorage;
+use deceit\storages\PlayerDataOnGameStorage;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -44,12 +45,13 @@ class StartGamePMMPService
 
             //TODO:ボスバーのメッセージ
             //役職のメッセージ
-            if (in_array($playerName, $game->getWolfNameList())) {
+            $playerDataOnGame = PlayerDataOnGameStorage::findByName($playerName);
+            if ($playerDataOnGame->isWolf()) {
                 $bossBar = new BossBar($player, BossBarTypeList::GameTimer(), TextFormat::RED . "", 0.0);
                 $bossBar->send();
 
                 $wolfNemListAsString = "あなた ";
-                foreach ($game->getWolfNameList() as $wolfName) $wolfNemListAsString .= $wolfName . " ";
+                foreach (PlayerDataOnGameStorage::getWolfs($gameId) as $wolfDataOnGame) $wolfNemListAsString .= $wolfDataOnGame->getName() . " ";
 
                 $player->sendMessage(TextFormat::RED . $wolfNemListAsString . TextFormat::RED . "が人狼です");
                 $player->sendMessage("市民を全員殺すか、タイムアップまで持ちこたえましょう");

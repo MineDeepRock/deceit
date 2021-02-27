@@ -6,6 +6,7 @@ namespace deceit\services;
 
 use deceit\dao\PlayerStatusDAO;
 use deceit\storages\GameStorage;
+use deceit\storages\PlayerDataOnGameStorage;
 
 class QuitGameService
 {
@@ -15,6 +16,7 @@ class QuitGameService
         $game = GameStorage::findById($belongGameId);
         if ($game === null) return false;
 
+        PlayerDataOnGameStorage::delete($playerName);
         $game->removePlayer($playerName);
         return true;
     }
