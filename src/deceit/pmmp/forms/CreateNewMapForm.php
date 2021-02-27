@@ -7,8 +7,8 @@ namespace deceit\pmmp\forms;
 use deceit\dao\MapDAO;
 use deceit\services\CreateNewMapService;
 use deceit\utilities\GetWorldNameList;
+use form_builder\models\custom_form_elements\Dropdown;
 use form_builder\models\custom_form_elements\Input;
-use form_builder\models\custom_form_elements\StepSlider;
 use form_builder\models\CustomForm;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -16,12 +16,12 @@ use pocketmine\Server;
 class CreateNewMapForm extends CustomForm
 {
     private Input $inputNameElement;
-    private StepSlider $selectWorldElement;
+    private Dropdown $selectWorldElement;
 
     public function __construct() {
         $worldNames = GetWorldNameList::execute();
         $this->inputNameElement = new Input("", "", "");
-        $this->selectWorldElement = new StepSlider("ワールドを選択", $worldNames, 0);
+        $this->selectWorldElement = new Dropdown("ワールドを選択", $worldNames);
         parent::__construct(
             "マップを作成",
             [
