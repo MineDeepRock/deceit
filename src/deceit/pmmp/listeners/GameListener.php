@@ -16,10 +16,12 @@ use deceit\pmmp\events\FinishedGameTimerEvent;
 use deceit\pmmp\events\FuelTankBecameFullEvent;
 use deceit\pmmp\events\StoppedGameTimerEvent;
 use deceit\pmmp\events\UpdatedExitTimerEvent;
+use deceit\pmmp\events\UpdatedGameDataEvent;
 use deceit\pmmp\events\UpdatedGameTimerEvent;
 use deceit\pmmp\events\VotedPlayerEvent;
 use deceit\pmmp\forms\ConfirmVoteForm;
 use deceit\pmmp\items\FuelItem;
+use deceit\pmmp\scoreboards\GameSettingsScoreboard;
 use deceit\pmmp\services\FinishGamePMMPService;
 use deceit\services\FinishGameService;
 use deceit\services\UpdatePlayerStateOnGameService;
@@ -325,5 +327,15 @@ class GameListener implements Listener
         if ($game->isFinished()) return false;
 
         return true;
+    }
+
+    public function onUpdatedGameData(UpdatedGameDataEvent $event) {
+        $game = GameStorage::findById($event->getGameId());
+        if ($game === null) return;
+
+        foreach ($game->getPlayerNameList() as $playerName) {
+            $player = Server::getInstance()->getPlayer($playerName);
+            GameSettingsScoreboard::update($player);
+        }
     }
 }
