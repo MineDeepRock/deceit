@@ -29,7 +29,7 @@ class CreateGameForm extends CustomForm
             $mapNames[] = $map->getName();
         }
 
-        $this->mapNameElement = new Dropdown("マップ", $mapNames, 0);
+        $this->mapNameElement = new Dropdown("マップ", $mapNames);
         $this->maxPlayersElement = new Slider("最大プレイヤー数", 3, 10, 6);
         $this->wolfsCountElement = new Slider("人狼の数", 1, 3, 1);
 

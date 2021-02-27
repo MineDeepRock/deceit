@@ -44,17 +44,16 @@ class Game
     private bool $isFinished;
 
     public function __construct(string $gameOwnerName, Map $map, int $maxPlayers, int $wolfsCount, TaskScheduler $scheduler) {
-        $gameId = GameId::asNew();
+        $this->gameId = GameId::asNew();
         $fuelTanks = [];
         foreach ($map->getFuelSpawnVectors() as $_) {
-            $fuelTanks[] = new FuelTank($gameId);
+            $fuelTanks[] = new FuelTank($this->gameId);
         }
 
         $this->scheduler = $scheduler;
-        $timer = new GameTimer($gameId, $scheduler);
-        $exitTimer = new ExitTimer($gameId, $scheduler);
+        $timer = new GameTimer($this->gameId, $scheduler);
+        $exitTimer = new ExitTimer($this->gameId, $scheduler);
 
-        $this->gameId = $gameId;
         $this->gameOwnerName = $gameOwnerName;
         $this->maxPlayers = $maxPlayers;
         $this->wolfsCount = $wolfsCount;
