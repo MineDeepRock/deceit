@@ -8,6 +8,9 @@ use deceit\models\GameId;
 
 class GameStorage
 {
+    /**
+     * @var Game[]
+     */
     static array $games = [];
 
     static function add(Game $game): bool {
@@ -34,7 +37,7 @@ class GameStorage
         if ($gameId === null) return null;;
 
         foreach (self::$games as $game) {
-            if ($game->getId()->equals($gameId)) {
+            if ($game->getGameId()->equals($gameId)) {
                 return $game;
             }
         }
