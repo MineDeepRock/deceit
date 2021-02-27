@@ -22,7 +22,7 @@ class GameListForm extends SimpleForm
         foreach (GameStorage::getAll() as $game) {
             $gameId = $game->getGameId();
             $mapName = TextFormat::BOLD . $game->getMap()->getName() . TextFormat::RESET;
-            $playersCountAsText = TextFormat::BOLD . count($game->getPlayersName()) . "/" . $game->getMaxPlayers() . TextFormat::RESET;
+            $playersCountAsText = TextFormat::BOLD . count($game->getPlayerNameList()) . "/" . $game->getMaxPlayers() . TextFormat::RESET;
             $wolfCount = TextFormat::BOLD . $game->getWolfsCount() . TextFormat::RESET;
             $text = "マップ:{$mapName},人数:{$playersCountAsText},人狼:{$wolfCount},オーナー:{$game->getGameOwnerName()}";
 

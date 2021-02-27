@@ -34,7 +34,7 @@ class StartGamePMMPService
         $game = GameStorage::findById($gameId);
         $map = $game->getMap();
         $level = Server::getInstance()->getLevelByName($map->getLevelName());
-        foreach ($game->getPlayersName() as $playerName) {
+        foreach ($game->getPlayerNameList() as $playerName) {
             //初期位置にテレポート //TODO:ランダムな場所にテレポートするように
             $player = Server::getInstance()->getPlayer($playerName);
             $player->teleport(new Position($map->getStartVector(), $level));

@@ -17,13 +17,13 @@ class SelectWolfPlayersService
         if ($game === null) return false;
         if ($game->getGameOwnerName() !== $ownerName) return false;
 
-        if (count($game->getPlayersName()) <= 3) return false;
-        if (count($game->getPlayersName()) - $game->getWolfsCount() * 2 <= 0) return false;
+        if (count($game->getPlayerNameList()) <= 3) return false;
+        if (count($game->getPlayerNameList()) - $game->getWolfsCount() * 2 <= 0) return false;
 
         $wolfPlayersName = [];
-        $wolfPlayersNameIndexList = array_rand($game->getPlayersName(), $game->getWolfsCount());
+        $wolfPlayersNameIndexList = array_rand($game->getPlayerNameList(), $game->getWolfsCount());
         foreach ($wolfPlayersNameIndexList as $wolfPlayerNameIndex) {
-            $wolfPlayerName = $game->getPlayersName()[$wolfPlayerNameIndex];
+            $wolfPlayerName = $game->getPlayerNameList()[$wolfPlayerNameIndex];
             $wolfPlayersName[] = $wolfPlayerName;
 
             PlayerDataOnGameStorage::update(new PlayerDataOnGame($wolfPlayerName, $gameId, PlayerStateOnGame::Alive(), true));

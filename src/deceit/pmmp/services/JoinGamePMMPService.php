@@ -22,7 +22,7 @@ class JoinGamePMMPService
             GameSettingsScoreboard::send($player);
 
             $game = GameStorage::findById($gameId);
-            foreach ($game->getPlayersName() as $participantName) {
+            foreach ($game->getPlayerNameList() as $participantName) {
                 $participant = Server::getInstance()->getPlayer($participantName);
                 if ($participant->getName() === $player->getName()) continue;
 

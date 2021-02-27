@@ -30,7 +30,7 @@ class FinishGamePMMPService
         $messageToPlayers = $winWolfs ? "敗北" : "勝利!!";
         $messageToWolfs = $winWolfs ? "勝利!!" : "敗北";
 
-        foreach ($game->getPlayersName() as $playerName) {
+        foreach ($game->getPlayerNameList() as $playerName) {
             $player = Server::getInstance()->getPlayer($playerName);
             if ($player === null) return;
 

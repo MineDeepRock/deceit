@@ -23,7 +23,7 @@ class Game
     private int $maxPlayers;
     private int $wolfsCount;
 
-    private array $playersName;//TODO:rename
+    private array $playerNameList;//TODO:rename
     private array $wolfNameList;
 
     /**
@@ -55,7 +55,7 @@ class Game
         $this->gameOwnerName = $gameOwnerName;
         $this->maxPlayers = $maxPlayers;
         $this->wolfsCount = $wolfsCount;
-        $this->playersName = [];
+        $this->playerNameList = [];
         $this->fuelTanks = $fuelTanks;
         $this->map = $map;
         $this->timer = $timer;
@@ -104,8 +104,8 @@ class Game
     }
 
     public function canJoin(string $playerName): bool {
-        if (in_array($playerName, $this->playersName)) return false;
-        if (count($this->playersName) === $this->maxPlayers) return false;
+        if (in_array($playerName, $this->playerNameList)) return false;
+        if (count($this->playerNameList) === $this->maxPlayers) return false;
         if ($this->isStarted) return false;
 
         return true;
@@ -113,7 +113,7 @@ class Game
 
     public function addPlayer(string $playerName): bool {
         if ($this->canJoin($playerName)) {
-            $this->playersName[] = $playerName;
+            $this->playerNameList[] = $playerName;
             return true;
         }
 
@@ -121,23 +121,23 @@ class Game
     }
 
     public function removePlayer(string $playerName): bool {
-        if (!in_array($playerName, $this->playersName)) return false;
+        if (!in_array($playerName, $this->playerNameList)) return false;
 
         //オーナー以外に参加者がいなかったら、試合を削除
-        if (count($this->playersName) === 1) {
+        if (count($this->playerNameList) === 1) {
             GameStorage::delete($this->gameId);
 
             return true;
         }
 
         //playersNameから削除
-        $index = array_search($playerName, $this->playersName);
-        unset($this->playersName[$index]);
-        $this->playersName = array_values($this->playersName);
+        $index = array_search($playerName, $this->playerNameList);
+        unset($this->playerNameList[$index]);
+        $this->playerNameList = array_values($this->playerNameList);
 
         //オーナーを受け渡す
         if ($playerName === $this->gameOwnerName) {
-            $this->gameOwnerName = $this->playersName[0];
+            $this->gameOwnerName = $this->playerNameList[0];
         }
 
         return true;
@@ -181,8 +181,8 @@ class Game
     /**
      * @return string[]
      */
-    public function getPlayersName(): array {
-        return $this->playersName;
+    public function getPlayerNameList(): array {
+        return $this->playerNameList;
     }
 
     /**

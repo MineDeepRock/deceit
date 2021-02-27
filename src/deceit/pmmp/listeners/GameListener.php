@@ -220,7 +220,7 @@ class GameListener implements Listener
         $game = GameStorage::findById($belongGameId);
         UpdatePlayerStateOnGameService::execute($owner->getName(), PlayerStateOnGame::Dead());
 
-        foreach ($game->getPlayersName() as $name) {
+        foreach ($game->getPlayerNameList() as $name) {
             $player = Server::getInstance()->getPlayer($name);
             if ($player === null) return;
             if (!$player->isOnline()) return;
@@ -234,7 +234,7 @@ class GameListener implements Listener
         $gameId = $event->getGameId();
         $game = GameStorage::findById($gameId);
         if ($game === null) return;
-        foreach ($game->getPlayersName() as $playerName) {
+        foreach ($game->getPlayerNameList() as $playerName) {
             $player = Server::getInstance()->getPlayer($playerName);
             if ($player === null) return;
 
@@ -249,7 +249,7 @@ class GameListener implements Listener
         $gameId = $event->getGameId();
         $game = GameStorage::findById($gameId);
         if ($game === null) return;
-        foreach ($game->getPlayersName() as $playerName) {
+        foreach ($game->getPlayerNameList() as $playerName) {
             $player = Server::getInstance()->getPlayer($playerName);
             if ($player === null) return;
 
@@ -265,7 +265,7 @@ class GameListener implements Listener
         $game = GameStorage::findById($gameId);
         if ($game === null) return;
 
-        foreach ($game->getPlayersName() as $playerName) {
+        foreach ($game->getPlayerNameList() as $playerName) {
             $player = Server::getInstance()->getPlayer($playerName);
             if ($player === null) return;
             $bossBar = BossBar::findByType($player, BossBarTypeList::GameTimer());
@@ -309,7 +309,7 @@ class GameListener implements Listener
 
             $player->sendMessage("脱出成功！！");
 
-            foreach ($game->getPlayersName() as $participantName) {
+            foreach ($game->getPlayerNameList() as $participantName) {
                 $participant = Server::getInstance()->getPlayer($participantName);
                 $participant->sendMessage($player->getName() . "が脱出しました");
             }
