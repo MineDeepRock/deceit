@@ -24,9 +24,6 @@ class StartGamePMMPService
         $gameId = PlayerStatusDAO::findByName($owner->getName())->getBelongGameId();
         if ($gameId === null) return false;
 
-        $selectWolfResult = SelectWolfPlayersService::execute($owner->getName(), $gameId);
-        if (!$selectWolfResult) return false;
-
         $startResult = StartGameService::execute($owner->getName(), $gameId);
         if (!$startResult) return false;
 

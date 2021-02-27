@@ -13,7 +13,7 @@ use pocketmine\utils\UUID;
 
 class EntityBase extends Human
 {
-    const NAME ="";
+    protected const NAME ="";
 
     protected $skinId = "Standard_CustomSlim";
     protected $skinName = "";
