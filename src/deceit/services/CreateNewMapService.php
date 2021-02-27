@@ -12,7 +12,7 @@ use pocketmine\math\Vector3;
 class CreateNewMapService
 {
     static function execute(string $levelName, string $mapName, Vector3 $spawnPoint): bool {
-        if ($levelName === null or $mapName === null) return false;
+        if ($levelName === null or empty($mapName)) return false;
 
         $newMap = new Map(
             $levelName,
