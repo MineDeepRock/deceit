@@ -45,13 +45,12 @@ class StartGamePMMPService
 
             //TODO:ボスバーのメッセージ
             //役職のメッセージ
-            $playerDataOnGame = PlayerDataOnGameStorage::findByName($playerName);
-            if ($playerDataOnGame->isWolf()) {
+            if (in_array($playerName, $game->getWolfNameList())) {
                 $bossBar = new BossBar($player, BossBarTypeList::GameTimer(), TextFormat::RED . "", 0.0);
                 $bossBar->send();
 
                 $wolfNemListAsString = "あなた ";
-                foreach (PlayerDataOnGameStorage::getWolfs($gameId) as $wolfDataOnGame) $wolfNemListAsString .= $wolfDataOnGame->getName() . " ";
+                foreach ($game->getWolfNameList() as $wolfName) $wolfNemListAsString .= $wolfName . " ";
 
                 $player->sendMessage(TextFormat::RED . $wolfNemListAsString . TextFormat::RED . "が人狼です");
                 $player->sendMessage("市民を全員殺すか、タイムアップまで持ちこたえましょう");

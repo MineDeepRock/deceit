@@ -26,11 +26,6 @@ class Game
     private array $playersName;//TODO:rename
     private array $wolfNameList;
 
-    private array $alivePlayerNameList;
-    private array $deadPlayerNameList;
-
-    private array $escapedPlayerNameList;
-
     /**
      * @var FuelTank[]
      */
@@ -119,7 +114,6 @@ class Game
     public function addPlayer(string $playerName): bool {
         if ($this->canJoin($playerName)) {
             $this->playersName[] = $playerName;
-            $this->alivePlayerNameList[] = $playerName;
             return true;
         }
 
@@ -240,5 +234,12 @@ class Game
     public function getExitTimerPercentage(): float {
         if ($this->exitTimer->getTimeLeft() === 0) return 0;
         return $this->exitTimer->getTimeLeft() / $this->exitTimer->getInitialTime();
+    }
+
+    /**
+     * @return array
+     */
+    public function getWolfNameList(): array {
+        return $this->wolfNameList;
     }
 }

@@ -146,22 +146,4 @@ class PlayerDataOnGameStorage
 
         return $result;
     }
-
-    /**
-     * @param GameId $gameId
-     * @return PlayerDataOnGame[]
-     */
-    static function getWolfs(GameId $gameId): array {
-        $result = [];
-
-        foreach (self::$playerDataOnGames as $playerDataOnGame) {
-            if ($playerDataOnGame->getBelongGameId()->equals($gameId)) {
-                if ($playerDataOnGame->isWolf()) {
-                    $result[] = $playerDataOnGame;
-                }
-            }
-        }
-
-        return $result;
-    }
 }

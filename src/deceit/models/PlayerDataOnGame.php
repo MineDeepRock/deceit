@@ -13,14 +13,12 @@ class PlayerDataOnGame
     private string $name;
     private GameId $belongGameId;
 
-    private bool $isWolf;
     private PlayerStateOnGame $state;
 
     public function __construct(string $name, GameId $belongGameId, PlayerStateOnGame $state, bool $isWolf = false) {
         $this->name = $name;
         $this->belongGameId = $belongGameId;
         $this->state = $state;
-        $this->isWolf = $isWolf;
     }
 
     /**

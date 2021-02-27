@@ -34,8 +34,7 @@ class FinishGamePMMPService
             $player = Server::getInstance()->getPlayer($playerName);
             if ($player === null) return;
 
-            $playerDataOnGame = PlayerDataOnGameStorage::findByName($playerName);
-            if ($playerDataOnGame->isWolf()) {
+            if (in_array($playerName, $game->getWolfNameList())) {
                 $player->sendMessage($messageToWolfs);
                 $player->sendTitle($messageToWolfs);
             } else {

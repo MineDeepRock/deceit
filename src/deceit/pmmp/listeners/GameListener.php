@@ -78,9 +78,9 @@ class GameListener implements Listener
                 if ($fuelTank === null) return;
 
 
-                $attackerGameData = PlayerDataOnGameStorage::findByName($attacker->getName());
 
-                $result = $fuelTank->addFuel($itemInHand->getCount(), $attackerGameData->isWolf());
+                $isFakeFuel = in_array($attacker->getName(), $game->getWolfNameList());
+                $result = $fuelTank->addFuel($itemInHand->getCount(), $isFakeFuel);
                 if ($result) {
                     //TODO: マックスを超えた分は消費しないように
                     $attacker->getInventory()->clear($attacker->getInventory()->getHeldItemIndex());
