@@ -4,7 +4,7 @@
 namespace deceit\services;
 
 
-use deceit\models\GameId;
+use deceit\types\GameId;
 use deceit\storages\GameStorage;
 
 class StartGameService

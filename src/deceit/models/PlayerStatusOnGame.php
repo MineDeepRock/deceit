@@ -4,16 +4,15 @@
 namespace deceit\models;
 
 
-//一時的なプレイヤーデータは含まない。
 use deceit\types\GameId;
 
-class PlayerStatus
+class PlayerStatusOnGame
 {
     private string $name;
-    private ?GameId $belongGameId;//BelongGameIdは一時的だけど例外
+    private GameId $belongGameId;
 
-    //TODO:level,money,etc,,
-    public function __construct(string $name, ?GameId $belongGameId = null) {
+
+    public function __construct(string $name, GameId $belongGameId) {
         $this->name = $name;
         $this->belongGameId = $belongGameId;
     }
@@ -26,9 +25,9 @@ class PlayerStatus
     }
 
     /**
-     * @return GameId|null
+     * @return GameId
      */
-    public function getBelongGameId(): ?GameId {
+    public function getBelongGameId(): GameId {
         return $this->belongGameId;
     }
 }

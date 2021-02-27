@@ -7,6 +7,7 @@ namespace deceit\models;
 use deceit\pmmp\events\FinishedExitTimerEvent;
 use deceit\pmmp\events\StoppedGameTimerEvent;
 use deceit\pmmp\events\UpdatedExitTimerEvent;
+use deceit\types\GameId;
 use pocketmine\scheduler\TaskScheduler;
 
 class ExitTimer extends Timer

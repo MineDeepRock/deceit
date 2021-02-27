@@ -4,7 +4,7 @@
 namespace deceit\pmmp\services;
 
 
-use deceit\models\GameId;
+use deceit\types\GameId;
 use deceit\pmmp\scoreboards\GameSettingsScoreboard;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\services\JoinGameService;

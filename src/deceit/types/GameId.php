@@ -1,7 +1,7 @@
 <?php
 
 
-namespace deceit\models;
+namespace deceit\types;
 
 
 class GameId

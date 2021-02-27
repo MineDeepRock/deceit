@@ -4,7 +4,7 @@
 namespace deceit\pmmp\events;
 
 
-use deceit\models\GameId;
+use deceit\types\GameId;
 use pocketmine\event\Event;
 
 class UpdatedGameTimerEvent extends Event

@@ -4,7 +4,7 @@
 namespace deceit\adapters;
 
 
-use deceit\models\GameId;
+use deceit\types\GameId;
 use deceit\models\PlayerStatus;
 
 class PlayerStatusJsonAdapter

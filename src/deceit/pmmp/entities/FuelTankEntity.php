@@ -4,8 +4,8 @@
 namespace deceit\pmmp\entities;
 
 
-use deceit\models\FuelTankId;
-use deceit\models\GameId;
+use deceit\types\FuelTankId;
+use deceit\types\GameId;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
 use pocketmine\nbt\tag\CompoundTag;

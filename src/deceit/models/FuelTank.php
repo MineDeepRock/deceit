@@ -5,6 +5,8 @@ namespace deceit\models;
 
 
 use deceit\pmmp\events\FuelTankBecameFullEvent;
+use deceit\types\FuelTankId;
+use deceit\types\GameId;
 
 class FuelTank
 {

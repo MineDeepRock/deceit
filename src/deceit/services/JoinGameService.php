@@ -5,7 +5,7 @@ namespace deceit\services;
 
 
 use deceit\dao\PlayerStatusDAO;
-use deceit\models\GameId;
+use deceit\types\GameId;
 use deceit\models\PlayerStatus;
 use deceit\storages\GameStorage;
 

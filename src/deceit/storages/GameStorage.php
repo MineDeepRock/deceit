@@ -4,7 +4,7 @@ namespace deceit\storages;
 
 
 use deceit\models\Game;
-use deceit\models\GameId;
+use deceit\types\GameId;
 
 class GameStorage
 {
@@ -34,7 +34,7 @@ class GameStorage
     }
 
     static function findById(?GameId $gameId): ?Game {
-        if ($gameId === null) return null;;
+        if ($gameId === null) return null;
 
         foreach (self::$games as $game) {
             if ($game->getGameId()->equals($gameId)) {

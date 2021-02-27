@@ -5,7 +5,7 @@ namespace deceit\pmmp\services;
 
 
 use bossbar_system\BossBar;
-use deceit\models\GameId;
+use deceit\types\GameId;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\storages\GameStorage;
 use pocketmine\block\Block;

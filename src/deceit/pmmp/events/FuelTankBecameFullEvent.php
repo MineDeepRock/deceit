@@ -4,8 +4,8 @@
 namespace deceit\pmmp\events;
 
 
-use deceit\models\FuelTankId;
-use deceit\models\GameId;
+use deceit\types\FuelTankId;
+use deceit\types\GameId;
 use pocketmine\event\Event;
 
 class FuelTankBecameFullEvent extends Event

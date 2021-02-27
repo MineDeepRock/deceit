@@ -6,6 +6,8 @@ namespace deceit\models;
 use deceit\pmmp\entities\FuelEntity;
 use deceit\pmmp\entities\FuelTankEntity;
 use deceit\storages\GameStorage;
+use deceit\types\FuelTankId;
+use deceit\types\GameId;
 use pocketmine\level\Position;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\TaskHandler;
