@@ -41,11 +41,4 @@ class PlayerDataOnGame
     public function getState(): PlayerStateOnGame {
         return $this->state;
     }
-
-    /**
-     * @return bool
-     */
-    public function isWolf(): bool {
-        return $this->isWolf;
-    }
 }

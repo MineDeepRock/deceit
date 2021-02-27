@@ -77,20 +77,29 @@ class PlayerDataOnGameStorage
 
     /**
      * @param GameId $gameId
+     * @param PlayerStateOnGame $targetStateOnGame
      * @return PlayerDataOnGame[]
      */
-    static function getAlivePlayers(GameId $gameId): array {
+    private static function getPlayersByState(GameId $gameId, PlayerStateOnGame $targetStateOnGame): array {
         $result = [];
 
         foreach (self::$playerDataOnGames as $playerDataOnGame) {
             if ($playerDataOnGame->getBelongGameId()->equals($gameId)) {
-                if ($playerDataOnGame->getState()->equals(PlayerStateOnGame::Alive())) {
+                if ($playerDataOnGame->getState()->equals($targetStateOnGame)) {
                     $result[] = $playerDataOnGame;
                 }
             }
         }
 
         return $result;
+    }
+
+    /**
+     * @param GameId $gameId
+     * @return PlayerDataOnGame[]
+     */
+    static function getAlivePlayers(GameId $gameId): array {
+        return self::getPlayersByState($gameId, PlayerStateOnGame::Alive());
     }
 
     /**
@@ -98,17 +107,8 @@ class PlayerDataOnGameStorage
      * @return PlayerDataOnGame[]
      */
     static function getCadaverPlayers(GameId $gameId): array {
-        $result = [];
+        return self::getPlayersByState($gameId, PlayerStateOnGame::Cadaver());
 
-        foreach (self::$playerDataOnGames as $playerDataOnGame) {
-            if ($playerDataOnGame->getBelongGameId()->equals($gameId)) {
-                if ($playerDataOnGame->getState()->equals(PlayerStateOnGame::Cadaver())) {
-                    $result[] = $playerDataOnGame;
-                }
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -116,17 +116,7 @@ class PlayerDataOnGameStorage
      * @return PlayerDataOnGame[]
      */
     static function getDeadPlayers(GameId $gameId): array {
-        $result = [];
-
-        foreach (self::$playerDataOnGames as $playerDataOnGame) {
-            if ($playerDataOnGame->getBelongGameId()->equals($gameId)) {
-                if ($playerDataOnGame->getState()->equals(PlayerStateOnGame::Dead())) {
-                    $result[] = $playerDataOnGame;
-                }
-            }
-        }
-
-        return $result;
+        return self::getPlayersByState($gameId, PlayerStateOnGame::Dead());
     }
 
     /**
@@ -134,16 +124,6 @@ class PlayerDataOnGameStorage
      * @return PlayerDataOnGame[]
      */
     static function getEscapedPlayers(GameId $gameId): array {
-        $result = [];
-
-        foreach (self::$playerDataOnGames as $playerDataOnGame) {
-            if ($playerDataOnGame->getBelongGameId()->equals($gameId)) {
-                if ($playerDataOnGame->getState()->equals(PlayerStateOnGame::Escaped())) {
-                    $result[] = $playerDataOnGame;
-                }
-            }
-        }
-
-        return $result;
+        return self::getPlayersByState($gameId, PlayerStateOnGame::Escaped());
     }
 }
