@@ -17,7 +17,7 @@ class PlayerStatusJsonAdapter
     static function encode(PlayerStatus $playerStatus): array {
         return [
             "name" => $playerStatus->getName(),
-            "belong_game_id" => strval($playerStatus->getBelongGameId()),
+            "belong_game_id" => $playerStatus->getBelongGameId(),
         ];
     }
 }
