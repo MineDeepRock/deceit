@@ -7,6 +7,7 @@ namespace deceit\models;
 use deceit\types\GameId;
 use deceit\types\PlayerStateOnGame;
 
+//ゲーム中にしか使わない値を持つ
 class PlayerDataOnGame
 {
     private string $name;
