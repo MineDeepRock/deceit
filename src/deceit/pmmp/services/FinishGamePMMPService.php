@@ -23,6 +23,7 @@ class FinishGamePMMPService
         $mapLevel = Server::getInstance()->getLevelByName($map->getLevelName());
         $mapLevel->setBlock($map->getExitVector(), Block::get($map->getOriginalExitBlockId()));
 
+        //メッセージの送信+ロビーへ送還
         $escapedPlayerCount = PlayerDataOnGameStorage::getEscapedPlayers($gameId);
         $winWolfs = $escapedPlayerCount === 0;
 
@@ -41,18 +42,8 @@ class FinishGamePMMPService
                 $player->sendMessage($messageToPlayers);
                 $player->sendTitle($messageToPlayers);
             }
-        }
 
-        $level = Server::getInstance()->getLevelByName("lobby");
-        foreach ($game->getPlayersName() as $playerName) {
-            $player = Server::getInstance()->getPlayer($playerName);
-            if ($player === null) return;
-
-            $player->teleport($level->getSpawnLocation());
-            $player->getInventory()->setContents([]);
-            $bossBars = BossBar::getBelongings($player);
-            foreach ($bossBars as $bossBar) $bossBar->remove();
-            LobbyScoreboard::send($player);
+            QuitGamePMMPService::execute($player);
         }
     }
 }
