@@ -23,7 +23,7 @@ class GameSettingsScoreboard extends Scoreboard
             //TODO:error
         }
 
-        $playerCount = $game->getMaxPlayers() . "/" . count($game->getPlayerNameList());
+        $playerCount = count($game->getPlayerNameList()) . "/" . $game->getMaxPlayers();
 
         $scores = [
             new Score(TextFormat::RESET . "----------------------"),
