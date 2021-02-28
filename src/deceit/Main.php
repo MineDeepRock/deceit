@@ -25,7 +25,7 @@ use pocketmine\Server;
 class Main extends PluginBase implements Listener
 {
     public function onEnable() {
-        DataFolderPath::init($this->getDataFolder());
+        DataFolderPath::init($this->getDataFolder(), $this->getFile() . "resources/");
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getServer()->getPluginManager()->registerEvents(new GameListener($this->getScheduler()), $this);
 
@@ -64,7 +64,7 @@ class Main extends PluginBase implements Listener
 
                 if ($game === null) {
                     $sender->sendMessage("ゲームに参加していないか、ゲームのオーナではありません");
-                }  else {
+                } else {
                     $sender->sendForm(new GameSettingForm());
                 }
 
