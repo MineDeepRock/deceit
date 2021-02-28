@@ -10,6 +10,7 @@ use deceit\models\PlayerStatus;
 use deceit\pmmp\blocks\ExitBlock;
 use deceit\pmmp\BossBarTypeList;
 use deceit\pmmp\entities\CadaverEntity;
+use deceit\pmmp\entities\FuelEntity;
 use deceit\pmmp\entities\FuelTankEntity;
 use deceit\pmmp\events\FinishedExitTimerEvent;
 use deceit\pmmp\events\FinishedGameTimerEvent;
@@ -95,8 +96,28 @@ class GameListener implements Listener
 
         }
     }
+    public function onDamagedFuelEntity(EntityDamageEvent $event) {
+        $fuelEntity = $event->getEntity();
+        if (!($fuelEntity instanceof FuelEntity)) return;
 
-    public function onFuelTankBecameFull(FuelTankBecameFullEvent $event): void {
+        if ($event instanceof EntityDamageByEntityEvent) {
+
+            //Player以外ならキャンセル
+            $attacker = $event->getDamager();
+            if (!($attacker instanceof Player)) return;
+
+            $attackerStatus = PlayerStatusDAO::findByName($attacker->getName());
+            $belongGameId = $attackerStatus->getBelongGameId();
+
+            //試合に参加していない ならキャンセル
+            if ($belongGameId === null) return;
+            
+            $attacker->getInventory()->addItem(new FuelItem());
+        }
+    }
+
+
+        public function onFuelTankBecameFull(FuelTankBecameFullEvent $event): void {
         $fulledTankId = $event->getTankId();
         $gameId = $event->getBelongGameId();
 
