@@ -32,16 +32,16 @@ class FuelTank
         if ($this->storageAmount >= $this->capacity) return false;
 
         $this->storageAmount += $fuelCount;
-        if ($isFake) $this->fakeStorageAmount += $fuelCount;
+        if ($isFake and !$this->isOnceFulled) $this->fakeStorageAmount += $fuelCount;
 
         if ($this->storageAmount >= $this->capacity) {
             $this->storageAmount = $this->capacity;
 
-            if ($this->isOnceFulled) {
-                $this->storageAmount -= $this->fakeStorageAmount;
-            } else {
+            if ($this->isOnceFulled or $this->fakeStorageAmount === 0) {
                 $event = new FuelTankBecameFullEvent($this->belongGameId, $this->tankId);
                 $event->call();
+            } else {
+                $this->storageAmount -= $this->fakeStorageAmount;
             }
         }
 

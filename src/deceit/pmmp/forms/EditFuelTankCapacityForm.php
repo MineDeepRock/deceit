@@ -21,7 +21,7 @@ class EditFuelTankCapacityForm extends CustomForm
         $this->map = $map;
         $this->fuelTankMapData = $fuelTankMapData;
 
-        $this->capacitySlider = new Slider("容量", 1, 100, 20);
+        $this->capacitySlider = new Slider("容量", 1, 100, $fuelTankMapData->getCapacity());
         parent::__construct("容量を変更する", [
             $this->capacitySlider,
         ]);
