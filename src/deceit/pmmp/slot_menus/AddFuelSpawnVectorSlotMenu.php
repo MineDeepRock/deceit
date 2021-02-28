@@ -39,6 +39,17 @@ class AddFuelSpawnVectorSlotMenu extends SlotMenu
 
                         $player->sendForm(new FuelSpawnVectorSettingForm($updatedMap));
                     }
+                ),
+
+                new SlotMenuElement(
+                    ItemIds::DROPPER,
+                    "戻る",
+                    function (Player $player) {
+                        SlotMenuSystem::close($player);
+                        $player->sendForm(new FuelSpawnVectorSettingForm($this->map));
+                    },
+                    null,
+                    8
                 )
             ]
         );

@@ -40,6 +40,16 @@ class AddFuelTankSlotMenu extends SlotMenu
 
                         $player->sendForm(new FuelTankListForm($updatedMap));
                     }
+                ),
+                new SlotMenuElement(
+                    ItemIds::DROPPER,
+                    "戻る",
+                    function (Player $player) {
+                        SlotMenuSystem::close($player);
+                        $player->sendForm(new FuelTankListForm($this->map));
+                    },
+                    null,
+                    8
                 )
             ]
         );

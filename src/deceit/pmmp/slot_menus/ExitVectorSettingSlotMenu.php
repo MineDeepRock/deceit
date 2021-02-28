@@ -38,6 +38,16 @@ class ExitVectorSettingSlotMenu extends SlotMenu
 
                         $player->sendForm(new MapSettingForm($updatedMap));
                     }
+                ),
+                new SlotMenuElement(
+                    ItemIds::DROPPER,
+                    "戻る",
+                    function (Player $player) {
+                        SlotMenuSystem::close($player);
+                        $player->sendForm(new MapSettingForm($this->map));
+                    },
+                    null,
+                    8
                 )
             ]
         );
