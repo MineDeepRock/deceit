@@ -19,6 +19,7 @@ class CadaverEntity extends EntityBase
     public $width = 0.6;
     public $height = 0.2;
 
+    public string $skinName = self::NAME;
     protected string $geometryId = "geometry." . self::NAME;
     protected string $geometryName = self::NAME . ".geo.json";
 

@@ -16,6 +16,7 @@ class FuelEntity extends EntityBase
 {
     const NAME = "Fuel";
 
+    public string $skinName = self::NAME;
     public string $geometryId = "geometry." . self::NAME;
     public string $geometryName = self::NAME . ".geo.json";
 
