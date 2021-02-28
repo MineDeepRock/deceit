@@ -5,7 +5,6 @@ namespace deceit\pmmp\services;
 
 
 use bossbar_system\BossBar;
-use deceit\pmmp\scoreboards\GameSettingsScoreboard;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\services\QuitGameService;
 use pocketmine\Player;

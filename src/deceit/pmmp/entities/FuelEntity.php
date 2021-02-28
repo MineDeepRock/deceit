@@ -4,7 +4,6 @@
 namespace deceit\pmmp\entities;
 
 
-use deceit\types\GameId;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
 use pocketmine\nbt\tag\CompoundTag;

@@ -19,21 +19,20 @@ class FuelTank
     private int $fakeStorageAmount;
     private int $isOnceFulled;
 
-    public function __construct(GameId $gameId) {
+    public function __construct(GameId $gameId, int $capacity) {
         $this->belongGameId = $gameId;
         $this->tankId = FuelTankId::asNew();
-        $this->capacity = 200;
+        $this->capacity = $capacity <= 1 ? 1 : $capacity;
         $this->storageAmount = 0;
         $this->fakeStorageAmount = 0;
         $this->isOnceFulled = false;
     }
 
     public function addFuel(int $fuelCount, bool $isFake = false): bool {
-        if ($this->capacity >= $this->storageAmount) return false;
+        if ($this->storageAmount >= $this->capacity) return false;
 
-        $fuelAmount = 10 * $fuelCount;
-        $this->storageAmount += $fuelAmount;
-        if ($isFake) $this->fakeStorageAmount += $fuelAmount;
+        $this->storageAmount += $fuelCount;
+        if ($isFake) $this->fakeStorageAmount += $fuelCount;
 
         if ($this->storageAmount >= $this->capacity) {
             $this->storageAmount = $this->capacity;

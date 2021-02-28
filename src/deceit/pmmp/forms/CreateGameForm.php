@@ -7,7 +7,6 @@ namespace deceit\pmmp\forms;
 use deceit\dao\MapDAO;
 use deceit\services\CreateGameService;
 use form_builder\models\custom_form_elements\Dropdown;
-use form_builder\models\custom_form_elements\Input;
 use form_builder\models\custom_form_elements\Slider;
 use form_builder\models\CustomForm;
 use pocketmine\Player;

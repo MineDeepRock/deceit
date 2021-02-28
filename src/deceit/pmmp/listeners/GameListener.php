@@ -5,7 +5,6 @@ namespace deceit\pmmp\listeners;
 
 use bossbar_system\BossBar;
 use deceit\dao\PlayerStatusDAO;
-use deceit\models\PlayerDataOnGame;
 use deceit\models\PlayerStatus;
 use deceit\pmmp\blocks\ExitBlock;
 use deceit\pmmp\BossBarTypeList;
