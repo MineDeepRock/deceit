@@ -12,7 +12,7 @@ class MapJsonAdapter
     static function decode(array $json): Map {
         $fuelTankMapDataList = [];
         foreach ($json["fuel_tanks"] as $fuelTank) {
-            $fuelTankVectors[] = new FuelTankMapData($fuelTank["capacity"], new Vector3($fuelTank["x"], $fuelTank["y"], $fuelTank["z"]));
+            $fuelTankMapDataList[] = new FuelTankMapData($fuelTank["capacity"], new Vector3($fuelTank["x"], $fuelTank["y"], $fuelTank["z"]));
         }
 
 
