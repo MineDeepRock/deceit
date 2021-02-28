@@ -5,8 +5,9 @@ namespace deceit\pmmp\slot_menus;
 
 
 use deceit\dao\MapDAO;
+use deceit\models\FuelTankMapData;
 use deceit\models\Map;
-use deceit\pmmp\forms\FuelTankSettingForm;
+use deceit\pmmp\forms\FuelTankListForm;
 use pocketmine\block\Block;
 use pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
@@ -31,13 +32,13 @@ class AddFuelTankSlotMenu extends SlotMenu
                         $updatedMap = $this->updateMap($player);
                         SlotMenuSystem::close($player);
 
-                        $player->sendForm(new FuelTankSettingForm($updatedMap));
+                        $player->sendForm(new FuelTankListForm($updatedMap));
                     },
                     function (Player $player, Block $block) {
                         $updatedMap = $this->updateMap($block);
                         SlotMenuSystem::close($player);
 
-                        $player->sendForm(new FuelTankSettingForm($updatedMap));
+                        $player->sendForm(new FuelTankListForm($updatedMap));
                     }
                 )
             ]
@@ -47,8 +48,8 @@ class AddFuelTankSlotMenu extends SlotMenu
 
     private function updateMap(Vector3 $vector3): Map {
 
-        $newFuelTankVectors = $this->map->getFuelTankVectors();
-        $newFuelTankVectors[] = $vector3;
+        $newFuelTankVectors = $this->map->getFuelTankMapDataList();
+        $newFuelTankVectors[] = new FuelTankMapData(20, $vector3);
 
         $newMap = new Map(
             $this->map->getLevelName(),

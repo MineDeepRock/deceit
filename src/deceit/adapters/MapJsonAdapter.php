@@ -3,15 +3,16 @@
 namespace deceit\adapters;
 
 
+use deceit\models\FuelTankMapData;
 use deceit\models\Map;
 use pocketmine\math\Vector3;
 
 class MapJsonAdapter
 {
     static function decode(array $json): Map {
-        $fuelTankVectors = [];
-        foreach ($json["fuel_tank_vectors"] as $tankVector) {
-            $fuelTankVectors[] = new Vector3($tankVector["x"], $tankVector["y"], $tankVector["z"]);
+        $fuelTankMapDataList = [];
+        foreach ($json["fuel_tanks"] as $fuelTank) {
+            $fuelTankVectors[] = new FuelTankMapData($fuelTank["capacity"], new Vector3($fuelTank["x"], $fuelTank["y"], $fuelTank["z"]));
         }
 
 
@@ -32,17 +33,18 @@ class MapJsonAdapter
             $json["exit_vector"]["z"],
         );
 
-        return new Map($json["level_name"], $json["name"], $startVector, $exitVector, $json["original_exit_block_id"], $fuelTankVectors, $fuelSpawnVectors);
+        return new Map($json["level_name"], $json["name"], $startVector, $exitVector, $json["original_exit_block_id"], $fuelTankMapDataList, $fuelSpawnVectors);
     }
 
     static function encode(Map $map): array {
 
-        $fuelTankVectors = [];
-        foreach ($map->getFuelTankVectors() as $tankVector) {
-            $fuelTankVectors[] = [
-                "x" => $tankVector->getX(),
-                "y" => $tankVector->getY(),
-                "z" => $tankVector->getZ()
+        $fuelTanks = [];
+        foreach ($map->getFuelTankMapDataList() as $fueLTankMapData) {
+            $fuelTanks[] = [
+                "capacity" => $fueLTankMapData->getCapacity(),
+                "x" => $fueLTankMapData->getVector()->getX(),
+                "y" => $fueLTankMapData->getVector()->getY(),
+                "z" => $fueLTankMapData->getVector()->getZ()
             ];
         }
 
@@ -72,7 +74,7 @@ class MapJsonAdapter
             "start_vector" => $startVector,
             "exit_vector" => $exitVector,
             "original_exit_block_id" => $map->getOriginalExitBlockId(),
-            "fuel_tank_vectors" => $fuelTankVectors,
+            "fuel_tanks" => $fuelTanks,
             "fuel_spawn_vectors" => $fuelSpawnVectors,
         ];
     }

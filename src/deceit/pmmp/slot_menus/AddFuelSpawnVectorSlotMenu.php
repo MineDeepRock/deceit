@@ -7,7 +7,6 @@ namespace deceit\pmmp\slot_menus;
 use deceit\dao\MapDAO;
 use deceit\models\Map;
 use deceit\pmmp\forms\FuelSpawnVectorSettingForm;
-use deceit\pmmp\forms\FuelTankSettingForm;
 use pocketmine\block\Block;
 use pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
@@ -57,7 +56,7 @@ class AddFuelSpawnVectorSlotMenu extends SlotMenu
             $this->map->getStartVector(),
             $this->map->getExitVector(),
             $this->map->getOriginalExitBlockId(),
-            $this->map->getFuelTankVectors(),
+            $this->map->getFuelTankMapDataList(),
             $newFuelSpawnVectors,
         );
         MapDAO::update($this->map->getName(), $newMap);

@@ -44,8 +44,8 @@ class Game
     public function __construct(string $gameOwnerName, Map $map, int $maxPlayers, int $wolfsCount, TaskScheduler $scheduler) {
         $this->gameId = GameId::asNew();
         $fuelTanks = [];
-        foreach ($map->getFuelSpawnVectors() as $_) {
-            $fuelTanks[] = new FuelTank($this->gameId);
+        foreach ($map->getFuelTankMapDataList() as $fuelTankMapData) {
+            $fuelTanks[] = new FuelTank($this->gameId, $fuelTankMapData->getCapacity());
         }
 
         $this->scheduler = $scheduler;
@@ -88,8 +88,8 @@ class Game
         ), 20 * 3, 20 * 30);
 
         $index = 0;
-        foreach ($this->map->getFuelTankVectors() as $tankVector) {
-            $fuelEntity = new FuelTankEntity($level, Position::fromObject($tankVector, $level), $this->gameId, $this->getFuelTanks()[$index]->getTankId());
+        foreach ($this->map->getFuelTankMapDataList() as $tankData) {
+            $fuelEntity = new FuelTankEntity($level, Position::fromObject($tankData->getVector(), $level), $this->gameId, $this->getFuelTanks()[$index]->getTankId());
             $fuelEntity->spawnToAll();
             $index++;
         }

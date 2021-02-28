@@ -51,7 +51,7 @@ class InitialSpawnVectorSettingSlotMenu extends SlotMenu
             $vector3,
             $this->map->getExitVector(),
             $this->map->getOriginalExitBlockId(),
-            $this->map->getFuelTankVectors(),
+            $this->map->getFuelTankMapDataList(),
             $this->map->getFuelSpawnVectors(),
         );
         MapDAO::update($this->map->getName(), $newMap);

@@ -30,7 +30,7 @@ class RenameMapForm extends CustomForm
             $this->map->getStartVector(),
             $this->map->getExitVector(),
             $this->map->getOriginalExitBlockId(),
-            $this->map->getFuelTankVectors(),
+            $this->map->getFuelTankMapDataList(),
             $this->map->getFuelSpawnVectors(),
         );
 

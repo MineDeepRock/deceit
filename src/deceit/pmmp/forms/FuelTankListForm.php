@@ -6,13 +6,13 @@ namespace deceit\pmmp\forms;
 
 use deceit\models\Map;
 use deceit\pmmp\slot_menus\AddFuelTankSlotMenu;
-use deceit\pmmp\slot_menus\FuelTankVectorSettingSlotMenu;
+use deceit\pmmp\slot_menus\FuelTankSettingSlotMenu;
 use form_builder\models\simple_form_elements\SimpleFormButton;
 use form_builder\models\SimpleForm;
 use pocketmine\Player;
 use slot_menu_system\SlotMenuSystem;
 
-class FuelTankSettingForm extends SimpleForm
+class FuelTankListForm extends SimpleForm
 {
     private Map $map;
 
@@ -28,13 +28,15 @@ class FuelTankSettingForm extends SimpleForm
             )
         ];
 
-        foreach ($map->getFuelTankVectors() as $vector) {
+        foreach ($map->getFuelTankMapDataList() as $fuelTankMapData) {
+            $vector = $fuelTankMapData->getVector();
+
             $buttons[] = new SimpleFormButton(
-                "x:{$vector->getY()},y:{$vector->getY()},z:{$vector->getZ()}",
+                "容量:{$fuelTankMapData->getCapacity()},x:{$vector->getY()},y:{$vector->getY()},z:{$vector->getZ()}",
                 null,
-                function (Player $player) use ($map, $vector) {
-                    $player->teleport($vector);
-                    SlotMenuSystem::send($player, new FuelTankVectorSettingSlotMenu($map, $vector));
+                function (Player $player) use ($map, $fuelTankMapData) {
+                    $player->teleport($fuelTankMapData->getVector());
+                    SlotMenuSystem::send($player, new FuelTankSettingSlotMenu($map, $fuelTankMapData));
                 }
             );
         }
