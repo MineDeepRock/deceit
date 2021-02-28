@@ -72,11 +72,17 @@ class Game
         $this->fuelSpawnHandler = $this->scheduler->scheduleDelayedRepeatingTask(new ClosureTask(
             function (int $currentTick) use ($level): void {
                 //TODO:難易度調整
-                $spawnCount = intval(count($this->map->getFuelSpawnVectors()) / 2);
-                $vectors = array_rand($this->map->getFuelSpawnVectors(), $spawnCount);
-                foreach ($vectors as $vector) {
-                    $fuelEntity = new FuelEntity($level, Position::fromObject($vector, $level));
+                $vectors = $this->map->getFuelSpawnVectors();
+                $spawnCount = intval(count($vectors) / 2);
+                $vectorIndexList = array_rand($vectors, $spawnCount);
+                if (is_numeric($vectorIndexList)) {
+                    $fuelEntity = new FuelEntity($level, Position::fromObject($vectors[$vectorIndexList], $level));
                     $fuelEntity->spawnToAll();
+                } else {
+                    foreach ($vectorIndexList as $index) {
+                        $fuelEntity = new FuelEntity($level, Position::fromObject($vectors[$index], $level));
+                        $fuelEntity->spawnToAll();
+                    }
                 }
             }
         ), 20 * 3, 20 * 30);
