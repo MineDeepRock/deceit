@@ -20,6 +20,10 @@ class FuelEntity extends EntityBase
     public string $geometryId = "geometry." . self::NAME;
     public string $geometryName = self::NAME . ".geo.json";
 
+    public $width = 0.6;
+    public $height = 1.0;
+    public $eyeHeight = 1.0;
+
     public function __construct(Level $level, Position $position) {
         parent::__construct($level, $nbt = new CompoundTag('', [
             'Pos' => new ListTag('Pos', [
