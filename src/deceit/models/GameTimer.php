@@ -4,9 +4,10 @@
 namespace deceit\models;
 
 
-use deceit\pmmp\events\StoppedGameTimerEvent;
-use deceit\pmmp\events\UpdatedGameTimerEvent;
+use deceit\pmmp\BossBarTypeList;
 use deceit\pmmp\services\FinishGamePMMPService;
+use deceit\pmmp\services\RemoveGameBossBarPMMPService;
+use deceit\pmmp\services\UpdateGameBossBarPMMPService;
 use deceit\services\FinishGameService;
 use deceit\types\GameId;
 use pocketmine\scheduler\TaskScheduler;
@@ -21,13 +22,11 @@ class GameTimer extends Timer
     }
 
     public function onUpdatedTimer(): void {
-        $event = new UpdatedGameTimerEvent($this->gameId);
-        $event->call();
+        UpdateGameBossBarPMMPService::execute($this->gameId, BossBarTypeList::GameTimer());
     }
 
     public function onStoppedTimer(): void {
-        $event = new StoppedGameTimerEvent($this->gameId);
-        $event->call();
+        RemoveGameBossBarPMMPService::execute($this->gameId, BossBarTypeList::GameTimer());
     }
 
     public function onFinishedTimer(): void {

@@ -15,16 +15,15 @@ use deceit\pmmp\events\FuelTankBecameFullEvent;
 use deceit\pmmp\events\StoppedGameTimerEvent;
 use deceit\pmmp\events\UpdatedExitTimerEvent;
 use deceit\pmmp\events\UpdatedGameDataEvent;
-use deceit\pmmp\events\UpdatedGameTimerEvent;
 use deceit\pmmp\events\VotedPlayerEvent;
 use deceit\pmmp\forms\ConfirmVoteForm;
 use deceit\pmmp\items\FuelItem;
 use deceit\pmmp\scoreboards\GameSettingsScoreboard;
+use deceit\pmmp\services\OpenExitPMMPService;
 use deceit\services\UpdatePlayerStateOnGameService;
 use deceit\storages\GameStorage;
 use deceit\storages\PlayerDataOnGameStorage;
 use deceit\types\PlayerStateOnGame;
-use pocketmine\block\Block;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDeathEvent;
@@ -76,7 +75,6 @@ class GameListener implements Listener
                 if ($fuelTank === null) return;
 
 
-
                 $isFakeFuel = in_array($attacker->getName(), $game->getWolfNameList());
                 $result = $fuelTank->addFuel($itemInHand->getCount(), $isFakeFuel);
                 if ($result) {
@@ -91,6 +89,7 @@ class GameListener implements Listener
 
         }
     }
+
     public function onDamagedFuelEntity(EntityDamageEvent $event) {
         $fuelEntity = $event->getEntity();
         if (!($fuelEntity instanceof FuelEntity)) return;
@@ -106,14 +105,13 @@ class GameListener implements Listener
 
             //試合に参加していない ならキャンセル
             if ($belongGameId === null) return;
-            
+
             $attacker->getInventory()->addItem(new FuelItem());
         }
     }
 
 
-        public function onFuelTankBecameFull(FuelTankBecameFullEvent $event): void {
-        $fulledTankId = $event->getTankId();
+    public function onFuelTankBecameFull(FuelTankBecameFullEvent $event): void {
         $gameId = $event->getBelongGameId();
 
         $game = GameStorage::findById($gameId);
@@ -126,11 +124,7 @@ class GameListener implements Listener
 
         //すべてのタンクが満タンになったら、脱出の出口を開く
         if ($isAllTankFull) {
-            $exitVector = $game->getMap()->getExitVector();
-            $levelName = $game->getMap()->getLevelName();
-            $level = Server::getInstance()->getLevelByName($levelName);
-
-            $level->setBlock($exitVector, Block::get(ExitBlock::ID));
+            OpenExitPMMPService::execute($game->getMap());
         }
     }
 
@@ -248,49 +242,6 @@ class GameListener implements Listener
         }
     }
 
-    public function onUpdatedGameTimer(UpdatedGameTimerEvent $event) {
-        $gameId = $event->getGameId();
-        $game = GameStorage::findById($gameId);
-        if ($game === null) return;
-        foreach ($game->getPlayerNameList() as $playerName) {
-            $player = Server::getInstance()->getPlayer($playerName);
-            if ($player === null) return;
-
-            //BossBarnの更新
-            $bossBar = BossBar::findByType($player, BossBarTypeList::GameTimer());
-            if ($bossBar === null) return;//TODO:error
-            $bossBar->updatePercentage($game->getGameTimerPercentage());
-        }
-    }
-
-    public function onUpdatedExitTimer(UpdatedExitTimerEvent $event) {
-        $gameId = $event->getGameId();
-        $game = GameStorage::findById($gameId);
-        if ($game === null) return;
-        foreach ($game->getPlayerNameList() as $playerName) {
-            $player = Server::getInstance()->getPlayer($playerName);
-            if ($player === null) return;
-
-            //BossBarnの更新
-            $bossBar = BossBar::findByType($player, BossBarTypeList::ExitTimer());
-            if ($bossBar === null) return;//TODO:error
-            $bossBar->updatePercentage($game->getExitTimerPercentage());
-        }
-    }
-
-    public function onStoppedGameTimer(StoppedGameTimerEvent $event) {
-        $gameId = $event->getGameId();
-        $game = GameStorage::findById($gameId);
-        if ($game === null) return;
-
-        foreach ($game->getPlayerNameList() as $playerName) {
-            $player = Server::getInstance()->getPlayer($playerName);
-            if ($player === null) return;
-            $bossBar = BossBar::findByType($player, BossBarTypeList::GameTimer());
-            $bossBar->remove();
-        }
-    }
-
     public function onToggleSneak(PlayerToggleSneakEvent $event) {
         $player = $event->getPlayer();
         if (!$player->isSneaking()) return;
@@ -331,6 +282,7 @@ class GameListener implements Listener
         return true;
     }
 
+    //TODO : イベントいらないかも
     public function onUpdatedGameData(UpdatedGameDataEvent $event) {
         $game = GameStorage::findById($event->getGameId());
         if ($game === null) return;
