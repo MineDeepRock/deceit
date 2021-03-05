@@ -3,7 +3,7 @@
 namespace deceit\dao;
 
 
-use deceit\adapters\MapJsonAdapter;
+use deceit\dto\MapDTO;
 use deceit\DataFolderPath;
 use deceit\models\Map;
 
@@ -13,7 +13,7 @@ class MapDAO
         if (!file_exists(DataFolderPath::$map . $name . ".json")) return null;
 
         $mapsData = json_decode(file_get_contents(DataFolderPath::$map . $name . ".json"), true);
-        return MapJsonAdapter::decode($mapsData);
+        return MapDTO::decode($mapsData);
     }
 
     /**
@@ -25,7 +25,7 @@ class MapDAO
         while (($fileName = readdir($dh)) !== false) {
             if (filetype(DataFolderPath::$map . $fileName) === "file") {
                 $data = json_decode(file_get_contents(DataFolderPath::$map . $fileName), true);
-                $maps[] = MapJsonAdapter::decode($data);
+                $maps[] = MapDTO::decode($data);
             }
         }
 
@@ -37,14 +37,14 @@ class MapDAO
     static function save(Map $map): void {
         if (self::findByName($map->getName()) !== null) return;
 
-        file_put_contents(DataFolderPath::$map . $map->getName() . ".json", json_encode(MapJsonAdapter::encode($map)));
+        file_put_contents(DataFolderPath::$map . $map->getName() . ".json", json_encode(MapDTO::encode($map)));
     }
 
     static function update(string $mapName, Map $map): void {
         if (self::findByName($map->getName()) === null) return;
         if ($mapName !== $map->getName()) self::delete($mapName);
 
-        file_put_contents(DataFolderPath::$map . $map->getName() . ".json", json_encode(MapJsonAdapter::encode($map)));
+        file_put_contents(DataFolderPath::$map . $map->getName() . ".json", json_encode(MapDTO::encode($map)));
     }
 
     static function delete(string $mapName): void {

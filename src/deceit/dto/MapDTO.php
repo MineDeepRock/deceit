@@ -1,13 +1,13 @@
 <?php
 
-namespace deceit\adapters;
+namespace deceit\dto;
 
 
 use deceit\models\FuelTankMapData;
 use deceit\models\Map;
 use pocketmine\math\Vector3;
 
-class MapJsonAdapter
+class MapDTO
 {
     static function decode(array $json): Map {
         $fuelTankMapDataList = [];

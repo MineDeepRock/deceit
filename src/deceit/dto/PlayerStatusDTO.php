@@ -1,13 +1,13 @@
 <?php
 
 
-namespace deceit\adapters;
+namespace deceit\dto;
 
 
 use deceit\types\GameId;
 use deceit\models\PlayerStatus;
 
-class PlayerStatusJsonAdapter
+class PlayerStatusDTO
 {
     static function decode(array $json): PlayerStatus {
         $gameId = $json["belong_game_id"] === null ? null : new GameId($json["belong_game_id"]);

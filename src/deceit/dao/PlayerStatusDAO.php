@@ -4,7 +4,7 @@
 namespace deceit\dao;
 
 
-use deceit\adapters\PlayerStatusJsonAdapter;
+use deceit\dto\PlayerStatusDTO;
 use deceit\DataFolderPath;
 use deceit\models\PlayerStatus;
 
@@ -14,7 +14,7 @@ class PlayerStatusDAO
         if (!file_exists(DataFolderPath::$playerStatus . $name . ".json")) return null;
 
         $playerData = json_decode(file_get_contents(DataFolderPath::$playerStatus . $name . ".json"), true);
-        return PlayerStatusJsonAdapter::decode($playerData);
+        return PlayerStatusDTO::decode($playerData);
     }
 
     static function all(): array {
@@ -23,7 +23,7 @@ class PlayerStatusDAO
         while (($fileName = readdir($dh)) !== false) {
             if (filetype(DataFolderPath::$playerStatus . $fileName) === "file") {
                 $data = json_decode(file_get_contents(DataFolderPath::$playerStatus . $fileName), true);
-                $playerStatusList[] = PlayerStatusJsonAdapter::decode($data);
+                $playerStatusList[] = PlayerStatusDTO::decode($data);
             }
         }
 
@@ -35,12 +35,12 @@ class PlayerStatusDAO
     static function save(PlayerStatus $playerStatus): void {
         if (self::findByName($playerStatus->getName()) !== null) return;
 
-        file_put_contents(DataFolderPath::$playerStatus . $playerStatus->getName() . ".json", json_encode(PlayerStatusJsonAdapter::encode($playerStatus)));
+        file_put_contents(DataFolderPath::$playerStatus . $playerStatus->getName() . ".json", json_encode(PlayerStatusDTO::encode($playerStatus)));
     }
 
     static function update(PlayerStatus $playerStatus): void {
         if (self::findByName($playerStatus->getName()) === null) return;
 
-        file_put_contents(DataFolderPath::$playerStatus . $playerStatus->getName() . ".json", json_encode(PlayerStatusJsonAdapter::encode($playerStatus)));
+        file_put_contents(DataFolderPath::$playerStatus . $playerStatus->getName() . ".json", json_encode(PlayerStatusDTO::encode($playerStatus)));
     }
 }
