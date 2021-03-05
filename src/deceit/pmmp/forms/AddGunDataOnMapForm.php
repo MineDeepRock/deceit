@@ -1,0 +1,47 @@
+<?php
+
+
+namespace deceit\pmmp\forms;
+
+
+use deceit\dao\MapDAO;
+use deceit\models\GunDataOnMap;
+use deceit\models\Map;
+use deceit\pmmp\slot_menus\AddGunDataOnMapSlotMenu;
+use form_builder\models\custom_form_elements\Dropdown;
+use form_builder\models\CustomForm;
+use gun_system\GunSystem;
+use pocketmine\math\Vector3;
+use pocketmine\Player;
+use slot_menu_system\SlotMenuSystem;
+
+class AddGunDataOnMapForm extends CustomForm
+{
+    private Map $map;
+    private Vector3 $vector;
+    private Dropdown $gunNameElement;
+
+    public function __construct(Map $map, Vector3 $vector) {
+        $this->map = $map;
+        $this->vector = $vector;
+
+        $this->gunNameElement = new Dropdown("銃一覧", GunSystem::loadAllGuns(), 0);
+        parent::__construct("銃を選択", [
+            $this->gunNameElement,
+        ]);
+    }
+
+
+    function onSubmit(Player $player): void {
+        $gunName = $this->gunNameElement->getResult();
+        $gunDataOnMapList = $this->map->getGunDataOnMapList();
+        $gunDataOnMapList[] = new GunDataOnMap($gunName, $this->vector);
+
+        MapDAO::updatePartOfMap($this->map->getName(), ["gun_data_list" => $gunDataOnMapList]);
+        $player->sendForm(new GunDataOnMapListForm(MapDAO::findByName($this->map->getName())));
+    }
+
+    function onClickCloseButton(Player $player): void {
+        SlotMenuSystem::send($player, new AddGunDataOnMapSlotMenu($this->map));
+    }
+}
