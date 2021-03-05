@@ -100,6 +100,7 @@ class Game
 
     public function finish(): void {
         $this->isFinished = true;
+        $this->timer->stop();
         $this->exitTimer->stop();
         $this->fuelSpawnHandler->cancel();
     }
