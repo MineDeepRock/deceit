@@ -30,4 +30,11 @@ class GunDataOnMap
     public function getVector(): Vector3 {
         return $this->vector;
     }
+
+    /**
+     * @return string
+     */
+    public function getName(): string {
+        return $this->name;
+    }
 }
