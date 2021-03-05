@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8254aa734f16c025e65dadbc0b38add0",
+    "content-hash": "67c40aab3be616f3553c5a392a026431",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -104,6 +104,34 @@
                 }
             ],
             "time": "2020-09-16T13:56:43+00:00"
+        },
+        {
+            "name": "mine_deep_rock/gun_system",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MineDeepRock/gun_system",
+                "reference": "f3cce9d1075535210cbbe21a58afd6ceb31de149"
+            },
+            "require": {
+                "ext-gd": "*",
+                "ext-json": "*",
+                "pocketmine/pocketmine-mp": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": [
+                        "src/"
+                    ]
+                }
+            },
+            "authors": [
+                {
+                    "name": "suinua"
+                }
+            ],
+            "time": "2020-09-19T07:42:41+00:00"
         },
         {
             "name": "mine_deep_rock/scoreboard_builder",
@@ -675,7 +703,8 @@
         "mine_deep_rock/form_builder": 20,
         "mine_deep_rock/bossbar_system": 20,
         "mine_deep_rock/scoreboard_builder": 20,
-        "mine_deep_rock/slot_menu_system": 20
+        "mine_deep_rock/slot_menu_system": 20,
+        "mine_deep_rock/gun_system": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
