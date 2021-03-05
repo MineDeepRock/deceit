@@ -3,23 +3,20 @@
 namespace deceit\pmmp\listeners;
 
 
-use bossbar_system\BossBar;
 use deceit\dao\PlayerStatusDAO;
 use deceit\models\PlayerStatus;
 use deceit\pmmp\blocks\ExitBlock;
-use deceit\pmmp\BossBarTypeList;
 use deceit\pmmp\entities\CadaverEntity;
 use deceit\pmmp\entities\FuelEntity;
 use deceit\pmmp\entities\FuelTankEntity;
 use deceit\pmmp\events\FuelTankBecameFullEvent;
-use deceit\pmmp\events\StoppedGameTimerEvent;
-use deceit\pmmp\events\UpdatedExitTimerEvent;
 use deceit\pmmp\events\UpdatedGameDataEvent;
-use deceit\pmmp\events\VotedPlayerEvent;
 use deceit\pmmp\forms\ConfirmVoteForm;
 use deceit\pmmp\items\FuelItem;
 use deceit\pmmp\scoreboards\GameSettingsScoreboard;
+use deceit\pmmp\services\FinishGamePMMPService;
 use deceit\pmmp\services\OpenExitPMMPService;
+use deceit\services\FinishGameService;
 use deceit\services\UpdatePlayerStateOnGameService;
 use deceit\storages\GameStorage;
 use deceit\storages\PlayerDataOnGameStorage;
@@ -134,7 +131,7 @@ class GameListener implements Listener
         if (!$this->belongGameIsInProgress($playerStatus)) return;
 
         $player->setSpawn($player->getPosition());
-        $cadaver = new CadaverEntity($player->getLevel(), $player);
+        $cadaver = new CadaverEntity($player->getLevel(), $playerStatus->getBelongGameId(), $player);
         $cadaver->spawnToAll();
 
         //15秒間放置されると死亡する
@@ -191,28 +188,6 @@ class GameListener implements Listener
         $attacker->sendForm(new ConfirmVoteForm($cadaverEntity));
     }
 
-    public function onVotedPlayerEvent(VotedPlayerEvent $event): void {
-        $cadaverEntity = $event->getCadaverEntity();
-        $votedPlayerNameList = $cadaverEntity->getVotedPlayerNameList();
-
-        $player = $cadaverEntity->getOwner();
-        $playerStatus = PlayerStatusDAO::findByName($player->getName());
-        if (!$this->belongGameIsInProgress($playerStatus)) return;
-
-        $game = GameStorage::findById($playerStatus->getBelongGameId());
-
-        $playersCanVoteCount =
-            count(PlayerDataOnGameStorage::getAlivePlayers($game->getGameId())) +
-            count(PlayerDataOnGameStorage::getCadaverPlayers($game->getGameId()));
-
-        $isMajority = $playersCanVoteCount - count($votedPlayerNameList) * 2 <= 0;
-
-        if ($isMajority) {
-            $cadaverEntity->kill();
-        }
-    }
-
-
     public function onCadaverDeath(EntityDeathEvent $event) {
         $event->setDrops([]);
         $entity = $event->getEntity();
@@ -232,13 +207,19 @@ class GameListener implements Listener
         $game = GameStorage::findById($belongGameId);
         UpdatePlayerStateOnGameService::execute($owner->getName(), PlayerStateOnGame::Dead());
 
-        foreach ($game->getPlayerNameList() as $name) {
-            $player = Server::getInstance()->getPlayer($name);
-            if ($player === null) return;
-            if (!$player->isOnline()) return;
+        //人狼がすべてのプレイヤーを殺したとき
+        $aliveWolfCount = 0;
+        $alivePlayerDataList = PlayerDataOnGameStorage::getAlivePlayers($belongGameId);
+        foreach ($alivePlayerDataList as $alivePlayerData) {
+            if (in_array($alivePlayerData->getName(), $game->getWolfNameList())) {
+                $aliveWolfCount++;
+            }
+        }
 
-            //$player->sendMessage(TextFormat::RED . $owner->getName() . "が処刑されました");
-            //$player->sendTitle(TextFormat::RED . $owner->getName() . "が処刑されました");
+        //TODO : 自己蘇生を考慮する
+        if (count($alivePlayerDataList) - $aliveWolfCount <= 0) {
+            FinishGameService::execute($belongGameId);
+            FinishGamePMMPService::execute($belongGameId);
         }
     }
 

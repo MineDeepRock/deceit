@@ -4,6 +4,9 @@ namespace deceit\pmmp\entities;
 
 
 use deceit\DataFolderPath;
+use deceit\storages\GameStorage;
+use deceit\storages\PlayerDataOnGameStorage;
+use deceit\types\GameId;
 use pocketmine\entity\Skin;
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
@@ -24,11 +27,13 @@ class CadaverEntity extends EntityBase
     protected string $geometryName = self::NAME . ".geo.json";
 
     private Player $owner;
+    private GameId $gameId;
 
     private array $votedPlayerNameList;
 
-    public function __construct(Level $level, Player $owner) {
+    public function __construct(Level $level, GameId $gameId, Player $owner) {
         $this->owner = $owner;
+        $this->gameId = $gameId;
         $this->votedPlayerNameList = [];
         $nbt = new CompoundTag('', [
             'Pos' => new ListTag('Pos', [
@@ -80,8 +85,23 @@ class CadaverEntity extends EntityBase
     }
 
     public function vote(string $playerName): bool {
+        $game = GameStorage::findById($this - $this->gameId);
+        if ($game === null) return false;
+        if (!$game->isStarted()) return false;
+        if ($game->isFinished()) return false;
+
+        if (!$this->isAlive()) return false;
+
         if (in_array($playerName, $this->votedPlayerNameList)) return false;
         $this->votedPlayerNameList[] = $playerName;
+
+        $playersCanVoteCount =
+            count(PlayerDataOnGameStorage::getAlivePlayers($game->getGameId())) +
+            count(PlayerDataOnGameStorage::getCadaverPlayers($game->getGameId()));
+
+        $isMajority = $playersCanVoteCount - count($this->votedPlayerNameList) * 2 <= 0;
+
+        if ($isMajority) $this->kill();
         return true;
     }
 }
