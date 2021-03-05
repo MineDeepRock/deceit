@@ -54,6 +54,13 @@ class MapSettingForm extends SimpleForm
                 }
             ),
             new SimpleFormButton(
+                "アイテムのスポーン位置の変更",
+                null,
+                function (Player $player) use ($map) {
+                    $player->sendForm(new ItemDataOnMapListForm($map));
+                }
+            ),
+            new SimpleFormButton(
                 "銃のスポーン位置の変更",
                 null,
                 function (Player $player) use ($map) {
