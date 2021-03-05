@@ -4,6 +4,8 @@ namespace deceit\dto;
 
 
 use deceit\models\FuelTankMapData;
+use deceit\models\GunDataOnMap;
+use deceit\models\ItemDataOnMap;
 use deceit\models\Map;
 use pocketmine\math\Vector3;
 
@@ -33,7 +35,27 @@ class MapDTO
             $json["exit_vector"]["z"],
         );
 
-        return new Map($json["level_name"], $json["name"], $startVector, $exitVector, $json["original_exit_block_id"], $fuelTankMapDataList, $fuelSpawnVectors);
+        $itemDataList = [];
+        foreach ($json["item_data_list"] as $item) {
+            $vector = new Vector3(
+                $item["x"],
+                $item["y"],
+                $item["z"],
+            );
+            $itemDataList[] = new ItemDataOnMap($item["name"], $vector);
+        }
+
+        $gunDataList = [];
+        foreach ($json["gun_data_list"] as $gun) {
+            $vector = new Vector3(
+                $gun["x"],
+                $gun["y"],
+                $gun["z"],
+            );
+            $gunDataList[] = new GunDataOnMap($gun["name"], $vector);
+        }
+
+        return new Map($json["level_name"], $json["name"], $startVector, $exitVector, $json["original_exit_block_id"], $fuelTankMapDataList, $fuelSpawnVectors, $itemDataList, $gunDataList);
     }
 
     static function encode(Map $map): array {
@@ -68,6 +90,27 @@ class MapDTO
             "z" => $map->getExitVector()->getZ(),
         ];
 
+        $itemDataList = [];
+        foreach ($map->getItemDataOnMapList() as $itemDataList) {
+            $itemDataList[] = [
+                "name" => $itemDataList->getName(),
+                "x" => $itemDataList->getVector()->getX(),
+                "y" => $itemDataList->getVector()->getY(),
+                "z" => $itemDataList->getVector()->getZ()
+            ];
+        }
+
+
+        $gunDataList = [];
+        foreach ($map->getItemDataOnMapList() as $gunData) {
+            $gunDataList[] = [
+                "name" => $gunData->getName(),
+                "x" => $gunData->getVector()->getX(),
+                "y" => $gunData->getVector()->getY(),
+                "z" => $gunData->getVector()->getZ()
+            ];
+        }
+
         return [
             "level_name" => $map->getLevelName(),
             "name" => $map->getName(),
@@ -76,6 +119,8 @@ class MapDTO
             "original_exit_block_id" => $map->getOriginalExitBlockId(),
             "fuel_tanks" => $fuelTanks,
             "fuel_spawn_vectors" => $fuelSpawnVectors,
+            "item_data_list" => $itemDataList,
+            "gun_data_list" => $gunDataList
         ];
     }
 }

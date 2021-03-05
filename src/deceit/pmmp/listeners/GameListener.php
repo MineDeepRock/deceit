@@ -9,6 +9,8 @@ use deceit\pmmp\blocks\ExitBlock;
 use deceit\pmmp\entities\CadaverEntity;
 use deceit\pmmp\entities\FuelEntity;
 use deceit\pmmp\entities\FuelTankEntity;
+use deceit\pmmp\entities\ItemGunEntity;
+use deceit\pmmp\entities\ItemOnMapEntity;
 use deceit\pmmp\events\FuelTankBecameFullEvent;
 use deceit\pmmp\events\UpdatedGameDataEvent;
 use deceit\pmmp\forms\ConfirmVoteForm;
@@ -249,6 +251,16 @@ class GameListener implements Listener
                 $participant = Server::getInstance()->getPlayer($participantName);
                 $participant->sendMessage($player->getName() . "が脱出しました");
             }
+        }
+    }
+
+    public function onTapItemOnMapEntity(EntityDamageByEntityEvent $event): void {
+        $entity = $event->getEntity();
+        $attacker = $event->getDamager();
+        if (!($attacker instanceof Player)) return;
+        if (($entity instanceof ItemOnMapEntity) or ($entity instanceof ItemGunEntity)){
+            $event->setCancelled();
+            $entity->onAttackedByPlayer($attacker);
         }
     }
 

@@ -63,6 +63,8 @@ class MapDAO
             array_key_exists("original_exit_block_id", $array) ? $array["original_exit_block_id"] : $map->getOriginalExitBlockId(),
             array_key_exists("fuel_tanks", $array) ? $array["fuel_tanks"] : $map->getFuelTankMapDataList(),
             array_key_exists("fuel_spawn_vectors", $array) ? $array["fuel_spawn_vectors"] : $map->getFuelSpawnVectors(),
+            array_key_exists("item_data_list", $array) ? $array["item_data_list"] : $map->getItemDataOnMapList(),
+            array_key_exists("gun_data_list", $array) ? $array["gun_data_list"] : $map->getGunDataOnMapList(),
         );
 
         self::update($map->getName(), $newMap);

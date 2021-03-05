@@ -17,7 +17,10 @@ class Map
     private array $fuelTankMapDataList;
     private array $fuelSpawnVectors;
 
-    public function __construct(string $levelName, string $name, Vector3 $startVector, Vector3 $exitVector, int $originalExitBlockId, array $fuelTankMapDataList, array $fuelSpawnVectors) {
+    private array $itemDataOnMapList;
+    private array $gunDataOnMapList;
+
+    public function __construct(string $levelName, string $name, Vector3 $startVector, Vector3 $exitVector, int $originalExitBlockId, array $fuelTankMapDataList, array $fuelSpawnVectors, array $itemDataOnMapList, array $gunDataOnMapList) {
         $this->levelName = $levelName;
         $this->name = $name;
         $this->startVector = $startVector;
@@ -25,6 +28,8 @@ class Map
         $this->originalExitBlockId = $originalExitBlockId;
         $this->fuelTankMapDataList = $fuelTankMapDataList;
         $this->fuelSpawnVectors = $fuelSpawnVectors;
+        $this->itemDataOnMapList = $itemDataOnMapList;
+        $this->gunDataOnMapList = $gunDataOnMapList;
     }
 
     /**
@@ -74,5 +79,19 @@ class Map
      */
     public function getOriginalExitBlockId(): int {
         return $this->originalExitBlockId;
+    }
+
+    /**
+     * @return GunDataOnMap[]
+     */
+    public function getGunDataOnMapList(): array {
+        return $this->gunDataOnMapList;
+    }
+
+    /**
+     * @return ItemDataOnMap[]
+     */
+    public function getItemDataOnMapList(): array {
+        return $this->itemDataOnMapList;
     }
 }
