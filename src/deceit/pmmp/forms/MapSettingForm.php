@@ -64,7 +64,7 @@ class MapSettingForm extends SimpleForm
                 TextFormat::RED . "マップの削除",
                 null,
                 function (Player $player) use ($map) {
-                    $player->sendForm(new ConfirmDeletingMapForm($map));
+                    $player->sendForm(new ConfirmDeleteMapForm($map));
                 }
             ),
         ];

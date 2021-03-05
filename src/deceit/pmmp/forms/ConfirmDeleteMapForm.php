@@ -10,7 +10,7 @@ use form_builder\models\modal_form_elements\ModalFormButton;
 use form_builder\models\ModalForm;
 use pocketmine\Player;
 
-class ConfirmDeletingMapForm extends ModalForm
+class ConfirmDeleteMapForm extends ModalForm
 {
     private Map $map;
 
