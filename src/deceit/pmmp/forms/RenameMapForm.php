@@ -24,19 +24,9 @@ class RenameMapForm extends CustomForm
     }
 
     function onSubmit(Player $player): void {
-        $newMap = new Map(
-            $this->map->getLevelName(),
-            $this->nameInputElement->getResult(),
-            $this->map->getStartVector(),
-            $this->map->getExitVector(),
-            $this->map->getOriginalExitBlockId(),
-            $this->map->getFuelTankMapDataList(),
-            $this->map->getFuelSpawnVectors(),
-        );
+        MapDAO::updatePartOfMap($this->map->getName(),["name" => $this->nameInputElement->getResult()]);
 
-        MapDAO::update($this->map->getName(), $newMap);
-
-        $updatedMap = MapDAO::findByName($newMap->getName());
+        $updatedMap = MapDAO::findByName($this->map->getName());
         $player->sendForm(new MapSettingForm($updatedMap));
     }
 

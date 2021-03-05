@@ -17,7 +17,7 @@ class EditFuelTankCapacityForm extends CustomForm
     private FuelTankMapData $fuelTankMapData;
     private Slider $capacitySlider;
 
-    public function __construct(Map $map,FuelTankMapData $fuelTankMapData) {
+    public function __construct(Map $map, FuelTankMapData $fuelTankMapData) {
         $this->map = $map;
         $this->fuelTankMapData = $fuelTankMapData;
 
@@ -43,21 +43,9 @@ class EditFuelTankCapacityForm extends CustomForm
             }
         }
 
+        MapDAO::updatePartOfMap($this->map->getName(), ["fuel_tanks" => $fuelTankMapDataList]);
 
-
-        $newMap = new Map(
-            $this->map->getLevelName(),
-            $this->map->getName(),
-            $this->map->getStartVector(),
-            $this->map->getExitVector(),
-            $this->map->getOriginalExitBlockId(),
-            $fuelTankMapDataList,
-            $this->map->getFuelSpawnVectors(),
-        );
-
-        MapDAO::update($this->map->getName(), $newMap);
-
-        $updatedMap = MapDAO::findByName($newMap->getName());
+        $updatedMap = MapDAO::findByName($this->map->getName());
         $player->sendForm(new FuelTankListForm($updatedMap));
     }
 

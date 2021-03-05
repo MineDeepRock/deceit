@@ -55,16 +55,7 @@ class ExitVectorSettingSlotMenu extends SlotMenu
 
 
     private function updateMap(Vector3 $vector3): Map {
-        $newMap = new Map(
-            $this->map->getLevelName(),
-            $this->map->getName(),
-            $this->map->getStartVector(),
-            $vector3,
-            $this->map->getOriginalExitBlockId(),
-            $this->map->getFuelTankMapDataList(),
-            $this->map->getFuelSpawnVectors(),
-        );
-        MapDAO::update($this->map->getName(), $newMap);
+        MapDAO::updatePartOfMap($this->map->getName(), ["exit_vector" => $vector3]);
 
         return MapDao::findByName($this->map->getName());
     }

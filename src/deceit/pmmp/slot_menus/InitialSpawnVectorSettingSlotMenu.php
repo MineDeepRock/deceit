@@ -55,16 +55,7 @@ class InitialSpawnVectorSettingSlotMenu extends SlotMenu
 
 
     private function updateMap(Vector3 $vector3): Map {
-        $newMap = new Map(
-            $this->map->getLevelName(),
-            $this->map->getName(),
-            $vector3,
-            $this->map->getExitVector(),
-            $this->map->getOriginalExitBlockId(),
-            $this->map->getFuelTankMapDataList(),
-            $this->map->getFuelSpawnVectors(),
-        );
-        MapDAO::update($this->map->getName(), $newMap);
+        MapDAO::updatePartOfMap($this->map->getName(),["start_vector" => $vector3]);
 
         return MapDao::findByName($this->map->getName());
     }

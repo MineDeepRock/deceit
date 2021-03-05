@@ -50,4 +50,21 @@ class MapDAO
     static function delete(string $mapName): void {
         unlink(DataFolderPath::$map . $mapName . ".json");
     }
+
+    static function updatePartOfMap(string $name, array $array): void {
+        $map = self::findByName($name);
+        if ($map === null) return;
+
+        $newMap = new Map(
+            array_key_exists("level_name", $array) ? $array["level_name"] : $map->getLevelName(),
+            array_key_exists("name", $array) ? $array["name"] : $map->getName(),
+            array_key_exists("start_vector", $array) ? $array["start_vector"] : $map->getStartVector(),
+            array_key_exists("exit_vector", $array) ? $array["exit_vector"] : $map->getExitVector(),
+            array_key_exists("original_exit_block_id", $array) ? $array["original_exit_block_id"] : $map->getOriginalExitBlockId(),
+            array_key_exists("fuel_tanks", $array) ? $array["fuel_tanks"] : $map->getFuelTankMapDataList(),
+            array_key_exists("fuel_spawn_vectors", $array) ? $array["fuel_spawn_vectors"] : $map->getFuelSpawnVectors(),
+        );
+
+        self::update($map->getName(), $newMap);
+    }
 }

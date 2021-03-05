@@ -61,16 +61,7 @@ class AddFuelSpawnVectorSlotMenu extends SlotMenu
         $newFuelSpawnVectors = $this->map->getFuelSpawnVectors();
         $newFuelSpawnVectors[] = $vector3;
 
-        $newMap = new Map(
-            $this->map->getLevelName(),
-            $this->map->getName(),
-            $this->map->getStartVector(),
-            $this->map->getExitVector(),
-            $this->map->getOriginalExitBlockId(),
-            $this->map->getFuelTankMapDataList(),
-            $newFuelSpawnVectors,
-        );
-        MapDAO::update($this->map->getName(), $newMap);
+        MapDAO::updatePartOfMap($this->map->getName(), ["fuel_spawn_vectors" => $newFuelSpawnVectors]);
 
         return MapDao::findByName($this->map->getName());
     }
