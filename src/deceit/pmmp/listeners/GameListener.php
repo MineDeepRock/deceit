@@ -11,8 +11,6 @@ use deceit\pmmp\BossBarTypeList;
 use deceit\pmmp\entities\CadaverEntity;
 use deceit\pmmp\entities\FuelEntity;
 use deceit\pmmp\entities\FuelTankEntity;
-use deceit\pmmp\events\FinishedExitTimerEvent;
-use deceit\pmmp\events\FinishedGameTimerEvent;
 use deceit\pmmp\events\FuelTankBecameFullEvent;
 use deceit\pmmp\events\StoppedGameTimerEvent;
 use deceit\pmmp\events\UpdatedExitTimerEvent;
@@ -22,8 +20,6 @@ use deceit\pmmp\events\VotedPlayerEvent;
 use deceit\pmmp\forms\ConfirmVoteForm;
 use deceit\pmmp\items\FuelItem;
 use deceit\pmmp\scoreboards\GameSettingsScoreboard;
-use deceit\pmmp\services\FinishGamePMMPService;
-use deceit\services\FinishGameService;
 use deceit\services\UpdatePlayerStateOnGameService;
 use deceit\storages\GameStorage;
 use deceit\storages\PlayerDataOnGameStorage;
@@ -293,20 +289,6 @@ class GameListener implements Listener
             $bossBar = BossBar::findByType($player, BossBarTypeList::GameTimer());
             $bossBar->remove();
         }
-    }
-
-    public function onFinishedGameTimer(FinishedGameTimerEvent $event) {
-        $gameId = $event->getGameId();
-
-        FinishGamePMMPService::execute($gameId);
-        FinishGameService::execute($gameId);
-    }
-
-    public function onFinishedExitTimer(FinishedExitTimerEvent $event) {
-        $gameId = $event->getGameId();
-
-        FinishGamePMMPService::execute($gameId);
-        FinishGameService::execute($gameId);
     }
 
     public function onToggleSneak(PlayerToggleSneakEvent $event) {

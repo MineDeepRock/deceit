@@ -4,9 +4,10 @@
 namespace deceit\models;
 
 
-use deceit\pmmp\events\FinishedGameTimerEvent;
 use deceit\pmmp\events\StoppedGameTimerEvent;
 use deceit\pmmp\events\UpdatedGameTimerEvent;
+use deceit\pmmp\services\FinishGamePMMPService;
+use deceit\services\FinishGameService;
 use deceit\types\GameId;
 use pocketmine\scheduler\TaskScheduler;
 
@@ -30,7 +31,7 @@ class GameTimer extends Timer
     }
 
     public function onFinishedTimer(): void {
-        $event = new FinishedGameTimerEvent($this->gameId);
-        $event->call();
+        FinishGamePMMPService::execute($this->gameId);
+        FinishGameService::execute($$this->gameId);
     }
 }
