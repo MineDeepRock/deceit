@@ -37,7 +37,7 @@ class GunDataOnMapSettingSlotMenu extends SlotMenu
                 ),
                 new SlotMenuElement(
                     ItemIds::NAME_TAG,
-                    "容量を変更",
+                    "銃を変更",
                     function (Player $player) use ($gunDataOnMap) {
                         SlotMenuSystem::close($player);
 

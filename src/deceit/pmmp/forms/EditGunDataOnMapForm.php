@@ -7,12 +7,10 @@ namespace deceit\pmmp\forms;
 use deceit\dao\MapDAO;
 use deceit\models\GunDataOnMap;
 use deceit\models\Map;
-use deceit\pmmp\slot_menus\AddGunDataOnMapSlotMenu;
 use deceit\pmmp\slot_menus\GunDataOnMapSettingSlotMenu;
 use form_builder\models\custom_form_elements\Dropdown;
 use form_builder\models\CustomForm;
 use gun_system\GunSystem;
-use pocketmine\math\Vector3;
 use pocketmine\Player;
 use slot_menu_system\SlotMenuSystem;
 

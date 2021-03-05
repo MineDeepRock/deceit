@@ -41,7 +41,7 @@ class GunDataOnMapListForm extends SimpleForm
             );
         }
 
-        parent::__construct($map->getName() . "のタンクの設定", "", $buttons);
+        parent::__construct($map->getName() . "銃のスポーン地点の設定", "", $buttons);
     }
 
     function onClickCloseButton(Player $player): void {
