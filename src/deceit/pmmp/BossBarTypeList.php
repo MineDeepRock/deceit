@@ -15,4 +15,8 @@ class BossBarTypeList
     static function ExitTimer(): BossBarType {
         return new BossBarType("ExitTimer");
     }
+
+    static function Transform(): BossBarType {
+        return new BossBarType("Transform");
+    }
 }

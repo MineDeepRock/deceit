@@ -79,4 +79,11 @@ class PlayerStatus
     public function getState(): PlayerState {
         return $this->state;
     }
+
+    /**
+     * @return bool
+     */
+    public function isWolf(): bool {
+        return $this->isWolf;
+    }
 }
