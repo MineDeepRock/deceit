@@ -6,6 +6,7 @@ namespace deceit\pmmp\listeners;
 use deceit\dao\PlayerDataDAO;
 use deceit\models\PlayerData;
 use deceit\pmmp\blocks\ExitBlock;
+use deceit\pmmp\entities\BloodPackEntity;
 use deceit\pmmp\entities\CadaverEntity;
 use deceit\pmmp\entities\DyingPlayerEntity;
 use deceit\pmmp\entities\FuelEntity;
@@ -269,14 +270,23 @@ class GameListener implements Listener
         $event->setCancelled();
 
         $attackerData = PlayerDataDAO::findByName($attacker->getName());
-        if($this->belongGameIsInProgress($attackerData)) return;
+        if ($this->belongGameIsInProgress($attackerData)) return;
 
-        $itemInHand  = $attacker->getInventory()->getItemInHand();
+        $itemInHand = $attacker->getInventory()->getItemInHand();
         if ($itemInHand->getId() === MedicineKitItem::ITEM_ID) {
             RescueCadaverEntityPMMPService::execute($cadaverEntity);
             //TODO:全部は使用しないように
             $attacker->getInventory()->remove($itemInHand);
         }
+    }
+
+    public function onTapBloodPackEntity(EntityDamageByEntityEvent $event) {
+        $bloodPackEntity = $event->getEntity();
+        $attacker = $event->getDamager();
+        if (!($attacker instanceof Player)) return;
+        if (!($bloodPackEntity instanceof BloodPackEntity)) return;
+        $event->setCancelled();
+        $bloodPackEntity->onAttackedByPlayer($attacker);
     }
 
     public function onTapItemOnMapEntity(EntityDamageByEntityEvent $event): void {
