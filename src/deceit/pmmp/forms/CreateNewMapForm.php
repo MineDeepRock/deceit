@@ -6,7 +6,7 @@ namespace deceit\pmmp\forms;
 
 use deceit\dao\MapDAO;
 use deceit\services\CreateNewMapService;
-use deceit\utilities\GetWorldNameList;
+use deceit\pmmp\utilities\GetWorldNameList;
 use form_builder\models\custom_form_elements\Dropdown;
 use form_builder\models\custom_form_elements\Input;
 use form_builder\models\CustomForm;

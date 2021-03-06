@@ -1,7 +1,7 @@
 <?php
 
 
-namespace deceit\utilities;
+namespace deceit\pmmp\utilities;
 
 
 use deceit\DataFolderPath;

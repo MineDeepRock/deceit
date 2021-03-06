@@ -1,6 +1,6 @@
 <?php
 
-namespace deceit\utilities;
+namespace deceit\pmmp\utilities;
 
 
 class GetWorldNameList

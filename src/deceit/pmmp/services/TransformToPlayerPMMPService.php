@@ -5,7 +5,7 @@ namespace deceit\pmmp\services;
 
 
 use deceit\storages\PlayerStatusStorage;
-use deceit\utilities\GetPlayerSkin;
+use deceit\pmmp\utilities\GetPlayerSkin;
 use pocketmine\entity\Attribute;
 use pocketmine\Player;
 
