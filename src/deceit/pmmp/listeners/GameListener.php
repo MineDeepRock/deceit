@@ -6,7 +6,7 @@ namespace deceit\pmmp\listeners;
 use deceit\dao\PlayerDataDAO;
 use deceit\models\PlayerData;
 use deceit\pmmp\blocks\ExitBlock;
-use deceit\pmmp\entities\CadaverEntity;
+use deceit\pmmp\entities\DyingPlayerEntity;
 use deceit\pmmp\entities\FuelEntity;
 use deceit\pmmp\entities\FuelTankEntity;
 use deceit\pmmp\entities\ItemGunEntity;
@@ -38,6 +38,7 @@ use pocketmine\utils\TextFormat;
 
 
 //TODO:蘇生機能
+//TODO:停電機能
 class GameListener implements Listener
 {
     private TaskScheduler $scheduler;
@@ -133,8 +134,8 @@ class GameListener implements Listener
         if (!$this->belongGameIsInProgress($playerData)) return;
 
         $player->setSpawn($player->getPosition());
-        $cadaver = new CadaverEntity($player->getLevel(), $playerData->getBelongGameId(), $player);
-        $cadaver->spawnToAll();
+        $dyingPlayerEntity = new DyingPlayerEntity($player->getLevel(), $playerData->getBelongGameId(), $player);
+        $dyingPlayerEntity->spawnToAll();
 
         //15秒間放置されると死亡する
         $playerName = $player->getName();
@@ -142,7 +143,7 @@ class GameListener implements Listener
         $this->scheduler->scheduleDelayedTask(new ClosureTask(
             function (int $currentTick) use ($playerName, $level): void {
                 foreach ($level->getEntities() as $entity) {
-                    if (!($entity instanceof CadaverEntity)) continue;
+                    if (!($entity instanceof DyingPlayerEntity)) continue;
                     $owner = $entity->getOwner();
                     if ($owner === null) continue;
                     if ($owner->getName() === $playerName) {
@@ -162,39 +163,39 @@ class GameListener implements Listener
         $player->setImmobile(true);
     }
 
-    public function onTapCadaverEntity(EntityDamageByEntityEvent $event) {
-        $cadaverEntity = $event->getEntity();
+    public function onTapDyingPlayerEntity(EntityDamageByEntityEvent $event) {
+        $dyingPlayerEntity = $event->getEntity();
         $attacker = $event->getDamager();
         if (!($attacker instanceof Player)) return;
-        if (!($cadaverEntity instanceof CadaverEntity)) return;
+        if (!($dyingPlayerEntity instanceof DyingPlayerEntity)) return;
         $event->setCancelled();
 
         //死体のオーナーとタップした人の確認
 
         //持ち主がオフライン
-        $cadaverEntityOwner = $cadaverEntity->getOwner();
-        if (!$cadaverEntityOwner->isOnline()) return;
+        $dyingPlayerEntityOwner = $dyingPlayerEntity->getOwner();
+        if (!$dyingPlayerEntityOwner->isOnline()) return;
 
         //進行中のゲームに参加しているか
-        $cadaverEntityOwnerData = PlayerDataDAO::findByName($cadaverEntityOwner->getName());
-        $cadaverEntityOwnerGameId = $cadaverEntityOwnerData->getBelongGameId();
+        $dyingPlayerEntityOwnerData = PlayerDataDAO::findByName($dyingPlayerEntityOwner->getName());
+        $dyingPlayerEntityOwnerGameId = $dyingPlayerEntityOwnerData->getBelongGameId();
         $attackerData = PlayerDataDAO::findByName($attacker->getName());
         $attackerGameId = $attackerData->getBelongGameId();
 
         if (!$this->belongGameIsInProgress($attackerData)) return;
-        if (!$this->belongGameIsInProgress($cadaverEntityOwnerData)) return;
+        if (!$this->belongGameIsInProgress($dyingPlayerEntityOwnerData)) return;
 
         //同じゲームに属しているか
-        if (!$attackerGameId->equals($cadaverEntityOwnerGameId)) return;
+        if (!$attackerGameId->equals($dyingPlayerEntityOwnerGameId)) return;
 
-        $attacker->sendForm(new ConfirmVoteForm($cadaverEntity));
+        $attacker->sendForm(new ConfirmVoteForm($dyingPlayerEntity));
     }
 
-    public function onCadaverDeath(EntityDeathEvent $event) {
+    public function onDyingPlayerEntityDeath(EntityDeathEvent $event) {
         $event->setDrops([]);
         $entity = $event->getEntity();
 
-        if (!($entity instanceof CadaverEntity)) return;
+        if (!($entity instanceof DyingPlayerEntity)) return;
 
         //TODO:本当の死、スペクテイターにする
         $owner = $entity->getOwner();
@@ -258,7 +259,7 @@ class GameListener implements Listener
         $entity = $event->getEntity();
         $attacker = $event->getDamager();
         if (!($attacker instanceof Player)) return;
-        if (($entity instanceof ItemOnMapEntity) or ($entity instanceof ItemGunEntity)){
+        if (($entity instanceof ItemOnMapEntity) or ($entity instanceof ItemGunEntity)) {
             $event->setCancelled();
             $entity->onAttackedByPlayer($attacker);
         }

@@ -16,9 +16,9 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\Player;
 use pocketmine\utils\UUID;
 
-class CadaverEntity extends EntityBase
+class DyingPlayerEntity extends EntityBase
 {
-    const NAME = "Cadaver";
+    const NAME = "DyingPlayerEntity";
     public $width = 0.6;
     public $height = 0.2;
 
@@ -97,7 +97,7 @@ class CadaverEntity extends EntityBase
 
         $playersCanVoteCount =
             count(PlayerStatusStorage::getAlivePlayers($game->getGameId())) +
-            count(PlayerStatusStorage::getCadaverPlayers($game->getGameId()));
+            count(PlayerStatusStorage::getDyingPlayers($game->getGameId()));
 
         $isMajority = $playersCanVoteCount - count($this->votedPlayerNameList) * 2 <= 0;
 

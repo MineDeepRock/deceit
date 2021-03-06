@@ -106,8 +106,8 @@ class PlayerStatusStorage
      * @param GameId $gameId
      * @return PlayerStatus[]
      */
-    static function getCadaverPlayers(GameId $gameId): array {
-        return self::getPlayersByState($gameId, PlayerState::Cadaver());
+    static function getDyingPlayers(GameId $gameId): array {
+        return self::getPlayersByState($gameId, PlayerState::Dying());
 
     }
 

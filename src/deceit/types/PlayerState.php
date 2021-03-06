@@ -16,8 +16,8 @@ class PlayerState
         return new self("Alive");
     }
 
-    static function Cadaver(): PlayerState {
-        return new self("Cadaver");
+    static function Dying(): PlayerState {
+        return new self("Dying");
     }
 
     static function Dead(): PlayerState {
