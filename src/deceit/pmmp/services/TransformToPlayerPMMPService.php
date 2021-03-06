@@ -4,6 +4,7 @@
 namespace deceit\pmmp\services;
 
 
+use deceit\pmmp\PlayerInventoryStorage;
 use deceit\storages\PlayerStatusStorage;
 use deceit\pmmp\utilities\GetPlayerSkin;
 use pocketmine\entity\Attribute;
@@ -21,7 +22,14 @@ class TransformToPlayerPMMPService
             $player->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED)->setValue(1);
             $player->setScale(1);
             $player->setSkin(GetPlayerSkin::execute($player));
-            //TODO:インベントリを復元
+
+            //インベントリを復元
+            $inventory = PlayerInventoryStorage::get($player);
+            if ($inventory == null) {
+                $player->getInventory()->setContents([]);
+            } else {
+                $player->getInventory()->setContents($inventory->getContents());
+            }
         }
     }
 }

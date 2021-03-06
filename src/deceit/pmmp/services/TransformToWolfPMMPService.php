@@ -5,6 +5,7 @@ namespace deceit\pmmp\services;
 
 
 use deceit\DataFolderPath;
+use deceit\pmmp\PlayerInventoryStorage;
 use deceit\storages\PlayerStatusStorage;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\Skin;
@@ -21,7 +22,9 @@ class TransformToWolfPMMPService
             $player->setSkin(new Skin("Standard_CustomSlim", file_get_contents(DataFolderPath::$skin ."wolf.skin")));
             $playerStatus->startTransformTimer();
 
-            //TODO:インベントリを一旦保存しクリア
+            //インベントリを保存しクリア
+            PlayerInventoryStorage::save($player);
+            $player->getInventory()->setContents([]);
         }
     }
 }
