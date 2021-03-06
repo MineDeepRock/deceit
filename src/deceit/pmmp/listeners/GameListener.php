@@ -19,10 +19,10 @@ use deceit\pmmp\scoreboards\GameSettingsScoreboard;
 use deceit\pmmp\services\FinishGamePMMPService;
 use deceit\pmmp\services\OpenExitPMMPService;
 use deceit\services\FinishGameService;
-use deceit\services\UpdatePlayerStateOnGameService;
+use deceit\services\UpdatePlayerStateService;
 use deceit\storages\GameStorage;
 use deceit\storages\PlayerStatusStorage;
-use deceit\types\PlayerStateOnGame;
+use deceit\types\PlayerState;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDeathEvent;
@@ -207,7 +207,7 @@ class GameListener implements Listener
         $owner->setImmobile(false);
 
         $game = GameStorage::findById($belongGameId);
-        UpdatePlayerStateOnGameService::execute($owner->getName(), PlayerStateOnGame::Dead());
+        UpdatePlayerStateService::execute($owner->getName(), PlayerState::Dead());
 
         //人狼がすべてのプレイヤーを殺したとき
         $aliveWolfCount = 0;
@@ -241,7 +241,7 @@ class GameListener implements Listener
         //脱出
         //TODO:時間がかかるようにする
         if ($blockUnderPlayer->getId() === ExitBlock::ID) {
-            UpdatePlayerStateOnGameService::execute($player->getName(), PlayerStateOnGame::Escaped());
+            UpdatePlayerStateService::execute($player->getName(), PlayerState::Escaped());
 
             $player->setGamemode(Player::SPECTATOR);
 

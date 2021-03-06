@@ -6,7 +6,7 @@ namespace deceit\storages;
 
 use deceit\models\PlayerStatus;
 use deceit\types\GameId;
-use deceit\types\PlayerStateOnGame;
+use deceit\types\PlayerState;
 
 class PlayerStatusStorage
 {
@@ -77,15 +77,15 @@ class PlayerStatusStorage
 
     /**
      * @param GameId $gameId
-     * @param PlayerStateOnGame $targetStateOnGame
+     * @param PlayerState $targetState
      * @return PlayerStatus[]
      */
-    private static function getPlayersByState(GameId $gameId, PlayerStateOnGame $targetStateOnGame): array {
+    private static function getPlayersByState(GameId $gameId, PlayerState $targetState): array {
         $result = [];
 
         foreach (self::$playerStatusList as $playerStatus) {
             if ($playerStatus->getBelongGameId()->equals($gameId)) {
-                if ($playerStatus->getState()->equals($targetStateOnGame)) {
+                if ($playerStatus->getState()->equals($targetState)) {
                     $result[] = $playerStatus;
                 }
             }
@@ -99,7 +99,7 @@ class PlayerStatusStorage
      * @return PlayerStatus[]
      */
     static function getAlivePlayers(GameId $gameId): array {
-        return self::getPlayersByState($gameId, PlayerStateOnGame::Alive());
+        return self::getPlayersByState($gameId, PlayerState::Alive());
     }
 
     /**
@@ -107,7 +107,7 @@ class PlayerStatusStorage
      * @return PlayerStatus[]
      */
     static function getCadaverPlayers(GameId $gameId): array {
-        return self::getPlayersByState($gameId, PlayerStateOnGame::Cadaver());
+        return self::getPlayersByState($gameId, PlayerState::Cadaver());
 
     }
 
@@ -116,7 +116,7 @@ class PlayerStatusStorage
      * @return PlayerStatus[]
      */
     static function getDeadPlayers(GameId $gameId): array {
-        return self::getPlayersByState($gameId, PlayerStateOnGame::Dead());
+        return self::getPlayersByState($gameId, PlayerState::Dead());
     }
 
     /**
@@ -124,6 +124,6 @@ class PlayerStatusStorage
      * @return PlayerStatus[]
      */
     static function getEscapedPlayers(GameId $gameId): array {
-        return self::getPlayersByState($gameId, PlayerStateOnGame::Escaped());
+        return self::getPlayersByState($gameId, PlayerState::Escaped());
     }
 }

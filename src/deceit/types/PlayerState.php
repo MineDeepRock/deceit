@@ -4,7 +4,7 @@
 namespace deceit\types;
 
 
-class PlayerStateOnGame
+class PlayerState
 {
     private string $text;
 
@@ -12,19 +12,19 @@ class PlayerStateOnGame
         $this->text = $text;
     }
 
-    static function Alive(): PlayerStateOnGame {
+    static function Alive(): PlayerState {
         return new self("Alive");
     }
 
-    static function Cadaver(): PlayerStateOnGame {
+    static function Cadaver(): PlayerState {
         return new self("Cadaver");
     }
 
-    static function Dead(): PlayerStateOnGame {
+    static function Dead(): PlayerState {
         return new self("Dead");
     }
 
-    static function Escaped(): PlayerStateOnGame {
+    static function Escaped(): PlayerState {
         return new self("Escaped");
     }
 

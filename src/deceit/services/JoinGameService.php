@@ -9,7 +9,7 @@ use deceit\pmmp\events\UpdatedGameDataEvent;
 use deceit\types\GameId;
 use deceit\models\PlayerData;
 use deceit\storages\GameStorage;
-use deceit\types\PlayerStateOnGame;
+use deceit\types\PlayerState;
 
 class JoinGameService
 {
@@ -21,7 +21,7 @@ class JoinGameService
         $result = $game->addPlayer($playerName);
         if (!$result) return false;
 
-        UpdatePlayerStateOnGameService::execute($playerName, PlayerStateOnGame::Alive());
+        UpdatePlayerStateService::execute($playerName, PlayerState::Alive());
 
         PlayerDataDAO::update(new PlayerData($playerName, $gameId));
 

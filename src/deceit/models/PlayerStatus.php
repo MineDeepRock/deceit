@@ -5,7 +5,7 @@ namespace deceit\models;
 
 
 use deceit\types\GameId;
-use deceit\types\PlayerStateOnGame;
+use deceit\types\PlayerState;
 
 //ゲーム中にしか使わない値を持つ
 class PlayerStatus
@@ -13,9 +13,9 @@ class PlayerStatus
     private string $name;
     private GameId $belongGameId;
 
-    private PlayerStateOnGame $state;
+    private PlayerState $state;
 
-    public function __construct(string $name, GameId $belongGameId, PlayerStateOnGame $state, bool $isWolf = false) {
+    public function __construct(string $name, GameId $belongGameId, PlayerState $state) {
         $this->name = $name;
         $this->belongGameId = $belongGameId;
         $this->state = $state;
@@ -36,9 +36,9 @@ class PlayerStatus
     }
 
     /**
-     * @return PlayerStateOnGame
+     * @return PlayerState
      */
-    public function getState(): PlayerStateOnGame {
+    public function getState(): PlayerState {
         return $this->state;
     }
 }

@@ -8,7 +8,7 @@ use deceit\models\PlayerStatus;
 use deceit\storages\PlayerStatusStorage;
 use deceit\types\GameId;
 use deceit\storages\GameStorage;
-use deceit\types\PlayerStateOnGame;
+use deceit\types\PlayerState;
 
 class SelectWolfPlayersService
 {
@@ -23,13 +23,13 @@ class SelectWolfPlayersService
             $wolfPlayerName = $game->getPlayerNameList()[$wolfPlayersNameIndex];
             $wolfPlayersName[] = $wolfPlayerName;
 
-            PlayerStatusStorage::update(new PlayerStatus($wolfPlayerName, $gameId, PlayerStateOnGame::Alive(), true));
+            PlayerStatusStorage::update(new PlayerStatus($wolfPlayerName, $gameId, PlayerState::Alive()));
         } else {
             foreach ($wolfPlayersNameIndex as $index) {
                 $wolfPlayerName = $game->getPlayerNameList()[$index];
                 $wolfPlayersName[] = $wolfPlayerName;
 
-                PlayerStatusStorage::update(new PlayerStatus($wolfPlayerName, $gameId, PlayerStateOnGame::Alive(), true));
+                PlayerStatusStorage::update(new PlayerStatus($wolfPlayerName, $gameId, PlayerState::Alive()));
             }
         }
 
