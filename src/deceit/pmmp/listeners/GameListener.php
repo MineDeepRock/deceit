@@ -6,6 +6,7 @@ namespace deceit\pmmp\listeners;
 use deceit\dao\PlayerDataDAO;
 use deceit\models\PlayerData;
 use deceit\pmmp\blocks\ExitBlock;
+use deceit\pmmp\entities\CadaverEntity;
 use deceit\pmmp\entities\DyingPlayerEntity;
 use deceit\pmmp\entities\FuelEntity;
 use deceit\pmmp\entities\FuelTankEntity;
@@ -170,7 +171,7 @@ class GameListener implements Listener
         if (!($dyingPlayerEntity instanceof DyingPlayerEntity)) return;
         $event->setCancelled();
 
-        //死体のオーナーとタップした人の確認
+        //瀕死状態のエンティティとタップした人の確認
 
         //持ち主がオフライン
         $dyingPlayerEntityOwner = $dyingPlayerEntity->getOwner();
@@ -209,6 +210,9 @@ class GameListener implements Listener
 
         $game = GameStorage::findById($belongGameId);
         UpdatePlayerStateService::execute($owner->getName(), PlayerState::Dead());
+
+        $cadaverEntity = new CadaverEntity($owner->getLevel(), $owner);
+        $cadaverEntity->spawnToAll();
 
         //人狼がすべてのプレイヤーを殺したとき
         $aliveWolfCount = 0;
