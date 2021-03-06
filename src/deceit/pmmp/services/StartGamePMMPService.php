@@ -11,16 +11,17 @@ use deceit\pmmp\scoreboards\GameSettingsScoreboard;
 use deceit\services\StartGameService;
 use deceit\storages\GameStorage;
 use pocketmine\Player;
+use pocketmine\scheduler\TaskScheduler;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
 class StartGamePMMPService
 {
-    static function execute(Player $owner): bool {
+    static function execute(Player $owner, TaskScheduler $taskScheduler): bool {
         $gameId = PlayerDataDAO::findByName($owner->getName())->getBelongGameId();
         if ($gameId === null) return false;
 
-        $startResult = StartGameService::execute($owner->getName(), $gameId);
+        $startResult = StartGameService::execute($owner->getName(), $gameId, $taskScheduler);
         if (!$startResult) return false;
 
 

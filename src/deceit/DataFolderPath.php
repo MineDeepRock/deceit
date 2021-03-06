@@ -10,6 +10,7 @@ class DataFolderPath
     static string $playerData;
     static string $skin;
     static string $geometry;
+    static string $playerSkin;
 
     static function init(string $dataPath,string $resourcePath) {
         self::$map = $dataPath . "maps/";
@@ -23,5 +24,9 @@ class DataFolderPath
 
         self::$geometry = $resourcePath . "geometry/";
         if (!file_exists(self::$geometry)) mkdir(self::$geometry);
+
+
+        self::$playerSkin = $dataPath . "player_skin/";
+        if (!file_exists(self::$playerSkin)) mkdir(self::$playerSkin);
     }
 }

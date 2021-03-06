@@ -13,6 +13,7 @@ use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\services\QuitGameService;
 use deceit\storages\GameStorage;
 use deceit\utilities\GetWorldNameList;
+use deceit\utilities\SavePlayerSkin;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\event\Listener;
@@ -37,6 +38,7 @@ class Main extends PluginBase implements Listener
     public function onJoin(PlayerJoinEvent $event) {
         $player = $event->getPlayer();
         $playerName = $player->getName();
+        SavePlayerSkin::execute($player);
 
         if (PlayerDataDAO::findByName($playerName) === null) {
             $playerData = new PlayerData($playerName);
@@ -65,7 +67,7 @@ class Main extends PluginBase implements Listener
                 if ($game === null) {
                     $sender->sendMessage("ゲームに参加していないか、ゲームのオーナではありません");
                 } else {
-                    $sender->sendForm(new GameSettingForm());
+                    $sender->sendForm(new GameSettingForm($this->getScheduler()));
                 }
 
                 return true;

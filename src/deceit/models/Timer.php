@@ -41,8 +41,10 @@ abstract class Timer
 
     public function stop(): void {
         if ($this->handler !== null) {
-            $this->onStoppedTimer();
-            $this->handler->cancel();
+            if (!$this->handler->isCancelled()) {
+                $this->onStoppedTimer();
+                $this->handler->cancel();
+            }
         }
     }
 
