@@ -4,7 +4,7 @@
 namespace deceit\pmmp\services;
 
 
-use deceit\storages\PlayerDataOnGameStorage;
+use deceit\storages\PlayerStatusStorage;
 use deceit\types\GameId;
 use deceit\storages\GameStorage;
 use pocketmine\block\Block;
@@ -22,7 +22,7 @@ class FinishGamePMMPService
         $mapLevel->setBlock($map->getExitVector(), Block::get($map->getOriginalExitBlockId()));
 
         //メッセージの送信+ロビーへ送還
-        $escapedPlayerCount = PlayerDataOnGameStorage::getEscapedPlayers($gameId);
+        $escapedPlayerCount = PlayerStatusStorage::getEscapedPlayers($gameId);
         $winWolfs = $escapedPlayerCount === 0;
 
         $messageToPlayers = $winWolfs ? "敗北" : "勝利!!";

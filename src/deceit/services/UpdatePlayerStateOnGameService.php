@@ -4,16 +4,16 @@
 namespace deceit\services;
 
 
-use deceit\models\PlayerDataOnGame;
-use deceit\storages\PlayerDataOnGameStorage;
+use deceit\models\PlayerStatus;
+use deceit\storages\PlayerStatusStorage;
 use deceit\types\PlayerStateOnGame;
 
 class UpdatePlayerStateOnGameService
 {
     static function execute(string $playerName, PlayerStateOnGame $playerStateOnGame): void {
-        $playerDataOnGame = PlayerDataOnGameStorage::findByName($playerName);
-        if ($playerDataOnGame === null) return;
+        $playerStatus = PlayerStatusStorage::findByName($playerName);
+        if ($playerStatus === null) return;
 
-        PlayerDataOnGameStorage::update(new PlayerDataOnGame($playerName, $playerDataOnGame->getBelongGameId(), $playerStateOnGame));
+        PlayerStatusStorage::update(new PlayerStatus($playerName, $playerStatus->getBelongGameId(), $playerStateOnGame));
     }
 }

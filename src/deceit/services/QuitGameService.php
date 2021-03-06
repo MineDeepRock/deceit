@@ -8,7 +8,7 @@ use deceit\dao\PlayerDataDAO;
 use deceit\models\PlayerData;
 use deceit\pmmp\events\UpdatedGameDataEvent;
 use deceit\storages\GameStorage;
-use deceit\storages\PlayerDataOnGameStorage;
+use deceit\storages\PlayerStatusStorage;
 
 class QuitGameService
 {
@@ -21,7 +21,7 @@ class QuitGameService
         $game = GameStorage::findById($belongGameId);
         $game->removePlayer($playerName);
 
-        PlayerDataOnGameStorage::delete($playerName);
+        PlayerStatusStorage::delete($playerName);
 
         $event = new UpdatedGameDataEvent($belongGameId);
         $event->call();

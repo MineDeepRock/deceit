@@ -14,8 +14,8 @@ class StartGameService
         if ($game === null) return false;
         if ($game->getGameOwnerName() !== $ownerName) return false;
 
-        if (count($game->getPlayerNameList()) <= 3) return false;
-        if (count($game->getPlayerNameList()) - $game->getWolfsCount() * 2 <= 0) return false;
+        //if (count($game->getPlayerNameList()) <= 3) return false;
+        //if (count($game->getPlayerNameList()) - $game->getWolfsCount() * 2 <= 0) return false;
 
         SelectWolfPlayersService::execute($gameId);
 

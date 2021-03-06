@@ -4,8 +4,8 @@
 namespace deceit\services;
 
 
-use deceit\models\PlayerDataOnGame;
-use deceit\storages\PlayerDataOnGameStorage;
+use deceit\models\PlayerStatus;
+use deceit\storages\PlayerStatusStorage;
 use deceit\types\GameId;
 use deceit\storages\GameStorage;
 use deceit\types\PlayerStateOnGame;
@@ -23,13 +23,13 @@ class SelectWolfPlayersService
             $wolfPlayerName = $game->getPlayerNameList()[$wolfPlayersNameIndex];
             $wolfPlayersName[] = $wolfPlayerName;
 
-            PlayerDataOnGameStorage::update(new PlayerDataOnGame($wolfPlayerName, $gameId, PlayerStateOnGame::Alive(), true));
+            PlayerStatusStorage::update(new PlayerStatus($wolfPlayerName, $gameId, PlayerStateOnGame::Alive(), true));
         } else {
             foreach ($wolfPlayersNameIndex as $index) {
                 $wolfPlayerName = $game->getPlayerNameList()[$index];
                 $wolfPlayersName[] = $wolfPlayerName;
 
-                PlayerDataOnGameStorage::update(new PlayerDataOnGame($wolfPlayerName, $gameId, PlayerStateOnGame::Alive(), true));
+                PlayerStatusStorage::update(new PlayerStatus($wolfPlayerName, $gameId, PlayerStateOnGame::Alive(), true));
             }
         }
 

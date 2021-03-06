@@ -8,7 +8,7 @@ use deceit\types\GameId;
 use deceit\types\PlayerStateOnGame;
 
 //ゲーム中にしか使わない値を持つ
-class PlayerDataOnGame
+class PlayerStatus
 {
     private string $name;
     private GameId $belongGameId;

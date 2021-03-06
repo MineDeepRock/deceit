@@ -21,7 +21,7 @@ use deceit\pmmp\services\OpenExitPMMPService;
 use deceit\services\FinishGameService;
 use deceit\services\UpdatePlayerStateOnGameService;
 use deceit\storages\GameStorage;
-use deceit\storages\PlayerDataOnGameStorage;
+use deceit\storages\PlayerStatusStorage;
 use deceit\types\PlayerStateOnGame;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -211,15 +211,15 @@ class GameListener implements Listener
 
         //人狼がすべてのプレイヤーを殺したとき
         $aliveWolfCount = 0;
-        $alivePlayerDataList = PlayerDataOnGameStorage::getAlivePlayers($belongGameId);
-        foreach ($alivePlayerDataList as $alivePlayerData) {
-            if (in_array($alivePlayerData->getName(), $game->getWolfNameList())) {
+        $alivePlayerStatusList = PlayerStatusStorage::getAlivePlayers($belongGameId);
+        foreach ($alivePlayerStatusList as $alivePlayerStatus) {
+            if (in_array($alivePlayerStatus->getName(), $game->getWolfNameList())) {
                 $aliveWolfCount++;
             }
         }
 
         //TODO : 自己蘇生を考慮する
-        if (count($alivePlayerDataList) - $aliveWolfCount <= 0) {
+        if (count($alivePlayerStatusList) - $aliveWolfCount <= 0) {
             FinishGameService::execute($belongGameId);
             FinishGamePMMPService::execute($belongGameId);
         }

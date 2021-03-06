@@ -5,7 +5,7 @@ namespace deceit\pmmp\entities;
 
 use deceit\DataFolderPath;
 use deceit\storages\GameStorage;
-use deceit\storages\PlayerDataOnGameStorage;
+use deceit\storages\PlayerStatusStorage;
 use deceit\types\GameId;
 use pocketmine\entity\Skin;
 use pocketmine\level\Level;
@@ -96,8 +96,8 @@ class CadaverEntity extends EntityBase
         $this->votedPlayerNameList[] = $playerName;
 
         $playersCanVoteCount =
-            count(PlayerDataOnGameStorage::getAlivePlayers($game->getGameId())) +
-            count(PlayerDataOnGameStorage::getCadaverPlayers($game->getGameId()));
+            count(PlayerStatusStorage::getAlivePlayers($game->getGameId())) +
+            count(PlayerStatusStorage::getCadaverPlayers($game->getGameId()));
 
         $isMajority = $playersCanVoteCount - count($this->votedPlayerNameList) * 2 <= 0;
 
