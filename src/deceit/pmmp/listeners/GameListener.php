@@ -16,9 +16,11 @@ use deceit\pmmp\events\FuelTankBecameFullEvent;
 use deceit\pmmp\events\UpdatedGameDataEvent;
 use deceit\pmmp\forms\ConfirmVoteForm;
 use deceit\pmmp\items\FuelItem;
+use deceit\pmmp\items\MedicineKitItem;
 use deceit\pmmp\scoreboards\GameSettingsScoreboard;
 use deceit\pmmp\services\FinishGamePMMPService;
 use deceit\pmmp\services\OpenExitPMMPService;
+use deceit\pmmp\services\RescueCadaverEntityPMMPService;
 use deceit\services\FinishGameService;
 use deceit\services\UpdatePlayerStateService;
 use deceit\storages\GameStorage;
@@ -256,6 +258,24 @@ class GameListener implements Listener
                 $participant = Server::getInstance()->getPlayer($participantName);
                 $participant->sendMessage($player->getName() . "が脱出しました");
             }
+        }
+    }
+
+    public function onTapCadaverEntity(EntityDamageByEntityEvent $event) {
+        $cadaverEntity = $event->getEntity();
+        $attacker = $event->getDamager();
+        if (!($attacker instanceof Player)) return;
+        if (!($cadaverEntity instanceof CadaverEntity)) return;
+        $event->setCancelled();
+
+        $attackerData = PlayerDataDAO::findByName($attacker->getName());
+        if($this->belongGameIsInProgress($attackerData)) return;
+
+        $itemInHand  = $attacker->getInventory()->getItemInHand();
+        if ($itemInHand->getId() === MedicineKitItem::ITEM_ID) {
+            RescueCadaverEntityPMMPService::execute($cadaverEntity);
+            //TODO:全部は使用しないように
+            $attacker->getInventory()->remove($itemInHand);
         }
     }
 

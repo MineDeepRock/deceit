@@ -24,8 +24,11 @@ class CadaverEntity extends EntityBase
     protected string $geometryId = "geometry." . self::NAME;
     protected string $geometryName = self::NAME . ".geo.json";
 
+    private Player $owner;
+
 
     public function __construct(Level $level, Player $owner) {
+        $this->owner = $owner;
         $nbt = new CompoundTag('', [
             'Pos' => new ListTag('Pos', [
                 new DoubleTag('', $owner->getX()),
@@ -59,5 +62,12 @@ class CadaverEntity extends EntityBase
             $this->geometryId,
             file_get_contents(DataFolderPath::$geometry . $this->geometryName)
         ));
+    }
+
+    /**
+     * @return Player
+     */
+    public function getOwner(): Player {
+        return $this->owner;
     }
 }
