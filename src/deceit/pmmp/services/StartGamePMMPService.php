@@ -5,7 +5,7 @@ namespace deceit\pmmp\services;
 
 
 use bossbar_system\BossBar;
-use deceit\dao\PlayerStatusDAO;
+use deceit\dao\PlayerDataDAO;
 use deceit\pmmp\BossBarTypeList;
 use deceit\pmmp\scoreboards\GameSettingsScoreboard;
 use deceit\services\StartGameService;
@@ -17,7 +17,7 @@ use pocketmine\utils\TextFormat;
 class StartGamePMMPService
 {
     static function execute(Player $owner): bool {
-        $gameId = PlayerStatusDAO::findByName($owner->getName())->getBelongGameId();
+        $gameId = PlayerDataDAO::findByName($owner->getName())->getBelongGameId();
         if ($gameId === null) return false;
 
         $startResult = StartGameService::execute($owner->getName(), $gameId);

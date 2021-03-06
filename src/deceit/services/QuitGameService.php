@@ -4,8 +4,8 @@
 namespace deceit\services;
 
 
-use deceit\dao\PlayerStatusDAO;
-use deceit\models\PlayerStatus;
+use deceit\dao\PlayerDataDAO;
+use deceit\models\PlayerData;
 use deceit\pmmp\events\UpdatedGameDataEvent;
 use deceit\storages\GameStorage;
 use deceit\storages\PlayerDataOnGameStorage;
@@ -13,11 +13,11 @@ use deceit\storages\PlayerDataOnGameStorage;
 class QuitGameService
 {
     static function execute(string $playerName): bool {
-        $status = PlayerStatusDAO::findByName($playerName);
-        $belongGameId = $status->getBelongGameId();
+        $playerData = PlayerDataDAO::findByName($playerName);
+        $belongGameId = $playerData->getBelongGameId();
         if ($belongGameId === null) return false;
 
-        PlayerStatusDAO::update(new PlayerStatus($playerName));
+        PlayerDataDAO::update(new PlayerData($playerName));
         $game = GameStorage::findById($belongGameId);
         $game->removePlayer($playerName);
 

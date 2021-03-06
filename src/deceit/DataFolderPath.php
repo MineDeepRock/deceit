@@ -7,7 +7,7 @@ namespace deceit;
 class DataFolderPath
 {
     static string $map;
-    static string $playerStatus;
+    static string $playerData;
     static string $skin;
     static string $geometry;
 
@@ -15,8 +15,8 @@ class DataFolderPath
         self::$map = $dataPath . "maps/";
         if (!file_exists(self::$map)) mkdir(self::$map);
 
-        self::$playerStatus = $dataPath . "player_status/";
-        if (!file_exists(self::$playerStatus)) mkdir(self::$playerStatus);
+        self::$playerData = $dataPath . "player_data/";
+        if (!file_exists(self::$playerData)) mkdir(self::$playerData);
 
         self::$skin = $resourcePath . "skin/";
         if (!file_exists(self::$skin)) mkdir(self::$skin);

@@ -4,7 +4,7 @@
 namespace deceit\pmmp\scoreboards;
 
 
-use deceit\dao\PlayerStatusDAO;
+use deceit\dao\PlayerDataDAO;
 use deceit\storages\GameStorage;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
@@ -17,8 +17,8 @@ class GameSettingsScoreboard extends Scoreboard
 {
 
     static function create(Player $player): Scoreboard {
-        $playerStatus = PlayerStatusDAO::findByName($player->getName());
-        $game = GameStorage::findById($playerStatus->getBelongGameId());
+        $playerData = PlayerDataDAO::findByName($player->getName());
+        $game = GameStorage::findById($playerData->getBelongGameId());
         if ($game === null) {
             //TODO:error
         }

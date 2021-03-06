@@ -2,8 +2,8 @@
 
 namespace deceit;
 
-use deceit\dao\PlayerStatusDAO;
-use deceit\models\PlayerStatus;
+use deceit\dao\PlayerDataDAO;
+use deceit\models\PlayerData;
 use deceit\pmmp\forms\CreateGameForm;
 use deceit\pmmp\forms\GameListForm;
 use deceit\pmmp\forms\GameSettingForm;
@@ -38,9 +38,9 @@ class Main extends PluginBase implements Listener
         $player = $event->getPlayer();
         $playerName = $player->getName();
 
-        if (PlayerStatusDAO::findByName($playerName) === null) {
-            $status = new PlayerStatus($playerName);
-            PlayerStatusDAO::save($status);
+        if (PlayerDataDAO::findByName($playerName) === null) {
+            $playerData = new PlayerData($playerName);
+            PlayerDataDAO::save($playerData);
         }
 
         LobbyScoreboard::send($player);
@@ -59,8 +59,8 @@ class Main extends PluginBase implements Listener
                 return true;
             }
             if ($label === "setting") {
-                $playerStatus = PlayerStatusDAO::findByName($sender->getName());
-                $game = GameStorage::findById($playerStatus->getBelongGameId());
+                $playerData = PlayerDataDAO::findByName($sender->getName());
+                $game = GameStorage::findById($playerData->getBelongGameId());
 
                 if ($game === null) {
                     $sender->sendMessage("ゲームに参加していないか、ゲームのオーナではありません");

@@ -3,8 +3,8 @@
 namespace deceit\pmmp\listeners;
 
 
-use deceit\dao\PlayerStatusDAO;
-use deceit\models\PlayerStatus;
+use deceit\dao\PlayerDataDAO;
+use deceit\models\PlayerData;
 use deceit\pmmp\blocks\ExitBlock;
 use deceit\pmmp\entities\CadaverEntity;
 use deceit\pmmp\entities\FuelEntity;
@@ -57,8 +57,8 @@ class GameListener implements Listener
             $attacker = $event->getDamager();
             if (!($attacker instanceof Player)) return;
 
-            $attackerStatus = PlayerStatusDAO::findByName($attacker->getName());
-            $belongGameId = $attackerStatus->getBelongGameId();
+            $attackerData = PlayerDataDAO::findByName($attacker->getName());
+            $belongGameId = $attackerData->getBelongGameId();
             $fuelTankBelongGameId = $fuelTankEntity->getBelongGameId();
 
             //試合に参加していない or 別の試合 ならキャンセル
@@ -99,8 +99,8 @@ class GameListener implements Listener
             $attacker = $event->getDamager();
             if (!($attacker instanceof Player)) return;
 
-            $attackerStatus = PlayerStatusDAO::findByName($attacker->getName());
-            $belongGameId = $attackerStatus->getBelongGameId();
+            $attackerData = PlayerDataDAO::findByName($attacker->getName());
+            $belongGameId = $attackerData->getBelongGameId();
 
             //試合に参加していない ならキャンセル
             if ($belongGameId === null) return;
@@ -129,11 +129,11 @@ class GameListener implements Listener
 
     public function onGamePlayerDeath(PlayerDeathEvent $event): void {
         $player = $event->getPlayer();
-        $playerStatus = PlayerStatusDAO::findByName($player->getName());
-        if (!$this->belongGameIsInProgress($playerStatus)) return;
+        $playerData = PlayerDataDAO::findByName($player->getName());
+        if (!$this->belongGameIsInProgress($playerData)) return;
 
         $player->setSpawn($player->getPosition());
-        $cadaver = new CadaverEntity($player->getLevel(), $playerStatus->getBelongGameId(), $player);
+        $cadaver = new CadaverEntity($player->getLevel(), $playerData->getBelongGameId(), $player);
         $cadaver->spawnToAll();
 
         //15秒間放置されると死亡する
@@ -155,8 +155,8 @@ class GameListener implements Listener
 
     public function onGamePlayerRespawn(PlayerRespawnEvent $event): void {
         $player = $event->getPlayer();
-        $playerStatus = PlayerStatusDAO::findByName($player->getName());
-        if (!$this->belongGameIsInProgress($playerStatus)) return;
+        $playerData = PlayerDataDAO::findByName($player->getName());
+        if (!$this->belongGameIsInProgress($playerData)) return;
 
         $player->setGamemode(Player::SPECTATOR);
         $player->setImmobile(true);
@@ -176,13 +176,13 @@ class GameListener implements Listener
         if (!$cadaverEntityOwner->isOnline()) return;
 
         //進行中のゲームに参加しているか
-        $cadaverEntityOwnerStatus = PlayerStatusDAO::findByName($cadaverEntityOwner->getName());
-        $cadaverEntityOwnerGameId = $cadaverEntityOwnerStatus->getBelongGameId();
-        $attackerStatus = PlayerStatusDAO::findByName($attacker->getName());
-        $attackerGameId = $attackerStatus->getBelongGameId();
+        $cadaverEntityOwnerData = PlayerDataDAO::findByName($cadaverEntityOwner->getName());
+        $cadaverEntityOwnerGameId = $cadaverEntityOwnerData->getBelongGameId();
+        $attackerData = PlayerDataDAO::findByName($attacker->getName());
+        $attackerGameId = $attackerData->getBelongGameId();
 
-        if (!$this->belongGameIsInProgress($attackerStatus)) return;
-        if (!$this->belongGameIsInProgress($cadaverEntityOwnerStatus)) return;
+        if (!$this->belongGameIsInProgress($attackerData)) return;
+        if (!$this->belongGameIsInProgress($cadaverEntityOwnerData)) return;
 
         //同じゲームに属しているか
         if (!$attackerGameId->equals($cadaverEntityOwnerGameId)) return;
@@ -200,8 +200,8 @@ class GameListener implements Listener
         $owner = $entity->getOwner();
         if (!$owner->isOnline()) return;
 
-        $ownerStatus = PlayerStatusDAO::findByName($owner->getName());
-        $belongGameId = $ownerStatus->getBelongGameId();
+        $ownerData = PlayerDataDAO::findByName($owner->getName());
+        $belongGameId = $ownerData->getBelongGameId();
         if ($belongGameId === null) return;
         $owner->setGamemode(Player::SPECTATOR);
         $owner->setImmobile(false);
@@ -229,10 +229,10 @@ class GameListener implements Listener
         $player = $event->getPlayer();
         if (!$player->isSneaking()) return;
 
-        $playerStatus = PlayerStatusDAO::findByName($player->getName());
-        if (!$this->belongGameIsInProgress($playerStatus)) return;
+        $playerData = PlayerDataDAO::findByName($player->getName());
+        if (!$this->belongGameIsInProgress($playerData)) return;
 
-        $game = GameStorage::findById($playerStatus->getBelongGameId());
+        $game = GameStorage::findById($playerData->getBelongGameId());
         $levelName = $game->getMap()->getLevelName();
         $level = Server::getInstance()->getLevelByName($levelName);
 
@@ -264,8 +264,8 @@ class GameListener implements Listener
         }
     }
 
-    private function belongGameIsInProgress(PlayerStatus $playerStatus): bool {
-        $gameId = $playerStatus->getBelongGameId();
+    private function belongGameIsInProgress(PlayerData $playerData): bool {
+        $gameId = $playerData->getBelongGameId();
 
         $game = GameStorage::findById($gameId);
         if ($game === null) return false;
