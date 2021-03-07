@@ -65,6 +65,7 @@ class MapDAO
             array_key_exists("fuel_spawn_vectors", $array) ? $array["fuel_spawn_vectors"] : $map->getFuelSpawnVectors(),
             array_key_exists("item_data_list", $array) ? $array["item_data_list"] : $map->getItemDataOnMapList(),
             array_key_exists("gun_data_list", $array) ? $array["gun_data_list"] : $map->getGunDataOnMapList(),
+            array_key_exists("blood_pack_list", $array) ? $array["blood_pack_list"] : $map->getGunDataOnMapList(),
         );
 
         self::update($map->getName(), $newMap);

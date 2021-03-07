@@ -10,7 +10,11 @@ use deceit\storages\GameStorage;
 use deceit\storages\PlayerStatusStorage;
 use pocketmine\entity\Skin;
 use pocketmine\level\Level;
+use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\DoubleTag;
+use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\ListTag;
 use pocketmine\Player;
 
 class BloodPackEntity extends EntityBase
@@ -18,8 +22,25 @@ class BloodPackEntity extends EntityBase
     const NAME = "BloodPack";
     private int $leftOfBlood;
 
-    public function __construct(Level $level, CompoundTag $nbt) {
+    public function __construct(Level $level, Vector3 $vector3) {
         $this->leftOfBlood = 2;
+
+        $nbt = new CompoundTag('', [
+            'Pos' => new ListTag('Pos', [
+                new DoubleTag('', $vector3->getX()),
+                new DoubleTag('', $vector3->getY()),
+                new DoubleTag('', $vector3->getZ())
+            ]),
+            'Motion' => new ListTag('Motion', [
+                new DoubleTag('', 0),
+                new DoubleTag('', 0),
+                new DoubleTag('', 0)
+            ]),
+            'Rotation' => new ListTag('Rotation', [
+                new FloatTag("", 0),
+                new FloatTag("", 0)
+            ]),
+        ]);
         parent::__construct($level, $nbt);
     }
 

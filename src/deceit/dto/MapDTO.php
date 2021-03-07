@@ -55,7 +55,27 @@ class MapDTO
             $gunDataList[] = new GunDataOnMap($gun["name"], $vector);
         }
 
-        return new Map($json["level_name"], $json["name"], $startVector, $exitVector, $json["original_exit_block_id"], $fuelTankMapDataList, $fuelSpawnVectors, $itemDataList, $gunDataList);
+        $bloodPackList = [];
+        foreach ($json["blood_pack_list"] as $bloodPack) {
+            $bloodPackList[] = new Vector3(
+                $bloodPack["x"],
+                $bloodPack["y"],
+                $bloodPack["z"],
+            );
+        }
+
+        return new Map(
+            $json["level_name"],
+            $json["name"],
+            $startVector,
+            $exitVector,
+            $json["original_exit_block_id"],
+            $fuelTankMapDataList,
+            $fuelSpawnVectors,
+            $itemDataList,
+            $gunDataList,
+            $bloodPackList
+        );
     }
 
     static function encode(Map $map): array {
@@ -111,6 +131,15 @@ class MapDTO
             ];
         }
 
+        $bloodPackList = [];
+        foreach ($map->getBloodPackSpawnVectorList() as $bloodPack) {
+            $bloodPackList[] = [
+                "x" => $bloodPack->getX(),
+                "y" => $bloodPack->getY(),
+                "z" => $bloodPack->getZ(),
+            ];
+        }
+
         return [
             "level_name" => $map->getLevelName(),
             "name" => $map->getName(),
@@ -120,7 +149,8 @@ class MapDTO
             "fuel_tanks" => $fuelTanks,
             "fuel_spawn_vectors" => $fuelSpawnVectors,
             "item_data_list" => $itemDataList,
-            "gun_data_list" => $gunDataList
+            "gun_data_list" => $gunDataList,
+            "blood_pack_list" => $bloodPackList
         ];
     }
 }

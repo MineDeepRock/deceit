@@ -30,6 +30,7 @@ class StartGamePMMPService
         $level = Server::getInstance()->getLevelByName($map->getLevelName());
 
         SpawnItemPMMPService::execute($map);
+        SpawnBloodPackPMMPService::execute($map);
 
         foreach ($game->getPlayerNameList() as $playerName) {
             //初期位置にテレポート //TODO:ランダムな場所にテレポートするように
