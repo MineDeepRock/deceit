@@ -30,8 +30,8 @@ class MapDTO
         );
 
         $exitVector = new Vector3(
-            $json["exit_vector"]["y"],
             $json["exit_vector"]["x"],
+            $json["exit_vector"]["y"],
             $json["exit_vector"]["z"],
         );
 
