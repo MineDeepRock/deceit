@@ -11,6 +11,7 @@ use deceit\pmmp\slot_menus\AddGunDataOnMapSlotMenu;
 use form_builder\models\custom_form_elements\Dropdown;
 use form_builder\models\CustomForm;
 use gun_system\GunSystem;
+use gun_system\model\Gun;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use slot_menu_system\SlotMenuSystem;
@@ -25,7 +26,11 @@ class AddGunDataOnMapForm extends CustomForm
         $this->map = $map;
         $this->vector = $vector;
 
-        $this->gunNameElement = new Dropdown("銃一覧", GunSystem::loadAllGuns(), 0);
+        $gunNames = array_map(function (Gun $gun) {
+            return $gun->getName();
+        }, GunSystem::loadAllGuns());
+
+        $this->gunNameElement = new Dropdown("銃一覧", $gunNames, 0);
         parent::__construct("銃を選択", [
             $this->gunNameElement,
         ]);

@@ -66,12 +66,12 @@ class FuelTankEntity extends EntityBase
 
     public function updateTankGauge(float $percentage): void {
         if ($percentage >= 1) {
-            $this->setNameTag(str_repeat(TextFormat::GREEN . ".", 100));
+            $this->setNameTag(str_repeat(TextFormat::GREEN . "■", 30));
         } else if ($percentage <= 0) {
-            $this->setNameTag(str_repeat(TextFormat::WHITE . ".", 100));
+            $this->setNameTag(str_repeat(TextFormat::WHITE . "■", 30));
         } else {
-            $fuelGauge = str_repeat(TextFormat::GREEN . ".", intval($percentage * 10));
-            $blankGauge = str_repeat(TextFormat::WHITE . ".", 100 - intval($percentage * 10));
+            $fuelGauge = str_repeat(TextFormat::GREEN . "■", floor($percentage * 30));
+            $blankGauge = str_repeat(TextFormat::WHITE . "■", 30 - floor($percentage * 30));
 
             $this->setNameTag($fuelGauge . $blankGauge);
         }

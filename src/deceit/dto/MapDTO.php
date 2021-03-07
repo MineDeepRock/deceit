@@ -91,18 +91,18 @@ class MapDTO
         ];
 
         $itemDataList = [];
-        foreach ($map->getItemDataOnMapList() as $itemDataList) {
+        foreach ($map->getItemDataOnMapList() as $itemData) {
             $itemDataList[] = [
-                "name" => $itemDataList->getName(),
-                "x" => $itemDataList->getVector()->getX(),
-                "y" => $itemDataList->getVector()->getY(),
-                "z" => $itemDataList->getVector()->getZ()
+                "name" => $itemData->getName(),
+                "x" => $itemData->getVector()->getX(),
+                "y" => $itemData->getVector()->getY(),
+                "z" => $itemData->getVector()->getZ()
             ];
         }
 
 
         $gunDataList = [];
-        foreach ($map->getItemDataOnMapList() as $gunData) {
+        foreach ($map->getGunDataOnMapList() as $gunData) {
             $gunDataList[] = [
                 "name" => $gunData->getName(),
                 "x" => $gunData->getVector()->getX(),

@@ -128,7 +128,7 @@ class GameListener implements Listener
 
         //すべてのタンクが満タンになったら、脱出の出口を開く
         if ($isAllTankFull) {
-            OpenExitPMMPService::execute($game->getMap());
+            OpenExitPMMPService::execute($game);
         }
     }
 

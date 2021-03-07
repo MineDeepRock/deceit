@@ -21,6 +21,8 @@ class CreateNewMapService
             $spawnPoint,
             BlockIds::STONE,
             [],
+            [],
+            [],
             []
         );
 
