@@ -23,7 +23,8 @@ class CreateNewMapService
             [],
             [],
             [],
-            []
+            [],
+            [],
         );
 
         MapDAO::save($newMap);
