@@ -15,9 +15,6 @@ use pocketmine\Player;
 
 class ItemOnMapEntity extends EntityBase
 {
-    public string $skinName = self::NAME;
-    public string $geometryId = "geometry." . self::NAME;
-    public string $geometryName = self::NAME . ".geo.json";
 
     public function __construct(Level $level, Position $position) {
         parent::__construct($level, $nbt = new CompoundTag('', [
