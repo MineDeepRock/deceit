@@ -42,13 +42,10 @@ class StartGamePMMPService
 
             //スコアボード
             GameSettingsScoreboard::delete($player);
+            //TODO:試合中のスコアボード
 
-            //TODO:ボスバーのメッセージ
             //役職のメッセージ
             if (in_array($playerName, $game->getWolfNameList())) {
-                $bossBar = new BossBar($player, BossBarTypeList::GameTimer(), TextFormat::RED . "", 0.0);
-                $bossBar->send();
-
                 $wolfNemListAsString = "あなた ";
                 foreach ($game->getWolfNameList() as $wolfName) $wolfNemListAsString .= $wolfName . " ";
 
@@ -57,9 +54,6 @@ class StartGamePMMPService
 
                 $player->sendTitle(TextFormat::RED . "あなたは人狼です", "市民を全員殺すか、タイムアップまで持ちこたえましょう");
             } else {
-                $bossBar = new BossBar($player, BossBarTypeList::GameTimer(), TextFormat::GREEN . "", 0.0);
-                $bossBar->send();
-
                 $player->sendMessage(TextFormat::GREEN . "あなたは人間です");
                 $player->sendMessage("燃料を燃料タンクに集めましょう");
 

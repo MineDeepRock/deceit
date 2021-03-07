@@ -4,6 +4,10 @@
 namespace deceit\pmmp\services;
 
 
+use bossbar_system\BossBar;
+use deceit\dao\PlayerDataDAO;
+use deceit\models\PlayerData;
+use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\storages\PlayerStatusStorage;
 use deceit\types\GameId;
 use deceit\storages\GameStorage;
@@ -40,7 +44,14 @@ class FinishGamePMMPService
                 $player->sendTitle($messageToPlayers);
             }
 
-            QuitGamePMMPService::execute($player);
+            //TODO:試合中のスコアボードを削除
+            $bossBars = BossBar::getBelongings($player);
+            foreach ($bossBars as $bossBar) $bossBar->remove();
+
+            $level = Server::getInstance()->getLevelByName("lobby");
+            $player->teleport($level->getSpawnLocation());
+            $player->getInventory()->setContents([]);
+            LobbyScoreboard::send($player);
         }
     }
 }

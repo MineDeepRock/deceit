@@ -23,7 +23,7 @@ class TransformTimer extends Timer
         $player = Server::getInstance()->getPlayer($this->playerName);
         if ($player === null) return;
 
-        $bossBar = new BossBar($player, BossBarTypeList::Transform(), "Transform", 0.0);
+        $bossBar = new BossBar($player, BossBarTypeList::Transform(), "Transform", 1);
         $bossBar->send();
 
         parent::start();
@@ -35,7 +35,7 @@ class TransformTimer extends Timer
 
         $bossBar = BossBar::findByType($player, BossBarTypeList::Transform());
         if ($bossBar === null) return;//TODO:error
-        $bossBar->updatePercentage($this->getTimeLeft() / $this->getInitialTime());
+        $bossBar->updatePercentage(1 - ($this->getTimeLeft() / $this->getInitialTime()));
     }
 
     public function onStoppedTimer(): void {
@@ -49,7 +49,6 @@ class TransformTimer extends Timer
         TransformToPlayerPMMPService::execute($player);
 
         $bossBar = BossBar::findByType($player, BossBarTypeList::Transform());
-        if ($bossBar === null) return;//TODO:error
-        $bossBar->remove();
+        if ($bossBar !== null) $bossBar->remove();
     }
 }
