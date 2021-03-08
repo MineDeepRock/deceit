@@ -15,6 +15,8 @@ use pocketmine\Player;
 
 class ItemGunEntity extends EntityBase
 {
+    const NAME = "Gun";
+
     public string $skinName = self::NAME;
     public string $geometryId = "geometry." . self::NAME;
     public string $geometryName = self::NAME . ".geo.json";

@@ -24,7 +24,7 @@ use pocketmine\utils\UUID;
 
 class DyingPlayerEntity extends EntityBase
 {
-    const NAME = "DyingPlayerEntity";
+    const NAME = "Dying";
     public $width = 0.6;
     public $height = 0.2;
 

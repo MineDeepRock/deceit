@@ -20,6 +20,10 @@ use pocketmine\Player;
 class BloodPackEntity extends EntityBase
 {
     const NAME = "BloodPack";
+    public string $skinName = self::NAME;
+    protected string $geometryId = "geometry." . self::NAME;
+    protected string $geometryName = self::NAME . ".geo.json";
+
     private int $leftOfBlood;
 
     public function __construct(Level $level, Vector3 $vector3) {
@@ -71,6 +75,9 @@ class BloodPackEntity extends EntityBase
                 $this->geometryId,
                 file_get_contents(DataFolderPath::$geometry . $this->geometryName)
             ));
+
+
+            $player->sendMessage("血液を取得しました");
         }
     }
 }

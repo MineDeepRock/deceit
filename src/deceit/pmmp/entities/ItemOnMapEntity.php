@@ -13,7 +13,7 @@ use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\Player;
 
-class ItemOnMapEntity extends EntityBase
+abstract class ItemOnMapEntity extends EntityBase
 {
 
     public function __construct(Level $level, Position $position) {
@@ -35,8 +35,5 @@ class ItemOnMapEntity extends EntityBase
         ]));
     }
 
-    public function onAttackedByPlayer(Player $player): void {
-        $player->getInventory()->addItem(ItemDataOnMap::getItem(self::NAME));
-        if ($this->isAlive()) $this->kill();
-    }
+    abstract public function onAttackedByPlayer(Player $player): void;
 }
