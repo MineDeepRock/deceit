@@ -86,4 +86,11 @@ class PlayerStatus
     public function isWolf(): bool {
         return $this->isWolf;
     }
+
+    /**
+     * @return int
+     */
+    public function getBloodTank(): int {
+        return $this->bloodTank;
+    }
 }
