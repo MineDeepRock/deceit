@@ -8,6 +8,8 @@ use deceit\pmmp\services\RescueDyingPlayerPMMPService;
 use deceit\storages\GameStorage;
 use deceit\storages\PlayerStatusStorage;
 use deceit\types\GameId;
+use deceit\types\PlayerState;
+use pocketmine\entity\Human;
 use pocketmine\entity\Skin;
 use pocketmine\level\Level;
 use pocketmine\level\particle\CriticalParticle;
@@ -20,9 +22,10 @@ use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\TaskHandler;
 use pocketmine\scheduler\TaskScheduler;
+use pocketmine\utils\TextFormat;
 use pocketmine\utils\UUID;
 
-class DyingPlayerEntity extends EntityBase
+class DyingPlayerEntity extends Human
 {
     const NAME = "Dying";
     public $width = 0.6;
@@ -58,6 +61,9 @@ class DyingPlayerEntity extends EntityBase
         $this->rescuingPlayer = null;
         $this->rescueGauge = 0;
 
+        $game = GameStorage::findById($gameId);
+        if ($game === null) return;//TODO:エラー
+
         $nbt = new CompoundTag('', [
             'Pos' => new ListTag('Pos', [
                 new DoubleTag('', $owner->getX()),
@@ -81,6 +87,14 @@ class DyingPlayerEntity extends EntityBase
         $this->setRotation($this->yaw, $this->pitch);
         $this->setNameTagAlwaysVisible(false);
         $this->sendSkin();
+
+        $nameTag = "";
+        foreach ($game->getPlayerNameList() as $name) {
+            if ($name !== $owner->getName()) {
+                $nameTag .= $name . TextFormat::WHITE . ":□ \n";
+            }
+        }
+        $this->setNameTag($nameTag);
     }
 
     private function initSkin(Player $player): void {
@@ -158,7 +172,7 @@ class DyingPlayerEntity extends EntityBase
                 $this->getLevel()->addParticle(new CriticalParticle($pos));
 
             } else {
-                if ($degree <= floor($this->rescueGauge/self::MaxRescueGauge*360) ) {
+                if ($degree <= floor($this->rescueGauge / self::MaxRescueGauge * 360)) {
                     $this->getLevel()->addParticle(new HappyVillagerParticle($pos));
 
                 } else {
@@ -192,15 +206,35 @@ class DyingPlayerEntity extends EntityBase
     }
 
     public function vote(string $playerName): bool {
-        $game = GameStorage::findById($this - $this->gameId);
+        $game = GameStorage::findById($this->gameId);
         if ($game === null) return false;
         if (!$game->isStarted()) return false;
         if ($game->isFinished()) return false;
 
         if (!$this->isAlive()) return false;
 
+        //生存者しか投票できない(フォームを開いてるときに殺されたときのために、ここでも条件分岐を挟む)
+        $playerStatus = PlayerStatusStorage::findByName($playerName);
+        if ($playerStatus === null) return false;
+        if (!$playerStatus->getState()->equals(PlayerState::Alive())) return false;
+
         if (in_array($playerName, $this->votedPlayerNameList)) return false;
         $this->votedPlayerNameList[] = $playerName;
+
+        //ネームタグの更新
+        $nameTag = "";
+        foreach ($game->getPlayerNameList() as $name) {
+            if ($name !== $this->owner->getName()) {
+                if (in_array($name, $this->votedPlayerNameList)) {
+                    $nameTag .= $name . TextFormat::GREEN . ":■ \n";
+
+                } else {
+                    $nameTag .= $name . TextFormat::WHITE . ":□ \n";
+
+                }
+            }
+        }
+        $this->setNameTag($nameTag);
 
         $playersCanVoteCount =
             count(PlayerStatusStorage::getAlivePlayers($game->getGameId())) +

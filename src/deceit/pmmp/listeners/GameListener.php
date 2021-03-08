@@ -137,7 +137,7 @@ class GameListener implements Listener
         if (!$this->belongGameIsInProgress($playerData)) return;
 
         $player->setSpawn($player->getPosition());
-        $dyingPlayerEntity = new DyingPlayerEntity($player->getLevel(), $playerData->getBelongGameId(), $player,$this->scheduler);
+        $dyingPlayerEntity = new DyingPlayerEntity($player->getLevel(), $playerData->getBelongGameId(), $player, $this->scheduler);
         $dyingPlayerEntity->spawnToAll();
     }
 
@@ -148,6 +148,7 @@ class GameListener implements Listener
 
         $player->setGamemode(Player::SPECTATOR);
         $player->setImmobile(true);
+        UpdatePlayerStateService::execute($player->getName(), PlayerState::Dying());
     }
 
     public function onTapDyingPlayerEntity(EntityDamageByEntityEvent $event) {
@@ -174,6 +175,11 @@ class GameListener implements Listener
 
         //同じゲームに属しているか
         if (!$attackerGameId->equals($dyingPlayerEntityOwnerGameId)) return;
+
+        //生存者しか投票できない
+        $attackerStatus = PlayerStatusStorage::findByName($attacker->getName());
+        if ($attackerStatus === null) return;
+        if (!$attackerStatus->getState()->equals(PlayerState::Alive())) return;
 
         $attacker->sendForm(new ConfirmVoteForm($dyingPlayerEntity));
     }
