@@ -4,9 +4,7 @@
 namespace deceit\pmmp\scoreboards;
 
 
-use deceit\dao\PlayerDataDAO;
 use deceit\models\Game;
-use deceit\storages\GameStorage;
 use deceit\storages\PlayerStatusStorage;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
