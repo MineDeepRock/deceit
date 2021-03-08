@@ -41,7 +41,6 @@ use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
 
-//TODO:瀕死状態での蘇生機能
 //TODO:停電機能
 class GameListener implements Listener
 {
