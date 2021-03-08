@@ -5,6 +5,7 @@ namespace deceit\pmmp\entities;
 
 
 use deceit\DataFolderPath;
+use pocketmine\entity\Human;
 use pocketmine\entity\Skin;
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
@@ -14,9 +15,9 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\Player;
 use pocketmine\utils\UUID;
 
-class CadaverEntity extends EntityBase
+class CadaverEntity extends Human
 {
-    const NAME = "CadaverEntity";
+    const NAME = "Cadaver";
     public $width = 0.6;
     public $height = 0.2;
 
