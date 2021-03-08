@@ -4,16 +4,22 @@ namespace deceit\pmmp\entities;
 
 
 use deceit\DataFolderPath;
+use deceit\pmmp\services\RescueDyingPlayerPMMPService;
 use deceit\storages\GameStorage;
 use deceit\storages\PlayerStatusStorage;
 use deceit\types\GameId;
 use pocketmine\entity\Skin;
 use pocketmine\level\Level;
+use pocketmine\level\particle\CriticalParticle;
+use pocketmine\level\particle\HappyVillagerParticle;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\Player;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\scheduler\TaskHandler;
+use pocketmine\scheduler\TaskScheduler;
 use pocketmine\utils\UUID;
 
 class DyingPlayerEntity extends EntityBase
@@ -26,15 +32,32 @@ class DyingPlayerEntity extends EntityBase
     protected string $geometryId = "geometry." . self::NAME;
     protected string $geometryName = self::NAME . ".geo.json";
 
+    private TaskScheduler $scheduler;
+    private TaskHandler $limitTaskHandler;
+    private TaskHandler $rescueTaskHandler;
+
+
     private Player $owner;
     private GameId $gameId;
+    private bool $isRescued;
 
     private array $votedPlayerNameList;
 
-    public function __construct(Level $level, GameId $gameId, Player $owner) {
+    private const RescueRange = 2;
+    private const MaxRescueGauge = 5;
+
+    private ?Player $rescuingPlayer;
+    private int $rescueGauge;
+
+    public function __construct(Level $level, GameId $gameId, Player $owner, TaskScheduler $scheduler) {
         $this->owner = $owner;
         $this->gameId = $gameId;
         $this->votedPlayerNameList = [];
+        $this->scheduler = $scheduler;
+        $this->isRescued = false;
+        $this->rescuingPlayer = null;
+        $this->rescueGauge = 0;
+
         $nbt = new CompoundTag('', [
             'Pos' => new ListTag('Pos', [
                 new DoubleTag('', $owner->getX()),
@@ -70,6 +93,90 @@ class DyingPlayerEntity extends EntityBase
         ));
     }
 
+    public function spawnToAll(): void {
+
+        $this->limitTaskHandler = $this->scheduler->scheduleDelayedTask(new ClosureTask(
+            function (int $currentTick): void {
+                if ($this->isAlive()) $this->kill();
+            }
+        ), 20 * 15);
+
+
+        $this->rescueTaskHandler = $this->scheduler->scheduleDelayedTask(new ClosureTask(
+            function (int $currentTick): void {
+                if ($this->rescuingPlayer === null) {
+                    $this->rescueGauge = 0;
+                    $this->findRescuingPlayer();
+
+                } else if (!$this->rescuingPlayer->isOnline()) {
+                    $this->rescueGauge = 0;
+                    $this->findRescuingPlayer();
+
+                } else {
+                    if ($this->distance($this->rescuingPlayer) <= self::RescueRange) {
+                        $this->rescueGauge++;
+                        if ($this->rescueGauge === self::MaxRescueGauge) {
+                            $this->isRescued = true;
+                            RescueDyingPlayerPMMPService::execute($this);
+
+                        }
+                    } else {
+                        $this->rescueGauge = 0;
+                        $this->rescuingPlayer = null;
+
+                    }
+                }
+
+                $this->sendCircleParticle();
+            }
+        ), 20 * 1);
+
+        parent::spawnToAll();
+    }
+
+    private function findRescuingPlayer() {
+        foreach ($this->getLevel()->getPlayers() as $player) {
+            if ($player->isSneaking() and $player->distance($this) <= 2) {
+                $this->rescuingPlayer = $player;
+                break;
+            }
+        }
+    }
+
+    private function sendCircleParticle() {
+        for ($degree = 0; $degree < 360; $degree += 10) {
+            $center = $this->getPosition();
+
+            $x = self::RescueRange * sin(deg2rad($degree));
+            $z = self::RescueRange * cos(deg2rad($degree));
+
+            $pos = $center->add($x, 1, $z);
+            if ($this->rescuingPlayer === null) {
+                $this->getLevel()->addParticle(new CriticalParticle($pos));
+
+            } else if (!$this->rescuingPlayer->isOnline()) {
+                $this->getLevel()->addParticle(new CriticalParticle($pos));
+
+            } else {
+                if ($degree <= floor($this->rescueGauge/self::MaxRescueGauge*360) ) {
+                    $this->getLevel()->addParticle(new HappyVillagerParticle($pos));
+
+                } else {
+                    $this->getLevel()->addParticle(new HappyVillagerParticle($pos));
+
+                }
+            }
+        }
+    }
+
+    protected function onDeath(): void {
+        $this->limitTaskHandler->cancel();
+        $this->rescueTaskHandler->cancel();
+
+        parent::onDeath();
+    }
+
+
     /**
      * @return Player
      */
@@ -103,5 +210,12 @@ class DyingPlayerEntity extends EntityBase
 
         if ($isMajority) $this->kill();
         return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRescued(): bool {
+        return $this->isRescued;
     }
 }

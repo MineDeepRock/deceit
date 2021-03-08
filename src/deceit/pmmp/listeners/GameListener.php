@@ -138,24 +138,8 @@ class GameListener implements Listener
         if (!$this->belongGameIsInProgress($playerData)) return;
 
         $player->setSpawn($player->getPosition());
-        $dyingPlayerEntity = new DyingPlayerEntity($player->getLevel(), $playerData->getBelongGameId(), $player);
+        $dyingPlayerEntity = new DyingPlayerEntity($player->getLevel(), $playerData->getBelongGameId(), $player,$this->scheduler);
         $dyingPlayerEntity->spawnToAll();
-
-        //15秒間放置されると死亡する
-        $playerName = $player->getName();
-        $level = $player->getLevel();
-        $this->scheduler->scheduleDelayedTask(new ClosureTask(
-            function (int $currentTick) use ($playerName, $level): void {
-                foreach ($level->getEntities() as $entity) {
-                    if (!($entity instanceof DyingPlayerEntity)) continue;
-                    $owner = $entity->getOwner();
-                    if ($owner === null) continue;
-                    if ($owner->getName() === $playerName) {
-                        $entity->kill();
-                    }
-                }
-            }
-        ), 20 * 15);
     }
 
     public function onGamePlayerRespawn(PlayerRespawnEvent $event): void {
@@ -200,8 +184,9 @@ class GameListener implements Listener
         $entity = $event->getEntity();
 
         if (!($entity instanceof DyingPlayerEntity)) return;
+        if ($entity->isRescued()) return;
 
-        //TODO:本当の死、スペクテイターにする
+        //本当の死
         $owner = $entity->getOwner();
         if (!$owner->isOnline()) return;
 
