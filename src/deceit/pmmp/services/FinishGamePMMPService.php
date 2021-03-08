@@ -8,6 +8,7 @@ use bossbar_system\BossBar;
 use deceit\dao\PlayerDataDAO;
 use deceit\models\PlayerData;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
+use deceit\pmmp\scoreboards\OnGameScoreboard;
 use deceit\storages\PlayerStatusStorage;
 use deceit\types\GameId;
 use deceit\storages\GameStorage;
@@ -44,7 +45,10 @@ class FinishGamePMMPService
                 $player->sendTitle($messageToPlayers);
             }
 
-            //TODO:試合中のスコアボードを削除
+            //スコアボードを削除
+            OnGameScoreboard::delete($player);
+
+            //ボスバーを削除
             $bossBars = BossBar::getBelongings($player);
             foreach ($bossBars as $bossBar) $bossBar->remove();
 

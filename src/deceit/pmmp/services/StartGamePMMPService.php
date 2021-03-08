@@ -7,7 +7,9 @@ namespace deceit\pmmp\services;
 use bossbar_system\BossBar;
 use deceit\dao\PlayerDataDAO;
 use deceit\pmmp\BossBarTypeList;
+use deceit\pmmp\items\TransformItem;
 use deceit\pmmp\scoreboards\GameSettingsScoreboard;
+use deceit\pmmp\scoreboards\OnGameScoreboard;
 use deceit\services\StartGameService;
 use deceit\storages\GameStorage;
 use pocketmine\Player;
@@ -42,7 +44,7 @@ class StartGamePMMPService
 
             //スコアボード
             GameSettingsScoreboard::delete($player);
-            //TODO:試合中のスコアボード
+            OnGameScoreboard::send($player, $game);
 
             //役職のメッセージ
             if (in_array($playerName, $game->getWolfNameList())) {
@@ -53,11 +55,17 @@ class StartGamePMMPService
                 $player->sendMessage("市民を全員殺すか、タイムアップまで持ちこたえましょう");
 
                 $player->sendTitle(TextFormat::RED . "あなたは人狼です", "市民を全員殺すか、タイムアップまで持ちこたえましょう");
+
+                $player->getInventory()->sendContents([]);
+                $player->getInventory()->addItem(new TransformItem());
             } else {
                 $player->sendMessage(TextFormat::GREEN . "あなたは人間です");
                 $player->sendMessage("燃料を燃料タンクに集めましょう");
 
                 $player->sendTitle(TextFormat::GREEN . "あなたは人間です", "燃料を燃料タンクに集めましょう");
+
+                //TODO:別のアイテムにする
+                $player->getInventory()->addItem(new TransformItem());
             }
         }
 
