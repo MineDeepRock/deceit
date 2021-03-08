@@ -49,8 +49,8 @@ class ExitTimer extends Timer
             $bossBar = BossBar::findByType($player, BossBarTypeList::ExitTimer());
             if ($bossBar === null) return;//TODO:error
 
-            $bossBar->updateTitle("残り時間:" . ($game->getGameTimeLeft() - $game->getGameTimeLeft()));
-            $bossBar->updatePercentage(1 - $game->getGameTimerPercentage());
+            $bossBar->updateTitle("残り時間:" . ($game->getExitTimeInitial() - $game->getExitTimeLeft()));
+            $bossBar->updatePercentage(1 - $game->getExitTimerPercentage());
         }
     }
 

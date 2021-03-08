@@ -50,7 +50,7 @@ class GameTimer extends Timer
             $bossBar = BossBar::findByType($player, BossBarTypeList::GameTimer());
             if ($bossBar === null) return;//TODO:error
 
-            $bossBar->updateTitle("残り時間:" . ($game->getGameTimeLeft() - $game->getGameTimeLeft()));
+            $bossBar->updateTitle("残り時間:" . ($game->getGameTimeInitial() - $game->getGameTimeLeft()));
             $bossBar->updatePercentage(1 - $game->getGameTimerPercentage());
         }
     }

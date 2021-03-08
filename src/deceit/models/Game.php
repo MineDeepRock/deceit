@@ -234,25 +234,29 @@ class Game
         return $this->isStarted;
     }
 
-    public function getGameTimeLeft():int {
+    public function getGameTimeLeft(): int {
         return $this->timer->getTimeLeft();
     }
-    public function getGameTimeInitial():int {
-        return $this->timer->getTimeLeft();
+
+    public function getGameTimeInitial(): int {
+        return $this->timer->getInitialTime();
     }
+
     public function getGameTimerPercentage(): float {
-        if ($this->timer->getTimeLeft() === 0) return 0;
+        if ($this->timer->getTimeLeft() === 0) return 0.01;
         return $this->timer->getTimeLeft() / $this->timer->getInitialTime();
     }
 
-    public function getExitTimeLeft():int {
+    public function getExitTimeLeft(): int {
         return $this->exitTimer->getTimeLeft();
     }
-    public function getExitTimeInitial():int {
-        return $this->exitTimer->getTimeLeft();
+
+    public function getExitTimeInitial(): int {
+        return $this->exitTimer->getInitialTime();
     }
+
     public function getExitTimerPercentage(): float {
-        if ($this->exitTimer->getTimeLeft() === 0) return 0;
+        if ($this->exitTimer->getTimeLeft() === 0) return 0.01;
         return $this->exitTimer->getTimeLeft() / $this->exitTimer->getInitialTime();
     }
 
