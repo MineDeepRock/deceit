@@ -16,6 +16,7 @@ class RescueCadaverEntityPMMPService
         if (!$player->isOnline()) return;
 
         $player->setGamemode(Player::ADVENTURE);
+        $player->teleport($cadaverEntity);
         UpdatePlayerStateService::execute($player->getName(), PlayerState::Alive());
 
         if ($cadaverEntity->isAlive()) $cadaverEntity->kill();
