@@ -210,7 +210,7 @@ class GameListener implements Listener
             }
         }
 
-        //TODO : 自己蘇生を考慮する
+
         if (count($alivePlayerStatusList) - $aliveWolfCount <= 0) {
             FinishGameService::execute($belongGameId);
             FinishGamePMMPService::execute($belongGameId);

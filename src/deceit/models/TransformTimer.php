@@ -16,7 +16,7 @@ class TransformTimer extends Timer
 
     public function __construct(string $playerName, TaskScheduler $scheduler) {
         $this->playerName = $playerName;
-        parent::__construct(30, 0, $scheduler);
+        parent::__construct(10, 0, $scheduler);
     }
 
     public function start(): void {
@@ -35,7 +35,14 @@ class TransformTimer extends Timer
 
         $bossBar = BossBar::findByType($player, BossBarTypeList::Transform());
         if ($bossBar === null) return;//TODO:error
-        $bossBar->updatePercentage(1 - ($this->getTimeLeft() / $this->getInitialTime()));
+
+        if (($this->getTimeLeft() / $this->getInitialTime()) === 1) {
+            $bossBar->updatePercentage(0.01);
+
+        } else {
+            $bossBar->updatePercentage(1 - ($this->getTimeLeft() / $this->getInitialTime()));
+
+        }
     }
 
     public function onStoppedTimer(): void {

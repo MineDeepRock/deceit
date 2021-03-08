@@ -18,18 +18,17 @@ class TransformToPlayerPMMPService
 
         $playerStatus = PlayerStatusStorage::findByName($player->getName());
         if ($playerStatus === null) return;
-        if ($playerStatus->canTransform()) {
-            $player->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED)->setValue(1);
-            $player->setScale(1);
-            $player->setSkin(GetPlayerSkin::execute($player));
+        $player->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED)->setValue(0.10);
+        $player->setScale(1);
+        $player->setSkin(GetPlayerSkin::execute($player));
+        $player->sendSkin();
 
-            //インベントリを復元
-            $inventory = PlayerInventoryStorage::get($player);
-            if ($inventory == null) {
-                $player->getInventory()->setContents([]);
-            } else {
-                $player->getInventory()->setContents($inventory->getContents());
-            }
+        //インベントリを復元
+        $inventory = PlayerInventoryStorage::get($player);
+        if ($inventory == null) {
+            $player->getInventory()->setContents([]);
+        } else {
+            $player->getInventory()->setContents($inventory->getContents());
         }
     }
 }

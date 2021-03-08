@@ -17,9 +17,10 @@ class TransformToWolfPMMPService
         $playerStatus = PlayerStatusStorage::findByName($player->getName());
         if ($playerStatus === null) return;
         if ($playerStatus->canTransform()) {
-            $player->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED)->setValue(1.3);
+            $player->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED)->setValue(0.30);
             $player->setScale(1.3);
             $player->setSkin(new Skin("Standard_CustomSlim", file_get_contents(DataFolderPath::$skin ."wolf.skin")));
+            $player->sendSkin();
             $playerStatus->startTransformTimer();
 
             //インベントリを保存しクリア

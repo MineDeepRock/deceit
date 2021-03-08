@@ -4,6 +4,13 @@ namespace deceit;
 
 use deceit\dao\PlayerDataDAO;
 use deceit\models\PlayerData;
+use deceit\pmmp\entities\BloodPackEntity;
+use deceit\pmmp\entities\CadaverEntity;
+use deceit\pmmp\entities\DyingPlayerEntity;
+use deceit\pmmp\entities\FuelEntity;
+use deceit\pmmp\entities\FuelTankEntity;
+use deceit\pmmp\entities\ItemGunEntity;
+use deceit\pmmp\entities\MedicineKitOnMapEntity;
 use deceit\pmmp\forms\CreateGameForm;
 use deceit\pmmp\forms\GameListForm;
 use deceit\pmmp\forms\GameSettingForm;
@@ -16,6 +23,7 @@ use deceit\pmmp\utilities\GetWorldNameList;
 use deceit\pmmp\utilities\SavePlayerSkin;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\entity\Entity;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -26,6 +34,14 @@ use pocketmine\Server;
 class Main extends PluginBase implements Listener
 {
     public function onEnable() {
+        Entity::registerEntity(BloodPackEntity::class, true, ['BloodPack']);
+        Entity::registerEntity(CadaverEntity::class, true, ['Cadaver']);
+        Entity::registerEntity(DyingPlayerEntity::class, true, ['Dying']);
+        Entity::registerEntity(FuelEntity::class, true, ['Fuel']);
+        Entity::registerEntity(FuelTankEntity::class, true, ['FuelTank']);
+        Entity::registerEntity(ItemGunEntity::class, true, ['Gun']);
+        Entity::registerEntity(MedicineKitOnMapEntity::class, true, ['MedicineKit']);
+
         DataFolderPath::init($this->getDataFolder(), $this->getFile() . "resources/");
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getServer()->getPluginManager()->registerEvents(new GameListener($this->getScheduler()), $this);

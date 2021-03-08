@@ -76,6 +76,8 @@ class BloodPackEntity extends EntityBase
                 file_get_contents(DataFolderPath::$geometry . $this->geometryName)
             ));
 
+            $this->sendSkin();
+
 
             $player->sendMessage("血液を取得しました");
         }
