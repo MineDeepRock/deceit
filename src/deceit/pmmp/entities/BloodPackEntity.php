@@ -6,6 +6,7 @@ namespace deceit\pmmp\entities;
 
 use deceit\dao\PlayerDataDAO;
 use deceit\DataFolderPath;
+use deceit\pmmp\scoreboards\OnGameScoreboard;
 use deceit\storages\GameStorage;
 use deceit\storages\PlayerStatusStorage;
 use pocketmine\entity\Skin;
@@ -16,6 +17,7 @@ use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\Player;
+use pocketmine\Server;
 
 class BloodPackEntity extends EntityBase
 {
@@ -80,6 +82,13 @@ class BloodPackEntity extends EntityBase
 
 
             $player->sendMessage("血液を取得しました");
+            foreach ($game->getWolfNameList() as $name) {
+                $wolfPlayer = Server::getInstance()->getPlayer($name);
+                if ($wolfPlayer === null) return;
+                if (!$wolfPlayer->isOnline()) return;
+
+                OnGameScoreboard::update($wolfPlayer, $game);
+            }
         }
     }
 }
