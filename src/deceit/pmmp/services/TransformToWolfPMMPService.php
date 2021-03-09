@@ -5,7 +5,7 @@ namespace deceit\pmmp\services;
 
 
 use deceit\DataFolderPath;
-use deceit\pmmp\PlayerInventoryStorage;
+use deceit\pmmp\PlayerInventoryContentsStorage;
 use deceit\pmmp\scoreboards\OnGameScoreboard;
 use deceit\storages\GameStorage;
 use deceit\storages\PlayerStatusStorage;
@@ -34,7 +34,7 @@ class TransformToWolfPMMPService
             $playerStatus->startTransformTimer();
 
             //インベントリを保存しクリア
-            PlayerInventoryStorage::save($player);
+            PlayerInventoryContentsStorage::save($player->getName(), $player->getInventory()->getContents());
             $player->getInventory()->setContents([]);
         }
     }
