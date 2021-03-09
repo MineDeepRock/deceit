@@ -22,16 +22,17 @@ class TransformToWolfPMMPService
         if ($playerStatus->canTransform()) {
             $game = GameStorage::findById($playerStatus->getBelongGameId());
             if ($game === null) return;//TODO:エラー
-            foreach ($game->getWolfNameList() as $wolfName) {
-                $wolfPlayer = Server::getInstance()->getPlayer($wolfName);
-                OnGameScoreboard::update($wolfPlayer, $game);
-            }
 
             $player->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED)->setValue(0.30);
             $player->setScale(1.3);
             $player->setSkin(new Skin("Standard_CustomSlim", file_get_contents(DataFolderPath::$skin . "wolf.skin")));
             $player->sendSkin();
             $playerStatus->startTransformTimer();
+
+            foreach ($game->getWolfNameList() as $wolfName) {
+                $wolfPlayer = Server::getInstance()->getPlayer($wolfName);
+                OnGameScoreboard::update($wolfPlayer, $game);
+            }
 
             //インベントリを保存しクリア
             PlayerInventoryContentsStorage::save($player->getName(), $player->getInventory()->getContents());
