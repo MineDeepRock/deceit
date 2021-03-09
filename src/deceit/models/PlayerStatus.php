@@ -59,6 +59,11 @@ class PlayerStatus
         return true;
     }
 
+    public function nowTransforming(): bool {
+        if (!$this->isWolf) return false;
+        return $this->transformTimer->isProgress();
+    }
+
     /**
      * @return string
      */

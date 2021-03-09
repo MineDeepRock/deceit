@@ -4,6 +4,7 @@ namespace deceit\pmmp\entities;
 
 
 use deceit\DataFolderPath;
+use deceit\pmmp\items\MedicineKitItem;
 use deceit\pmmp\services\RescueDyingPlayerPMMPService;
 use deceit\storages\GameStorage;
 use deceit\storages\PlayerStatusStorage;
@@ -49,10 +50,11 @@ class DyingPlayerEntity extends Human
     private const RescueRange = 2;
     private const MaxRescueGauge = 5;
 
+    private bool $requireMedicineKit;
     private ?Player $rescuingPlayer;
     private int $rescueGauge;
 
-    public function __construct(Level $level, GameId $gameId, Player $owner, TaskScheduler $scheduler) {
+    public function __construct(Level $level, GameId $gameId, Player $owner,Bool $requireMedicineKit, TaskScheduler $scheduler) {
         $this->owner = $owner;
         $this->gameId = $gameId;
         $this->votedPlayerNameList = [];
@@ -60,6 +62,7 @@ class DyingPlayerEntity extends Human
         $this->isRescued = false;
         $this->rescuingPlayer = null;
         $this->rescueGauge = 0;
+        $this->requireMedicineKit = $requireMedicineKit;
 
         $game = GameStorage::findById($gameId);
         if ($game === null) return;//TODO:エラー
@@ -127,13 +130,29 @@ class DyingPlayerEntity extends Human
                     $this->findRescuingPlayer();
 
                 } else {
+                    //距離が適正
                     if ($this->distance($this->rescuingPlayer) <= self::RescueRange) {
+
+                        //医療キットが必要なのに持っていない
+                        if ($this->requireMedicineKit) {
+                            $itemInHand = $this->rescuingPlayer->getInventory()->getItemInHand();
+                            if (!($itemInHand->getId() === MedicineKitItem::ITEM_ID)) {
+                                $this->rescueGauge = 0;
+                                $this->rescuingPlayer = null;
+                            }
+                        }
+
+                        //医療キットが必要ない or　医療キットが必要かつ所持
                         $this->rescueGauge++;
                         if ($this->rescueGauge === self::MaxRescueGauge) {
                             $this->isRescued = true;
                             RescueDyingPlayerPMMPService::execute($this);
 
+                            //TODO:全部は使用しないように
+                            if ($this->requireMedicineKit) $this->rescuingPlayer->getInventory()->remove(new MedicineKitItem());
                         }
+
+                    //距離が不適
                     } else {
                         $this->rescueGauge = 0;
                         $this->rescuingPlayer = null;
@@ -151,8 +170,17 @@ class DyingPlayerEntity extends Human
     private function findRescuingPlayer() {
         foreach ($this->getLevel()->getPlayers() as $player) {
             if ($player->isSneaking() and $player->distance($this) <= 2) {
-                $this->rescuingPlayer = $player;
-                break;
+                if ($this->requireMedicineKit) {
+                    if ($player->getInventory()->contains(new MedicineKitItem())) {
+                        $this->rescuingPlayer = $player;
+                        break;
+                    } else {
+                        continue;
+                    }
+                }  else {
+                    $this->rescuingPlayer = $player;
+                    break;
+                }
             }
         }
     }
@@ -181,6 +209,13 @@ class DyingPlayerEntity extends Human
                 }
             }
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRequireMedicineKit(): bool {
+        return $this->requireMedicineKit;
     }
 
     protected function onDeath(): void {

@@ -13,6 +13,7 @@ use pocketmine\Server;
 class TransformTimer extends Timer
 {
     private string $playerName;
+    private bool $isProgress = false;
 
     public function __construct(string $playerName, TaskScheduler $scheduler) {
         $this->playerName = $playerName;
@@ -20,6 +21,8 @@ class TransformTimer extends Timer
     }
 
     public function start(): void {
+        $this->isProgress = true;
+
         $player = Server::getInstance()->getPlayer($this->playerName);
         if ($player === null) return;
 
@@ -50,6 +53,8 @@ class TransformTimer extends Timer
     }
 
     public function onFinishedTimer(): void {
+        $this->isProgress = false;
+
         $player = Server::getInstance()->getPlayer($this->playerName);
         if ($player === null) return;
 
@@ -57,5 +62,12 @@ class TransformTimer extends Timer
 
         $bossBar = BossBar::findByType($player, BossBarTypeList::Transform());
         if ($bossBar !== null) $bossBar->remove();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProgress(): bool {
+        return $this->isProgress;
     }
 }
