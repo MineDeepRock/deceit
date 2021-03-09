@@ -25,8 +25,10 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\entity\Entity;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\network\mcpe\protocol\GameRulesChangedPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
@@ -62,6 +64,10 @@ class Main extends PluginBase implements Listener
         }
 
         LobbyScoreboard::send($player);
+
+        $pk = new GameRulesChangedPacket();
+        $pk->gameRules["doImmediateRespawn"] = [1, true];
+        $player->sendDataPacket($pk);
     }
 
     public function onQuit(PlayerQuitEvent $event) {
@@ -99,5 +105,9 @@ class Main extends PluginBase implements Listener
         }
 
         return false;
+    }
+
+    public function onExhaust(PlayerExhaustEvent $event) {
+        $event->setCancelled();
     }
 }
