@@ -5,6 +5,7 @@ namespace deceit\pmmp\entities;
 
 
 use gun_system\GunSystem;
+use pocketmine\item\Arrow;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
 use pocketmine\nbt\tag\CompoundTag;
@@ -46,6 +47,7 @@ class ItemGunEntity extends EntityBase
 
     public function onAttackedByPlayer(Player $player): void {
         $player->getInventory()->addItem(GunSystem::getItemGun($this->gunName));
+        $player->getInventory()->addItem(new Arrow());
         if ($this->isAlive()) $this->kill();
     }
 }
