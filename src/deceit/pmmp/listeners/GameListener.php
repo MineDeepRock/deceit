@@ -20,6 +20,7 @@ use deceit\pmmp\items\FuelItem;
 use deceit\pmmp\scoreboards\GameSettingsScoreboard;
 use deceit\pmmp\services\FinishGamePMMPService;
 use deceit\pmmp\services\OpenExitPMMPService;
+use deceit\pmmp\services\SendWolfChat;
 use deceit\services\FinishGameService;
 use deceit\services\UpdatePlayerStateService;
 use deceit\storages\GameStorage;
@@ -29,6 +30,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
@@ -309,6 +311,37 @@ class GameListener implements Listener
         foreach ($game->getPlayerNameList() as $playerName) {
             $player = Server::getInstance()->getPlayer($playerName);
             GameSettingsScoreboard::update($player);
+        }
+    }
+
+    public function onChat(PlayerChatEvent $event) {
+        $sender = $event->getPlayer();
+        if (substr($event->getMessage(), 0, 1) === "!") {
+            SendWolfChat::execute($sender, $event->getMessage());
+        }
+
+        $senderStatus = PlayerStatusStorage::findByName($sender->getName());
+        if ($senderStatus === null) return;
+
+        $game = GameStorage::findById($senderStatus->getBelongGameId());
+        if ($game === null) {
+            foreach (Server::getInstance()->getOnlinePlayers() as $onlinePlayer) {
+                $onlinePlayerStatus = PlayerStatusStorage::findByName($onlinePlayer->getName());
+                if ($onlinePlayerStatus === null) {
+                    $onlinePlayer->sendMessage("[{$sender->getName()}]" . $event->getMessage());
+                }
+            }
+
+            return;
+        }
+
+
+        foreach ($game->getPlayerNameList() as $name) {
+            $gamePlayer = Server::getInstance()->getPlayer($name);
+            if ($gamePlayer === null) continue;
+            if (!$gamePlayer->isOnline()) continue;
+
+            $gamePlayer->sendMessage("[{$sender->getName()}]" . $event->getMessage());
         }
     }
 }
