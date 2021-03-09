@@ -40,6 +40,10 @@ class PlayerStatus
         return true;
     }
 
+    public function resetBlood():void {
+       $this->bloodTank = 0;
+    }
+
     public function canTransform(): bool {
         return $this->bloodTank === 5;
     }

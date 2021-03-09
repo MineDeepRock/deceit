@@ -135,6 +135,12 @@ class GameListener implements Listener
         $playerData = PlayerDataDAO::findByName($player->getName());
         if (!$this->belongGameIsInProgress($playerData)) return;
 
+        //人狼が死んだ場合
+        $playerStatus = PlayerStatusStorage::findByName($player->getName());
+        if ($playerStatus->isWolf()) {
+            $playerStatus->resetBlood();
+        }
+
         //変身中の人狼に殺された場合
         $cause = $player->getLastDamageCause();
         if (!($cause instanceof EntityDamageByEntityEvent)) return;
