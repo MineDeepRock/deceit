@@ -47,7 +47,16 @@ class GameListForm extends SimpleForm
             }
         }
 
-        parent::__construct("試合一覧", "タップで参加できます", array_merge($availableGamesAsButtons, $unavailableGamesAsButtons));
+        $gameAsButtonList = array_merge($availableGamesAsButtons, $availableGamesAsButtons);
+        array_unshift($gameAsButtonList, new SimpleFormButton(
+            TextFormat::BLUE . "更新",
+            null,
+            function (Player $player) {
+                $player->sendForm(new GameListForm($player));
+            }
+        ));
+
+        parent::__construct("試合一覧", "タップで参加できます", $gameAsButtonList);
     }
 
     function onClickCloseButton(Player $player): void {
