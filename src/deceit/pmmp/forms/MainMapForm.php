@@ -8,6 +8,7 @@ use deceit\dao\MapDAO;
 use form_builder\models\simple_form_elements\SimpleFormButton;
 use form_builder\models\SimpleForm;
 use pocketmine\Player;
+use pocketmine\Server;
 
 class MainMapForm extends SimpleForm
 {
@@ -26,6 +27,10 @@ class MainMapForm extends SimpleForm
                 $map->getName(),
                 null,
                 function (Player $player) use ($map) {
+                    $level = Server::getInstance()->getLevelByName($map->getLevelName());
+                    $player->teleport($level->getSpawnLocation());
+                    $player->teleport($map->getStartVector());
+
                     $player->sendForm(new MapSettingForm($map));
                 }
             );

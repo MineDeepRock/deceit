@@ -38,6 +38,9 @@ class CreateNewMapForm extends CustomForm
         $result = CreateNewMapService::execute($levelName, $mapName, $level->getSpawnLocation());
 
         if ($result) {
+            $level = Server::getInstance()->getLevelByName($levelName);
+            $player->teleport($level->getSpawnLocation());
+
             $player->sendForm(new MapSettingForm(MapDAO::findByName($mapName)));
         }
     }

@@ -18,6 +18,7 @@ use deceit\pmmp\forms\GameListForm;
 use deceit\pmmp\forms\GameSettingForm;
 use deceit\pmmp\forms\MainMapForm;
 use deceit\pmmp\forms\WaitingRoomListForm;
+use deceit\pmmp\forms\WorldListForm;
 use deceit\pmmp\items\RemoveNPCItem;
 use deceit\pmmp\listeners\GameListener;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
@@ -110,15 +111,15 @@ class Main extends PluginBase implements Listener
                 $sender->sendForm(new MainMapForm());
                 return true;
             }
-            if ($label = "gamelist") {
+            if ($label === "gamelist") {
                 $sender->sendForm(new GameListForm($sender));
                 return true;
             }
-            if ($label = "room") {
+            if ($label === "room") {
                 $sender->sendForm(new WaitingRoomListForm());
                 return true;
             }
-            if ($label = "board") {
+            if ($label === "board") {
                 $nbt = new CompoundTag('', [
                     'Pos' => new ListTag('Pos', [
                         new DoubleTag('', $sender->getX()),
@@ -139,7 +140,7 @@ class Main extends PluginBase implements Listener
                 $entity->spawnToAll();
                 return true;
             }
-            if ($label = "computer") {
+            if ($label === "computer") {
                 $nbt = new CompoundTag('', [
                     'Pos' => new ListTag('Pos', [
                         new DoubleTag('', $sender->getX()),
@@ -160,8 +161,12 @@ class Main extends PluginBase implements Listener
                 $entity->spawnToAll();
                 return true;
             }
-            if ($label = "removenpc") {
+            if ($label === "removenpc") {
                 $sender->getInventory()->addItem(Item::get(RemoveNPCItem::ITEM_ID));
+                return true;
+            }
+            if ($label === "worldlist") {
+                $sender->sendForm(new WorldListForm());
                 return true;
             }
         }
