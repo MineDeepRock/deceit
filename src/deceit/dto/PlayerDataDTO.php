@@ -5,7 +5,7 @@ namespace deceit\dto;
 
 
 use deceit\types\GameId;
-use deceit\models\PlayerData;
+use deceit\data\PlayerData;
 
 class PlayerDataDTO
 {

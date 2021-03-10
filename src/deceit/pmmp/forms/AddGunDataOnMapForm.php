@@ -5,7 +5,7 @@ namespace deceit\pmmp\forms;
 
 
 use deceit\dao\MapDAO;
-use deceit\models\GunDataOnMap;
+use deceit\data\GunDataOnMap;
 use deceit\models\Map;
 use deceit\pmmp\slot_menus\AddGunDataOnMapSlotMenu;
 use form_builder\models\custom_form_elements\Dropdown;

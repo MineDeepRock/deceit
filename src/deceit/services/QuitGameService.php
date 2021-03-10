@@ -5,7 +5,7 @@ namespace deceit\services;
 
 
 use deceit\dao\PlayerDataDAO;
-use deceit\models\PlayerData;
+use deceit\data\PlayerData;
 use deceit\pmmp\events\UpdatedGameDataEvent;
 use deceit\storages\GameStorage;
 use deceit\storages\PlayerStatusStorage;

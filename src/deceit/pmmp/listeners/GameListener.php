@@ -5,7 +5,7 @@ namespace deceit\pmmp\listeners;
 
 use deceit\dao\PlayerDataDAO;
 use deceit\models\Game;
-use deceit\models\PlayerData;
+use deceit\data\PlayerData;
 use deceit\pmmp\blocks\ExitBlock;
 use deceit\pmmp\entities\BloodPackEntity;
 use deceit\pmmp\entities\CadaverEntity;

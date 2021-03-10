@@ -6,7 +6,7 @@ namespace deceit\pmmp\services;
 
 use bossbar_system\BossBar;
 use deceit\dao\PlayerDataDAO;
-use deceit\models\PlayerData;
+use deceit\data\PlayerData;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\pmmp\scoreboards\OnGameScoreboard;
 use deceit\storages\PlayerStatusStorage;

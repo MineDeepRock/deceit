@@ -5,7 +5,7 @@ namespace deceit\pmmp\slot_menus;
 
 
 use deceit\dao\MapDAO;
-use deceit\models\FuelTankMapData;
+use deceit\data\FuelTankMapData;
 use deceit\models\Map;
 use deceit\pmmp\forms\EditFuelTankCapacityForm;
 use deceit\pmmp\forms\FuelTankListForm;

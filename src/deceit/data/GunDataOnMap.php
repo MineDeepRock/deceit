@@ -1,7 +1,7 @@
 <?php
 
 
-namespace deceit\models;
+namespace deceit\data;
 
 
 use deceit\pmmp\entities\ItemGunEntity;

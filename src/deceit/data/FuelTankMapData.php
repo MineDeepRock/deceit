@@ -1,7 +1,7 @@
 <?php
 
 
-namespace deceit\models;
+namespace deceit\data;
 
 
 use pocketmine\math\Vector3;

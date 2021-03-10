@@ -5,7 +5,7 @@ namespace deceit\pmmp\forms;
 
 
 use deceit\dao\MapDAO;
-use deceit\models\FuelTankMapData;
+use deceit\data\FuelTankMapData;
 use deceit\models\Map;
 use form_builder\models\custom_form_elements\Slider;
 use form_builder\models\CustomForm;

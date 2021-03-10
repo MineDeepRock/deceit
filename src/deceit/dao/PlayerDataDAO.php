@@ -6,7 +6,7 @@ namespace deceit\dao;
 
 use deceit\dto\PlayerDataDTO;
 use deceit\DataFolderPath;
-use deceit\models\PlayerData;
+use deceit\data\PlayerData;
 
 class PlayerDataDAO
 {

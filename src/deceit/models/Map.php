@@ -4,8 +4,12 @@
 namespace deceit\models;
 
 
+use deceit\data\FuelTankMapData;
+use deceit\data\GunDataOnMap;
+use deceit\data\ItemDataOnMap;
 use pocketmine\math\Vector3;
 
+//TODO:ModelではなくDataではないか？？名前をMapDataにするべきか？
 class Map
 {
     private string $levelName;

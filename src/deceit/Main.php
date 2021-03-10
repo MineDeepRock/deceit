@@ -3,7 +3,7 @@
 namespace deceit;
 
 use deceit\dao\PlayerDataDAO;
-use deceit\models\PlayerData;
+use deceit\data\PlayerData;
 use deceit\pmmp\entities\BloodPackEntity;
 use deceit\pmmp\entities\CadaverEntity;
 use deceit\pmmp\entities\DyingPlayerEntity;

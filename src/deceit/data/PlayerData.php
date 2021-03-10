@@ -1,7 +1,7 @@
 <?php
 
 
-namespace deceit\models;
+namespace deceit\data;
 
 
 //一時的なプレイヤーデータは含まない。

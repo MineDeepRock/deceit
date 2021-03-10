@@ -5,7 +5,7 @@ namespace deceit\pmmp\slot_menus;
 
 
 use deceit\dao\MapDAO;
-use deceit\models\GunDataOnMap;
+use deceit\data\GunDataOnMap;
 use deceit\models\Map;
 use deceit\pmmp\forms\EditGunDataOnMapForm;
 use deceit\pmmp\forms\GunDataOnMapListForm;

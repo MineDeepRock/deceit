@@ -4,7 +4,7 @@
 namespace deceit\pmmp\entities;
 
 
-use deceit\models\ItemDataOnMap;
+use deceit\data\ItemDataOnMap;
 use pocketmine\level\Level;
 use pocketmine\level\Position;
 use pocketmine\nbt\tag\CompoundTag;

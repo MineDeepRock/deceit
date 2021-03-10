@@ -3,9 +3,9 @@
 namespace deceit\dto;
 
 
-use deceit\models\FuelTankMapData;
-use deceit\models\GunDataOnMap;
-use deceit\models\ItemDataOnMap;
+use deceit\data\FuelTankMapData;
+use deceit\data\GunDataOnMap;
+use deceit\data\ItemDataOnMap;
 use deceit\models\Map;
 use pocketmine\math\Vector3;
 
