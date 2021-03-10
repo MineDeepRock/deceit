@@ -152,6 +152,14 @@ class Game
         unset($this->playerNameList[$index]);
         $this->playerNameList = array_values($this->playerNameList);
 
+        //wolfNameから削除
+        $index2 = array_search($playerName, $this->wolfNameList);
+        if ($index2 !== false) {
+            unset($this->wolfNameList[$index]);
+            $this->wolfNameList = array_values($this->playerNameList);
+        }
+
+
         //オーナーを受け渡す
         if ($playerName === $this->gameOwnerName) {
             $this->gameOwnerName = $this->playerNameList[0];

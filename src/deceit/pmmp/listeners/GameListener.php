@@ -19,6 +19,7 @@ use deceit\pmmp\events\UpdatedGameDataEvent;
 use deceit\pmmp\forms\ConfirmVoteForm;
 use deceit\pmmp\items\FuelItem;
 use deceit\pmmp\scoreboards\GameSettingsScoreboard;
+use deceit\pmmp\scoreboards\OnGameScoreboard;
 use deceit\pmmp\services\FinishGamePMMPService;
 use deceit\pmmp\services\OpenExitPMMPService;
 use deceit\pmmp\services\SendWolfChat;
@@ -135,11 +136,16 @@ class GameListener implements Listener
         $player = $event->getPlayer();
         $playerData = PlayerDataDAO::findByName($player->getName());
         if (!$this->belongGameIsInProgress($playerData)) return;
+        $game = GameStorage::findById($playerData->getBelongGameId());
 
         //人狼が死んだ場合
         $playerStatus = PlayerStatusStorage::findByName($player->getName());
         if ($playerStatus->isWolf()) {
             $playerStatus->resetBlood();
+            foreach ($game->getWolfNameList() as $wolfName) {
+                $wolfPlayer = Server::getInstance()->getPlayer($wolfName);
+                OnGameScoreboard::update($wolfPlayer, $game);
+            }
         }
 
         //変身中の人狼に殺された場合
