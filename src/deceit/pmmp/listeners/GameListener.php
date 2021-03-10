@@ -251,7 +251,6 @@ class GameListener implements Listener
         if (!$this->belongGameIsInProgress($playerData)) return;
 
         $game = GameStorage::findById($playerData->getBelongGameId());
-        $levelName = $game->getMap()->getLevelName();
 
         //脱出
         if ($player->getPosition()->distance($game->getMap()->getExitVector()) <= Game::ExitRange) {

@@ -5,6 +5,8 @@ namespace deceit\models;
 
 use deceit\pmmp\entities\FuelEntity;
 use deceit\pmmp\entities\FuelTankEntity;
+use deceit\pmmp\utilities\ExitTimer;
+use deceit\pmmp\utilities\GameTimer;
 use deceit\storages\GameStorage;
 use deceit\types\FuelTankId;
 use deceit\types\GameId;

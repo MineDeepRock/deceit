@@ -1,7 +1,7 @@
 <?php
 
 
-namespace deceit\models;
+namespace deceit\pmmp\utilities;
 
 
 use bossbar_system\BossBar;
