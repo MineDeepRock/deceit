@@ -9,6 +9,8 @@ use deceit\pmmp\entities\CadaverEntity;
 use deceit\pmmp\entities\DyingPlayerEntity;
 use deceit\pmmp\entities\FuelEntity;
 use deceit\pmmp\entities\FuelTankEntity;
+use deceit\pmmp\entities\GameCreationComputer;
+use deceit\pmmp\entities\GameListBulletinBoard;
 use deceit\pmmp\entities\ItemGunEntity;
 use deceit\pmmp\entities\MedicineKitOnMapEntity;
 use deceit\pmmp\forms\CreateGameForm;
@@ -24,6 +26,7 @@ use deceit\pmmp\utilities\SavePlayerSkin;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\entity\Entity;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerJoinEvent;
@@ -105,6 +108,26 @@ class Main extends PluginBase implements Listener
         }
 
         return false;
+    }
+
+    public function onTapGameListBulletinBoard(EntityDamageByEntityEvent $event) {
+        $bloodPackEntity = $event->getEntity();
+        $attacker = $event->getDamager();
+        if (!($attacker instanceof Player)) return;
+        if (!($bloodPackEntity instanceof GameListBulletinBoard)) return;
+        $event->setCancelled();
+
+        $attacker->sendForm(new GameListForm($attacker));
+    }
+
+    public function onTapGameCreationComputer(EntityDamageByEntityEvent $event) {
+        $bloodPackEntity = $event->getEntity();
+        $attacker = $event->getDamager();
+        if (!($attacker instanceof Player)) return;
+        if (!($bloodPackEntity instanceof GameCreationComputer)) return;
+        $event->setCancelled();
+
+        $attacker->sendForm(new CreateGameForm($attacker));
     }
 
     public function onExhaust(PlayerExhaustEvent $event) {
