@@ -17,6 +17,7 @@ use deceit\pmmp\forms\CreateGameForm;
 use deceit\pmmp\forms\GameListForm;
 use deceit\pmmp\forms\GameSettingForm;
 use deceit\pmmp\forms\MainMapForm;
+use deceit\pmmp\forms\WaitingRoomListForm;
 use deceit\pmmp\listeners\GameListener;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\services\QuitGameService;
@@ -105,6 +106,10 @@ class Main extends PluginBase implements Listener
             }
             if ($label = "gamelist") {
                 $sender->sendForm(new GameListForm($sender));
+                return true;
+            }
+            if ($label = "room") {
+                $sender->sendForm(new WaitingRoomListForm());
                 return true;
             }
         }

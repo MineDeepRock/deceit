@@ -14,6 +14,11 @@ commands:
   map:
     usage: "/map"
     description: "map"
+    permission: op
   gamelist:
     usage: "/gamelist"
     description: "open game list"
+  room:
+    usage: "/room"
+    description: "open waiting room list"
+    permission: op

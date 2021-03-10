@@ -9,6 +9,7 @@ use deceit\DataFolderPath;
 use deceit\dto\WaitingRoomDTO;
 use pocketmine\math\Vector3;
 
+//TODO:ここでファイル操作を行っているのはおかしい
 class WaitingRoomStorage
 {
     /**
@@ -24,11 +25,40 @@ class WaitingRoomStorage
         }
     }
 
+    //TODO:注意
+    static function delete(WaitingRoom $target): void {
+        $newWaitingRoomList = [];
+        foreach (self::$waitingRoomList as $waitingRoom) {
+            if (!$waitingRoom->getVector()->equals($target->getVector())) {
+                $newWaitingRoomList[] = $waitingRoom;
+            }
+        }
+
+        self::$waitingRoomList = $newWaitingRoomList;
+        self::save();
+    }
+
+    //TODO:注意
+    static private function save(): void {
+        $json = [];
+        foreach (self::$waitingRoomList as $waitingRoom) {
+            $json[] = WaitingRoomDTO::encode($waitingRoom);
+        }
+
+        file_put_contents(DataFolderPath::$waitingRoomListJson, json_encode($json));
+    }
+
     static function add(WaitingRoom $waitingRoom): bool {
         if (self::findByVector($waitingRoom->getVector()) !== null) return false;
 
         self::$waitingRoomList[] = $waitingRoom;
+        self::save();
         return true;
+    }
+
+
+    static function getAll(): array {
+        return self::$waitingRoomList;
     }
 
     static function findByVector(?Vector3 $vector3): ?WaitingRoom {
