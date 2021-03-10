@@ -18,6 +18,7 @@ use deceit\pmmp\forms\GameListForm;
 use deceit\pmmp\forms\GameSettingForm;
 use deceit\pmmp\forms\MainMapForm;
 use deceit\pmmp\forms\WaitingRoomListForm;
+use deceit\pmmp\items\RemoveNPCItem;
 use deceit\pmmp\listeners\GameListener;
 use deceit\pmmp\scoreboards\LobbyScoreboard;
 use deceit\services\QuitGameService;
@@ -33,6 +34,11 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\item\Item;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\DoubleTag;
+use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\ListTag;
 use pocketmine\network\mcpe\protocol\GameRulesChangedPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
@@ -112,26 +118,74 @@ class Main extends PluginBase implements Listener
                 $sender->sendForm(new WaitingRoomListForm());
                 return true;
             }
+            if ($label = "board") {
+                $nbt = new CompoundTag('', [
+                    'Pos' => new ListTag('Pos', [
+                        new DoubleTag('', $sender->getX()),
+                        new DoubleTag('', $sender->getY()),
+                        new DoubleTag('', $sender->getZ())
+                    ]),
+                    'Motion' => new ListTag('Motion', [
+                        new DoubleTag('', 0),
+                        new DoubleTag('', 0),
+                        new DoubleTag('', 0)
+                    ]),
+                    'Rotation' => new ListTag('Rotation', [
+                        new FloatTag("", $sender->getYaw()),
+                        new FloatTag("", 0)
+                    ]),
+                ]);
+                $entity = new GameListBulletinBoard($sender->getLevel(), $nbt);
+                $entity->spawnToAll();
+                return true;
+            }
+            if ($label = "computer") {
+                $nbt = new CompoundTag('', [
+                    'Pos' => new ListTag('Pos', [
+                        new DoubleTag('', $sender->getX()),
+                        new DoubleTag('', $sender->getY()),
+                        new DoubleTag('', $sender->getZ())
+                    ]),
+                    'Motion' => new ListTag('Motion', [
+                        new DoubleTag('', 0),
+                        new DoubleTag('', 0),
+                        new DoubleTag('', 0)
+                    ]),
+                    'Rotation' => new ListTag('Rotation', [
+                        new FloatTag("", $sender->getYaw()),
+                        new FloatTag("", 0)
+                    ]),
+                ]);
+                $entity = new GameCreationComputer($sender->getLevel(), $nbt);
+                $entity->spawnToAll();
+                return true;
+            }
+            if ($label = "removenpc") {
+                $sender->getInventory()->addItem(Item::get(RemoveNPCItem::ITEM_ID));
+                return true;
+            }
         }
 
         return false;
     }
 
     public function onTapGameListBulletinBoard(EntityDamageByEntityEvent $event) {
-        $bloodPackEntity = $event->getEntity();
+        $gameListBulletinBoard = $event->getEntity();
         $attacker = $event->getDamager();
         if (!($attacker instanceof Player)) return;
-        if (!($bloodPackEntity instanceof GameListBulletinBoard)) return;
+        if (!($gameListBulletinBoard instanceof GameListBulletinBoard)) return;
+        if ($attacker->getInventory()->getItemInHand()->getId() === RemoveNPCItem::ITEM_ID) $gameListBulletinBoard->kill();
         $event->setCancelled();
 
         $attacker->sendForm(new GameListForm($attacker));
     }
 
     public function onTapGameCreationComputer(EntityDamageByEntityEvent $event) {
-        $bloodPackEntity = $event->getEntity();
+        $GameCreationComputer = $event->getEntity();
         $attacker = $event->getDamager();
         if (!($attacker instanceof Player)) return;
-        if (!($bloodPackEntity instanceof GameCreationComputer)) return;
+        if (!($GameCreationComputer instanceof GameCreationComputer)) return;
+        if ($attacker->getInventory()->getItemInHand()->getId() === RemoveNPCItem::ITEM_ID) $GameCreationComputer->kill();
         $event->setCancelled();
 
         $attacker->sendForm(new CreateGameForm($this->getScheduler()));

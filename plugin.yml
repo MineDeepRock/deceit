@@ -22,3 +22,15 @@ commands:
     usage: "/room"
     description: "open waiting room list"
     permission: op
+  board:
+    usage: "/board"
+    description: "summon board"
+    permission: op
+  computer:
+    usage: "/computer"
+    description: "summon computer"
+    permission: op
+  removenpc:
+    usage: "/removenpc"
+    description: "get RemoveNpcItem"
+    permission: op
