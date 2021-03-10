@@ -11,8 +11,9 @@ class DataFolderPath
     static string $skin;
     static string $geometry;
     static string $playerSkin;
+    static string $waitingRoomListJson;
 
-    static function init(string $dataPath,string $resourcePath) {
+    static function init(string $dataPath, string $resourcePath) {
         self::$map = $dataPath . "maps/";
         if (!file_exists(self::$map)) mkdir(self::$map);
 
@@ -28,5 +29,8 @@ class DataFolderPath
 
         self::$playerSkin = $dataPath . "player_skin/";
         if (!file_exists(self::$playerSkin)) mkdir(self::$playerSkin);
+
+        self::$waitingRoomListJson = $dataPath . "waiting_room/data.json";
+        if (!file_exists(self::$waitingRoomListJson)) file_put_contents(self::$waitingRoomListJson, json_encode([]));
     }
 }

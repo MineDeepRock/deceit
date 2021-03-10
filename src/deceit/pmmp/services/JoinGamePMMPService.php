@@ -22,6 +22,10 @@ class JoinGamePMMPService
             GameSettingsScoreboard::send($player);
 
             $game = GameStorage::findById($gameId);
+
+            //TODO:待合室がロビー以外を考慮する
+            $player->teleport($game->getWaitingRoom()->getVector());
+
             foreach ($game->getPlayerNameList() as $participantName) {
                 $participant = Server::getInstance()->getPlayer($participantName);
                 if ($participant->getName() === $player->getName()) continue;

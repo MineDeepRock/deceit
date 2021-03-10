@@ -3,11 +3,13 @@
 namespace deceit\models;
 
 
+use deceit\data\WaitingRoom;
 use deceit\pmmp\entities\FuelEntity;
 use deceit\pmmp\entities\FuelTankEntity;
 use deceit\pmmp\utilities\ExitTimer;
 use deceit\pmmp\utilities\GameTimer;
 use deceit\storages\GameStorage;
+use deceit\storages\WaitingRoomStorage;
 use deceit\types\FuelTankId;
 use deceit\types\GameId;
 use pocketmine\level\Position;
@@ -45,7 +47,9 @@ class Game
     private bool $isStarted;
     private bool $isFinished;
 
-    public function __construct(string $gameOwnerName, Map $map, int $maxPlayers, int $wolfsCount, TaskScheduler $scheduler) {
+    private WaitingRoom $waitingRoom;
+
+    public function __construct(string $gameOwnerName, Map $map, int $maxPlayers, int $wolfsCount, WaitingRoom $waitingRoom, TaskScheduler $scheduler) {
         $this->gameId = GameId::asNew();
         $fuelTanks = [];
         foreach ($map->getFuelTankMapDataList() as $fuelTankMapData) {
@@ -67,6 +71,7 @@ class Game
         $this->exitTimer = $exitTimer;
         $this->isStarted = false;
         $this->isFinished = false;
+        $this->waitingRoom = $waitingRoom;
     }
 
     public function start(): void {
@@ -269,5 +274,12 @@ class Game
      */
     public function getWolfNameList(): array {
         return $this->wolfNameList;
+    }
+
+    /**
+     * @return WaitingRoom
+     */
+    public function getWaitingRoom(): WaitingRoom {
+        return $this->waitingRoom;
     }
 }

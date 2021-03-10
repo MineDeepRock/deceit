@@ -23,6 +23,7 @@ use deceit\services\QuitGameService;
 use deceit\storages\GameStorage;
 use deceit\pmmp\utilities\GetWorldNameList;
 use deceit\pmmp\utilities\SavePlayerSkin;
+use deceit\storages\WaitingRoomStorage;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\entity\Entity;
@@ -48,6 +49,7 @@ class Main extends PluginBase implements Listener
         Entity::registerEntity(MedicineKitOnMapEntity::class, true, ['MedicineKit']);
 
         DataFolderPath::init($this->getDataFolder(), $this->getFile() . "resources/");
+        WaitingRoomStorage::loadAllWaitingRooms();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getServer()->getPluginManager()->registerEvents(new GameListener($this->getScheduler()), $this);
 
@@ -127,7 +129,7 @@ class Main extends PluginBase implements Listener
         if (!($bloodPackEntity instanceof GameCreationComputer)) return;
         $event->setCancelled();
 
-        $attacker->sendForm(new CreateGameForm($attacker));
+        $attacker->sendForm(new CreateGameForm($this->getScheduler()));
     }
 
     public function onExhaust(PlayerExhaustEvent $event) {

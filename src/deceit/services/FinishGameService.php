@@ -7,6 +7,7 @@ namespace deceit\services;
 use deceit\dao\PlayerDataDAO;
 use deceit\data\PlayerData;
 use deceit\storages\PlayerStatusStorage;
+use deceit\storages\WaitingRoomStorage;
 use deceit\types\GameId;
 use deceit\storages\GameStorage;
 
@@ -22,6 +23,7 @@ class FinishGameService
         }
 
         $game->finish();
+        WaitingRoomStorage::returnWaitingRoom($game->getWaitingRoom());
 
         GameStorage::delete($gameId);
     }
