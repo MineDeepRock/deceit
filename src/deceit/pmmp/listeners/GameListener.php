@@ -4,6 +4,7 @@ namespace deceit\pmmp\listeners;
 
 
 use deceit\dao\PlayerDataDAO;
+use deceit\models\Game;
 use deceit\models\PlayerData;
 use deceit\pmmp\blocks\ExitBlock;
 use deceit\pmmp\entities\BloodPackEntity;
@@ -251,13 +252,9 @@ class GameListener implements Listener
 
         $game = GameStorage::findById($playerData->getBelongGameId());
         $levelName = $game->getMap()->getLevelName();
-        $level = Server::getInstance()->getLevelByName($levelName);
-
-        $blockUnderPlayer = $level->getBlock($player);
 
         //脱出
-        //TODO:時間がかかるようにする
-        if ($blockUnderPlayer->getId() === ExitBlock::ID) {
+        if ($player->getPosition()->distance($game->getMap()->getExitVector()) <= Game::ExitRange) {
             UpdatePlayerStateService::execute($player->getName(), PlayerState::Escaped());
 
             $player->setGamemode(Player::SPECTATOR);

@@ -10,6 +10,7 @@ use deceit\pmmp\services\FinishGamePMMPService;
 use deceit\services\FinishGameService;
 use deceit\storages\GameStorage;
 use deceit\types\GameId;
+use pocketmine\level\particle\DustParticle;
 use pocketmine\scheduler\TaskScheduler;
 use pocketmine\Server;
 
@@ -41,6 +42,17 @@ class ExitTimer extends Timer
         //BossBarnの更新
         $game = GameStorage::findById($this->gameId);
         if ($game === null) return;
+
+        $level = Server::getInstance()->getLevelByName($game->getMap()->getLevelName());
+        for ($degree = 0; $degree < 360; $degree += 10) {
+            $center = $game->getMap()->getExitVector();
+
+            $x = Game::ExitRange * sin(deg2rad($degree));
+            $z = Game::ExitRange * cos(deg2rad($degree));
+
+            $pos = $center->add($x, 3, $z);
+            $level->addParticle(new DustParticle($pos, 0, 255, 0));
+        }
 
         foreach ($game->getPlayerNameList() as $playerName) {
             $player = Server::getInstance()->getPlayer($playerName);

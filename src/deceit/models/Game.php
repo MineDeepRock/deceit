@@ -17,6 +17,8 @@ use pocketmine\Server;
 //TODO:ユーザーがTankのキャパ設定をできるように
 class Game
 {
+    const ExitRange = 3;
+
     private GameId $gameId;
     private string $gameOwnerName;
 
