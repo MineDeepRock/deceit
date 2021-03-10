@@ -32,7 +32,7 @@ class ItemDataOnMapListForm extends SimpleForm
             $vector = $itemDataOnMap->getVector();
 
             $buttons[] = new SimpleFormButton(
-                "アイテム名:{$itemDataOnMap->getName()},x:{$vector->getY()},y:{$vector->getY()},z:{$vector->getZ()}",
+                "アイテム名:{$itemDataOnMap->getName()},x:{$vector->getX()},y:{$vector->getY()},z:{$vector->getZ()}",
                 null,
                 function (Player $player) use ($map, $itemDataOnMap) {
                     $player->teleport($itemDataOnMap->getVector());

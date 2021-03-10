@@ -32,7 +32,7 @@ class FuelTankListForm extends SimpleForm
             $vector = $fuelTankMapData->getVector();
 
             $buttons[] = new SimpleFormButton(
-                "容量:{$fuelTankMapData->getCapacity()},x:{$vector->getY()},y:{$vector->getY()},z:{$vector->getZ()}",
+                "容量:{$fuelTankMapData->getCapacity()},x:{$vector->getX()},y:{$vector->getY()},z:{$vector->getZ()}",
                 null,
                 function (Player $player) use ($map, $fuelTankMapData) {
                     $player->teleport($fuelTankMapData->getVector());

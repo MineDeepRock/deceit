@@ -32,7 +32,7 @@ class GunDataOnMapListForm extends SimpleForm
             $vector = $gunDataOnMap->getVector();
 
             $buttons[] = new SimpleFormButton(
-                "銃:{$gunDataOnMap->getName()},x:{$vector->getY()},y:{$vector->getY()},z:{$vector->getZ()}",
+                "銃:{$gunDataOnMap->getName()},x:{$vector->getX()},y:{$vector->getY()},z:{$vector->getZ()}",
                 null,
                 function (Player $player) use ($map, $gunDataOnMap) {
                     $player->teleport($gunDataOnMap->getVector());

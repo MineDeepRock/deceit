@@ -30,7 +30,7 @@ class FuelSpawnVectorSettingForm extends SimpleForm
 
         foreach ($map->getFuelSpawnVectors() as $vector) {
             $buttons[] = new SimpleFormButton(
-                "x:{$vector->getY()},y:{$vector->getY()},z:{$vector->getZ()}",
+                "x:{$vector->getX()},y:{$vector->getY()},z:{$vector->getZ()}",
                 null,
                 function (Player $player) use ($map, $vector) {
                     $player->teleport($vector);
