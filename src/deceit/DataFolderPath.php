@@ -31,6 +31,7 @@ class DataFolderPath
         if (!file_exists(self::$playerSkin)) mkdir(self::$playerSkin);
 
         self::$waitingRoomListJson = $dataPath . "waiting_room/data.json";
+		if (!file_exists($dataPath . "waiting_room/")) mkdir($dataPath . "waiting_room/");
         if (!file_exists(self::$waitingRoomListJson)) file_put_contents(self::$waitingRoomListJson, json_encode([]));
     }
 }
